@@ -1,1 +1,0 @@
-Crossfit Open Leaderboard
