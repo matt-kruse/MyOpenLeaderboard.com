@@ -89,6 +89,10 @@ app.controller("Controller", function($scope, $http, $interval) {
                         console.log ( "Athlete Count",data.leaderboardRows.length );
                         athletes = athletes.concat( data.leaderboardRows );
                         page++;
+                        if (data.pagination && data.pagination.totalPages && page>data.pagination.totalPages) {
+                            i++;
+                            page=1;
+                        }
                     }
                     else {
                         console.log("No athletes");
@@ -269,10 +273,10 @@ app.controller("Controller", function($scope, $http, $interval) {
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
             <td class="workout">{{a._rank}}</td>
             <td>{{a._total_rank}}</td>
-            <td class="workout" title="{{a.scores[0].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0]._workout_rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td class="workout" title="{{a.scores[0].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0]._workout_rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
             <td>{{a.scores[0]._workout_rank}}</td>
             
-            <td class="workout" title="{{a.scores[1].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1]._workout_rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td class="workout" title="{{a.scores[1].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1]._workout_rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span></td>
             <td>{{a.scores[1]._workout_rank}}</td>
             <td>{{a.scores[1]._overall_rank}}</td>
             <td>
@@ -281,7 +285,7 @@ app.controller("Controller", function($scope, $http, $interval) {
                 <span ng-if="a.scores[1].rankchange<0" class="negative">{{a.scores[1].rankchange}}</span>
             </td>
 
-            <td class="workout" title="{{a.scores[2].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2]._workout_rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td class="workout" title="{{a.scores[2].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2]._workout_rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span></td>
             <td>{{a.scores[2]._workout_rank}}</td>
             <td>{{a.scores[2]._overall_rank}}</td>
             <td>
@@ -290,7 +294,7 @@ app.controller("Controller", function($scope, $http, $interval) {
                 <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
             </td>
 
-            <td class="workout" title="{{a.scores[3].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td class="workout" title="{{a.scores[3].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
             <td>{{a.scores[3]._workout_rank}}</td>
             <td>{{a.scores[3]._overall_rank}}</td>
             <td>
@@ -299,7 +303,7 @@ app.controller("Controller", function($scope, $http, $interval) {
                 <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>
             </td>
 
-            <td class="workout" title="{{a.scores[4].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td class="workout" title="{{a.scores[4].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>
             <td>{{a.scores[4]._workout_rank}}</td>
             <td>{{a.scores[4]._overall_rank}}</td>
             <td>
