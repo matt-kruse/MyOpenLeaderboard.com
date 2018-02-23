@@ -120,20 +120,60 @@ app.controller("Controller", function($scope, $http, $interval) {
             if (athletes && athletes.length>0) {
                 // Fix scores
                 athletes.forEach(function(a) {
-                    a.overallRank = +a.overallRank;
-                    a.overallScore = +a.overallScore;
-                    
-                    a.scores[0] = a.scores[0] || {};
-                    a.scores[0].rank = +a.scores[0].rank || a.scores[0].rank || 0;
-                    a.scores[0].overallrank = a.scores[0].rank;
-                    a.scores[0].overallscore = a.scores[0].rank;
-                    for (var i=1; i<5; i++) {
+                    a._total_rank = 0;
+                    a._rank = 0;
+                    for (var i=0; i<5; i++) {
                         a.scores[i] = a.scores[i] || {};
-                        a.scores[i].rank = +a.scores[i].rank || a.scores[i].rank;
-                        a.scores[i].overallscore = (typeof a.scores[i].rank=="number") ? a.scores[i-1].overallscore + a.scores[i].rank : null;
-                        a.scores[i].overallrank = null;
+                        var s = a.scores[i];
+                        if (s.score) {
+                            s.score = +s.score;
+                        }
+                        s._workout_rank = null;
+                        s._overall_rank = null;
                     }
                 });
+                
+                // For each workout, assign the real workout rank
+                for (var i=0; i<5; i++) {
+                    // Sort from highest to lowest
+                    athletes = athletes.sort(function(a,b) {
+                        return b.scores[i].score - a.scores[i].score;
+                    });
+                    
+                    if (!athletes[0].scores[i].score) { break; }
+                    
+                    var rank = 0;
+                    athletes.forEach(function(a,index) {
+                        if (index==0 || a.scores[i].score != athletes[index-1].scores[i].score) {
+                            rank++;
+                        }
+                        a.scores[i]._workout_rank = rank;
+                        a.scores[i]._overall_rank += rank;
+                        a._total_rank += rank;
+                        if (i==0 || a.scores[i-1]._overall_rank==0) {
+                            // First workout, overall rank = workout rank
+                            a.scores[i].rankchange = 0;
+                        }
+                        else {
+                            // Look back at previous rank
+                            a.scores[i].rankchange = rank - a.scores[i-1]._overall_rank;
+                        }
+                    });
+                }
+                
+                // Now sort by overall rank by default
+                athletes = athletes.sort(function(a,b) {
+                    return a._total_rank - b._total_rank;
+                });
+                var rank=1;
+                athletes.forEach(function(a,i) {
+                    if (i>0 && athletes[i]._total_rank != athletes[i-1]._total_rank) {
+                        rank++;
+                    }
+                    a._rank = rank;
+                });
+                
+                /*
                 // Sort for each workout to get overall ranks
                 for (var i=1; i<5; i++) {
                     athletes = athletes.sort(function(a,b) {
@@ -151,6 +191,7 @@ app.controller("Controller", function($scope, $http, $interval) {
                         athletes[j].scores[i].rankchange = athletes[j].scores[i-1].overallrank - rank;
                     }
                 }
+                */
                 $scope.athletes = athletes;
             }
             else {
@@ -176,13 +217,13 @@ app.controller("Controller", function($scope, $http, $interval) {
     <br>
 	<div>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</div>
     <div><input id="a"><input type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value"></div>
+    <div>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</div>
 </div>
 <div ng-if="affiliates">
-	<div ng-if="athletes==null" class="loading">Loading<span id="dotdotdot"> . . .</span></div>
+	<div ng-if="athletes==null" class="loading">Loading Data<span id="dotdotdot"> . . .</span></div>
 	<div ng-if="athletes && athletes.length==0">No athletes found for that affiliate ID</div>
 	<div ng-if="athletes && athletes.length>0">
     <div><b>Crossfit Open Leaderboard - Affiliate {{affiliates}}</b> <i>(Click column headers to sort, click rows to select)</i> - Auto reload in {{counter}} minutes</div>
-    <div style="color:red;font-weight:bold;">Note: Ranking is currently incorrect, as it is separating men and women. I am working on this.</div>
     <table>
     <thead>
         <tr>
@@ -226,41 +267,41 @@ app.controller("Controller", function($scope, $http, $interval) {
         <tr ng-repeat="a in athletes | orderBy:sortby:sortdesc" ng-click="a.selected = !a.selected" ng-class="{'selected':(a.selected)}">
             <td>{{$index+1}}. {{a.entrant.competitorName}}</td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
-            <td class="workout">{{a.overallRank}}</td>
-            <td>{{a.overallscore}}</td>
-            <td class="workout" title="{{a.scores[0].breakdown}}" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0].rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
-            <td>{{a.scores[0].rank}}</td>
+            <td class="workout">{{a._rank}}</td>
+            <td>{{a._total_rank}}</td>
+            <td class="workout" title="{{a.scores[0].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0]._workout_rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td>{{a.scores[0]._workout_rank}}</td>
             
-            <td class="workout" title="{{a.scores[1].breakdown}}" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1].rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span></td>
-            <td>{{a.scores[1].rank}}</td>
-            <td>{{a.scores[1].overallrank}}</td>
+            <td class="workout" title="{{a.scores[1].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1]._workout_rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td>{{a.scores[1]._workout_rank}}</td>
+            <td>{{a.scores[1]._overall_rank}}</td>
             <td>
                 <span ng-if="a.scores[1].rankchange==0">-</span>
                 <span ng-if="a.scores[1].rankchange>0" class="positive">+{{a.scores[1].rankchange}}</span>
                 <span ng-if="a.scores[1].rankchange<0" class="negative">{{a.scores[1].rankchange}}</span>
             </td>
 
-            <td class="workout" title="{{a.scores[2].breakdown}}" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2].rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span></td>
-            <td>{{a.scores[2].rank}}</td>
-            <td>{{a.scores[2].overallrank}}</td>
+            <td class="workout" title="{{a.scores[2].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2]._workout_rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td>{{a.scores[2]._workout_rank}}</td>
+            <td>{{a.scores[2]._overall_rank}}</td>
             <td>
                 <span ng-if="a.scores[2].rankchange==0">-</span>
                 <span ng-if="a.scores[2].rankchange>0" class="positive">+{{a.scores[2].rankchange}}</span>
                 <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
             </td>
 
-            <td class="workout" title="{{a.scores[3].breakdown}}" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3].rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
-            <td>{{a.scores[3].rank}}</td>
-            <td>{{a.scores[3].overallrank}}</td>
+            <td class="workout" title="{{a.scores[3].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td>{{a.scores[3]._workout_rank}}</td>
+            <td>{{a.scores[3]._overall_rank}}</td>
             <td>
                 <span ng-if="a.scores[3].rankchange==0">-</span>
                 <span ng-if="a.scores[3].rankchange>0" class="positive">+{{a.scores[3].rankchange}}</span>
                 <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>
             </td>
 
-            <td class="workout" title="{{a.scores[4].breakdown}}" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4].rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>
-            <td>{{a.scores[4].rank}}</td>
-            <td>{{a.scores[4].overallrank}}</td>
+            <td class="workout" title="{{a.scores[4].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span><span ng-if="a.scores[1].scaled">(s)</span></td>
+            <td>{{a.scores[4]._workout_rank}}</td>
+            <td>{{a.scores[4]._overall_rank}}</td>
             <td>
                 <span ng-if="a.scores[4].rankchange==0">-</span>
                 <span ng-if="a.scores[4].rankchange>0" class="positive">+{{a.scores[4].rankchange}}</span>
