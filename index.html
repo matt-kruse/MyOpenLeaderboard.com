@@ -46,27 +46,35 @@ app.controller("Controller", function($scope, $http, $interval) {
 		$scope.sortdesc = (key==$scope.sortby) ? !$scope.sortdesc : (typeof desc=="boolean"?desc:false);
 		$scope.sortby = key;
 	};
-	$scope.affiliate = null;
+	$scope.affiliates = null;
 	$scope.athletes = null;
 	try {
-		$scope.affiliate = location.search.substring(1);
+		$scope.affiliates = location.search.substring(1);
 	} catch(e) { } 
-	if ($scope.affiliate) {
-        var dataurl = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2018/leaderboards?affiliate=' + $scope.affiliate;
+	if ($scope.affiliates) {
+        // Process each url to build up a list of athletes
+        var i=0;
+        var a=0;
+        var page=1;
+        var athletes=[];
         var dataurls = [];
-        
-        dataurls.push( dataurl + "&division=1&scaled=0" );
-        dataurls.push( dataurl + "&division=1&scaled=1" );
-        dataurls.push( dataurl + "&division=2&scaled=0" );
-        dataurls.push( dataurl + "&division=2&scaled=1" );
-        
         var aws = 'https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=';
         var proxy = true;
         
-        // Process each url to build up a list of athletes
-        var i=0;
-        var page=1;
-        var athletes=[];
+        var process_affiliate = function(affiliate) {
+        
+            var dataurl = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2018/leaderboards?affiliate=' + affiliate;
+            dataurls = [];
+            
+            dataurls.push( dataurl + "&division=1&scaled=0" );
+            dataurls.push( dataurl + "&division=1&scaled=1" );
+            dataurls.push( dataurl + "&division=2&scaled=0" );
+            dataurls.push( dataurl + "&division=2&scaled=1" );
+            
+            // Launch the first request
+            request();
+            
+        };
         var request = function() {
             var url = dataurls[i] + "&page="+page;
             console.log(url);
@@ -91,8 +99,15 @@ app.controller("Controller", function($scope, $http, $interval) {
                         request();
                     }
                     else {
-                        // All done!
-                        process_athletes();
+                        // All done with this affiliate!
+                        i=0;
+                        a++;
+                        if (a<affiliates.length) {
+                            process_affiliate( affiliates[a] );
+                        }
+                        else {
+                            process_athletes();
+                        }
                     }
                 }
                 else {
@@ -100,8 +115,6 @@ app.controller("Controller", function($scope, $http, $interval) {
                 }
             });
         };
-        // Launch the first request
-        request();
         
         var process_athletes = function() {
             if (athletes && athletes.length>0) {
@@ -143,6 +156,11 @@ app.controller("Controller", function($scope, $http, $interval) {
                 $scope.athletes = [];
             }
         };
+        
+        var affiliates = $scope.affiliates.split(/\s*,\s*/);
+        $scope.num_affiliates = affiliates.length;
+        process_affiliate(affiliates[a]);
+
     }
 });
 </script>
@@ -152,11 +170,13 @@ app.controller("Controller", function($scope, $http, $interval) {
 
 <div ng-controller="Controller">
 
-<div ng-if="!affiliate">
-	<b>Crossfit Open Affiliate Leaderboard</b><br>
-	Show results for affiliate ID (ex: 1234): <input id="a"><input type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value">
+<div ng-if="!affiliates">
+	<b>Crossfit Open Affiliate Leaderboard</b>
+    <br>
+	<div>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</div>
+    <div><input id="a"><input type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value"></div>
 </div>
-<div ng-if="affiliate">
+<div ng-if="affiliates">
 	<div ng-if="athletes==null" class="loading">Loading<span id="dotdotdot"> . . .</span></div>
 	<div ng-if="athletes && athletes.length==0">No athletes found for that affiliate ID</div>
 	<div ng-if="athletes && athletes.length>0">
@@ -165,6 +185,7 @@ app.controller("Controller", function($scope, $http, $interval) {
     <thead>
         <tr>
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
+            <th rowspan="2" ng-click="sort('entrant.affiliateId')" ng-if="num_affiliates>1">Affiliate</th>
             <th rowspan="2" class="workout" ng-click="sort('overallrank')">Overall<br>Rank</th>
             <th rowspan="2" ng-click="sort('overallscore')">Overall<br>Score</th>
             <th colspan="2">Workout #1</th>
@@ -202,6 +223,7 @@ app.controller("Controller", function($scope, $http, $interval) {
     <tbody>
         <tr ng-repeat="a in athletes | orderBy:sortby:sortdesc" ng-click="a.selected = !a.selected" ng-class="{'selected':(a.selected)}">
             <td>{{$index+1}}. {{a.entrant.competitorName}}</td>
+            <td ng-if="num_affiliates>1">{{a.entrant.affiliateId}}</td>
             <td class="workout">{{a.overallrank}}</td>
             <td>{{a.overallscore}}</td>
             <td class="workout" ng-class="{'empty':(a.scores[0].scoredisplay=='0'&&a.scores[0].rank>1)}">{{a.scores[0].scoredisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
