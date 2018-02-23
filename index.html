@@ -180,7 +180,7 @@ app.controller("Controller", function($scope, $http, $interval) {
 	<div ng-if="athletes==null" class="loading">Loading<span id="dotdotdot"> . . .</span></div>
 	<div ng-if="athletes && athletes.length==0">No athletes found for that affiliate ID</div>
 	<div ng-if="athletes && athletes.length>0">
-	<b>Crossfit Open Leaderboard - Affiliate {{affiliate}}</b> <i>(Click column headers to sort, click rows to select)</i> - Auto reload in {{counter}} minutes
+	<b>Crossfit Open Leaderboard - Affiliate {{affiliates}}</b> <i>(Click column headers to sort, click rows to select)</i> - Auto reload in {{counter}} minutes
     <table>
     <thead>
         <tr>
