@@ -104,39 +104,44 @@ app.controller("Controller", function($scope, $http, $interval) {
         request();
         
         var process_athletes = function() {
-            athletes.forEach(function(a) {
-                a.overallRank = +a.overallRank;
-                a.overallScore = +a.overallScore;
-                
-                a.scores[0] = a.scores[0] || {};
-                a.scores[0].rank = +a.scores[0].rank || a.scores[0].rank || 0;
-                a.scores[0].overallrank = a.scores[0].rank;
-                a.scores[0].overallscore = a.scores[0].rank;
-                for (var i=1; i<5; i++) {
-                    a.scores[i] = a.scores[i] || {};
-                    a.scores[i].rank = +a.scores[i].rank || a.scores[i].rank;
-                    a.scores[i].overallscore = (typeof a.scores[i].rank=="number") ? a.scores[i-1].overallscore + a.scores[i].rank : null;
-                    a.scores[i].overallrank = null;
-                }
-            });
-            // Sort for each workout to get overall ranks
-            for (var i=1; i<5; i++) {
-                athletes = athletes.sort(function(a,b) {
-                    return a.scores[i].overallscore - b.scores[i].overallscore;
-                });
-                if (!athletes[0].scores[i].overallscore) { break; }
-                var rank = 1;
-                athletes[0].scores[i].overallrank=1;
-                athletes[0].scores[i].rankchange = athletes[0].scores[i-1].overallrank - 1;
-                for (var j=1; j<athletes.length; j++) {
-                    if (athletes[j].scores[i].overallscore != athletes[j-1].scores[i].overallscore) {
-                        rank = j+1;
+            if (athletes && athletes.length>0) {
+                athletes.forEach(function(a) {
+                    a.overallRank = +a.overallRank;
+                    a.overallScore = +a.overallScore;
+                    
+                    a.scores[0] = a.scores[0] || {};
+                    a.scores[0].rank = +a.scores[0].rank || a.scores[0].rank || 0;
+                    a.scores[0].overallrank = a.scores[0].rank;
+                    a.scores[0].overallscore = a.scores[0].rank;
+                    for (var i=1; i<5; i++) {
+                        a.scores[i] = a.scores[i] || {};
+                        a.scores[i].rank = +a.scores[i].rank || a.scores[i].rank;
+                        a.scores[i].overallscore = (typeof a.scores[i].rank=="number") ? a.scores[i-1].overallscore + a.scores[i].rank : null;
+                        a.scores[i].overallrank = null;
                     }
-                    athletes[j].scores[i].overallrank=rank;
-                    athletes[j].scores[i].rankchange = athletes[j].scores[i-1].overallrank - rank;
+                });
+                // Sort for each workout to get overall ranks
+                for (var i=1; i<5; i++) {
+                    athletes = athletes.sort(function(a,b) {
+                        return a.scores[i].overallscore - b.scores[i].overallscore;
+                    });
+                    if (!athletes[0].scores[i].overallscore) { break; }
+                    var rank = 1;
+                    athletes[0].scores[i].overallrank=1;
+                    athletes[0].scores[i].rankchange = athletes[0].scores[i-1].overallrank - 1;
+                    for (var j=1; j<athletes.length; j++) {
+                        if (athletes[j].scores[i].overallscore != athletes[j-1].scores[i].overallscore) {
+                            rank = j+1;
+                        }
+                        athletes[j].scores[i].overallrank=rank;
+                        athletes[j].scores[i].rankchange = athletes[j].scores[i-1].overallrank - rank;
+                    }
                 }
+                $scope.athletes = athletes;
             }
-            $scope.athletes = athletes;
+            else {
+                $scope.athletes = [];
+            }
         };
     }
 });
