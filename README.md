@@ -1,2 +1,1 @@
-# MyOpenLeaderboard.com
-Custom Leaderboard for the Crossfit Open
+Crossfit Open Leaderboard

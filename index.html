@@ -1,0 +1,249 @@
+<html>
+
+<head>
+	<title>Crossfit Open Leaderboard</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style>
+body, * {
+font-size:13px;
+font-family:arial;
+}
+table { border:1px solid #666; border-collapse:collapse; cell-spacing:0; }
+td, th { border:1px solid #666; padding:1 1px; }
+th { cursor: pointer; padding:2px 2px;font-size:12px; }
+tbody tr:nth-child(even) { background-color:#ececec; }
+.workout { border-left:3px solid #666; }
+tbody tr { cursor:pointer; }
+tr.selected { background-color:yellow !important; }
+.positive { color:green; }
+.negative { color:red; }
+.empty { background-color:#faa; }
+.time { color:#777; font-style:italic; font-size:80%; }
+.loading { font-size:30px; font-weight:bold; }
+</style>
+<script src="angular.js"></script>
+<script>
+var app = angular.module("App", []);
+app.controller("Controller", function($scope, $http, $interval) {
+	$scope.sortby = 'overallrank';
+	$scope.sortdesc = false;
+	$scope.selected = null;
+	$scope.counter = 30;
+	$interval(function() {
+		$scope.counter--;
+		if ($scope.counter<1) {
+			window.location.reload(true);
+		}
+	}, 1000*60 );
+	$scope.time = function(s) {
+		if (typeof s!="number") { return "x"; }
+		var m = Math.floor(s/60);
+		s = (s-m*60);
+		if (s<10) { s="0"+s; }
+		return m+":"+s;
+	};
+	$scope.sort = function(key,desc) {
+		$scope.sortdesc = (key==$scope.sortby) ? !$scope.sortdesc : (typeof desc=="boolean"?desc:false);
+		$scope.sortby = key;
+	};
+	$scope.affiliate = null;
+	$scope.athletes = null;
+	try {
+		$scope.affiliate = location.search.substring(1);
+	} catch(e) { } 
+	if ($scope.affiliate) {
+        var dataurl = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2018/leaderboards?affiliate=' + $scope.affiliate;
+        var dataurls = [];
+        
+        dataurls.push( dataurl + "&division=1&scaled=0" );
+        dataurls.push( dataurl + "&division=1&scaled=1" );
+        dataurls.push( dataurl + "&division=2&scaled=0" );
+        dataurls.push( dataurl + "&division=2&scaled=1" );
+        
+        var aws = 'https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=';
+        var proxy = true;
+        
+        // Process each url to build up a list of athletes
+        var i=0;
+        var page=1;
+        var athletes=[];
+        var request = function() {
+            var url = dataurls[i] + "&page="+page;
+            console.log(url);
+            url = aws + encodeURIComponent( url );
+            if (document.getElementById('dotdotdot')) {
+                document.getElementById('dotdotdot').innerHTML += " . ";
+            }
+            $http.get(url).then( function(data) {
+                if (data) {
+                    data = JSON.parse(data.data.content);
+                    if (data && data.leaderboardRows && data.leaderboardRows.length>0) {
+                        console.log ( "Athlete Count",data.leaderboardRows.length );
+                        athletes = athletes.concat( data.leaderboardRows );
+                        page++;
+                    }
+                    else {
+                        console.log("No athletes");
+                        i++;
+                        page=1;
+                    }
+                    if (i<dataurls.length) {
+                        request();
+                    }
+                    else {
+                        // All done!
+                        process_athletes();
+                    }
+                }
+                else {
+                    console.log("OH NO!");
+                }
+            });
+        };
+        // Launch the first request
+        request();
+        
+        var process_athletes = function() {
+            athletes.forEach(function(a) {
+                a.overallRank = +a.overallRank;
+                a.overallScore = +a.overallScore;
+                
+                a.scores[0] = a.scores[0] || {};
+                a.scores[0].rank = +a.scores[0].rank || a.scores[0].rank || 0;
+                a.scores[0].overallrank = a.scores[0].rank;
+                a.scores[0].overallscore = a.scores[0].rank;
+                for (var i=1; i<5; i++) {
+                    a.scores[i] = a.scores[i] || {};
+                    a.scores[i].rank = +a.scores[i].rank || a.scores[i].rank;
+                    a.scores[i].overallscore = (typeof a.scores[i].rank=="number") ? a.scores[i-1].overallscore + a.scores[i].rank : null;
+                    a.scores[i].overallrank = null;
+                }
+            });
+            // Sort for each workout to get overall ranks
+            for (var i=1; i<5; i++) {
+                athletes = athletes.sort(function(a,b) {
+                    return a.scores[i].overallscore - b.scores[i].overallscore;
+                });
+                if (!athletes[0].scores[i].overallscore) { break; }
+                var rank = 1;
+                athletes[0].scores[i].overallrank=1;
+                athletes[0].scores[i].rankchange = athletes[0].scores[i-1].overallrank - 1;
+                for (var j=1; j<athletes.length; j++) {
+                    if (athletes[j].scores[i].overallscore != athletes[j-1].scores[i].overallscore) {
+                        rank = j+1;
+                    }
+                    athletes[j].scores[i].overallrank=rank;
+                    athletes[j].scores[i].rankchange = athletes[j].scores[i-1].overallrank - rank;
+                }
+            }
+            $scope.athletes = athletes;
+        };
+    }
+});
+</script>
+</head>
+
+<body ng-app="App">
+
+<div ng-controller="Controller">
+
+<div ng-if="!affiliate">
+	<b>Crossfit Open Affiliate Leaderboard</b><br>
+	Show results for affiliate ID (ex: 1234): <input id="a"><input type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value">
+</div>
+<div ng-if="affiliate">
+	<div ng-if="athletes==null" class="loading">Loading<span id="dotdotdot"> . . .</span></div>
+	<div ng-if="athletes && athletes.length==0">No athletes found for that affiliate ID</div>
+	<div ng-if="athletes && athletes.length>0">
+	<b>Crossfit Open Leaderboard - Affiliate {{affiliate}}</b> <i>(Click column headers to sort, click rows to select)</i> - Auto reload in {{counter}} minutes
+    <table>
+    <thead>
+        <tr>
+            <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
+            <th rowspan="2" class="workout" ng-click="sort('overallrank')">Overall<br>Rank</th>
+            <th rowspan="2" ng-click="sort('overallscore')">Overall<br>Score</th>
+            <th colspan="2">Workout #1</th>
+            <th colspan="4">Workout #2</th>
+            <th colspan="4">Workout #3</th>
+            <th colspan="4">Workout #4</th>
+            <th colspan="4">Workout #5</th>
+        </tr>
+        <tr>
+            <th class="workout" ng-click="sort('scores[0].scoredisplay')">Score</th>
+            <th ng-click="sort('scores[0].rank')">WO<br>Rank</th>
+            
+            <th class="workout" ng-click="sort('scores[1].scoredisplay')">Score</th>
+            <th ng-click="sort('scores[1].rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[1].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[1].rankchange',true)">Rank<br>Change</th>
+            
+            <th class="workout" ng-click="sort('scores[2].scoredisplay')">Score</th>
+            <th ng-click="sort('scores[2].rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[2].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[2].rankchange',true)">Rank<br>Change</th>
+            
+            <th class="workout" ng-click="sort('scores[3].scoredisplay')">Score</th>
+            <th ng-click="sort('scores[3].rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[3].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[3].rankchange',true)">Rank<br>Change</th>
+            
+            <th class="workout" ng-click="sort('scores[4].scoredisplay')">Score</th>
+            <th ng-click="sort('scores[4].rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[4].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[4].rankchange',true)">Rank<br>Change</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="a in athletes | orderBy:sortby:sortdesc" ng-click="a.selected = !a.selected" ng-class="{'selected':(a.selected)}">
+            <td>{{$index+1}}. {{a.entrant.competitorName}}</td>
+            <td class="workout">{{a.overallrank}}</td>
+            <td>{{a.overallscore}}</td>
+            <td class="workout" ng-class="{'empty':(a.scores[0].scoredisplay=='0'&&a.scores[0].rank>1)}">{{a.scores[0].scoredisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
+            <td>{{a.scores[0].rank}}</td>
+            
+            <td class="workout" ng-class="{'empty':(a.scores[1].scoredisplay=='0'&&a.scores[1].rank>1)}">{{a.scores[1].scoredisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span></td>
+            <td>{{a.scores[1].rank}}</td>
+            <td>{{a.scores[1].overallrank}}</td>
+            <td>
+                <span ng-if="a.scores[1].rankchange==0">-</span>
+                <span ng-if="a.scores[1].rankchange>0" class="positive">+{{a.scores[1].rankchange}}</span>
+                <span ng-if="a.scores[1].rankchange<0" class="negative">{{a.scores[1].rankchange}}</span>
+            </td>
+
+            <td class="workout" ng-class="{'empty':(a.scores[2].scoredisplay=='0'&&a.scores[2].rank>1)}">{{a.scores[2].scoredisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span></td>
+            <td>{{a.scores[2].rank}}</td>
+            <td>{{a.scores[2].overallrank}}</td>
+            <td>
+                <span ng-if="a.scores[2].rankchange==0">-</span>
+                <span ng-if="a.scores[2].rankchange>0" class="positive">+{{a.scores[2].rankchange}}</span>
+                <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
+            </td>
+
+            <td class="workout" ng-class="{'empty':(a.scores[3].scoredisplay=='0'&&a.scores[3].rank>1)}">{{a.scores[3].scoredisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
+            <td>{{a.scores[3].rank}}</td>
+            <td>{{a.scores[3].overallrank}}</td>
+            <td>
+                <span ng-if="a.scores[3].rankchange==0">-</span>
+                <span ng-if="a.scores[3].rankchange>0" class="positive">+{{a.scores[3].rankchange}}</span>
+                <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>
+            </td>
+
+            <td class="workout" ng-class="{'empty':(a.scores[4].scoredisplay=='0'&&a.scores[4].rank>1)}">{{a.scores[4].scoredisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>
+            <td>{{a.scores[4].rank}}</td>
+            <td>{{a.scores[4].overallrank}}</td>
+            <td>
+                <span ng-if="a.scores[4].rankchange==0">-</span>
+                <span ng-if="a.scores[4].rankchange>0" class="positive">+{{a.scores[4].rankchange}}</span>
+                <span ng-if="a.scores[4].rankchange<0" class="negative">{{a.scores[4].rankchange}}</span>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+	</div>
+
+	</div>
+</div>
+
+</body>
+</html>
