@@ -274,7 +274,7 @@ app.controller("Controller", function($scope, $http, $interval) {
     </thead>
     <tbody>
         <tr ng-repeat="a in athletes | orderBy:sortby:sortdesc" ng-click="a.selected = !a.selected" ng-class="{'selected':(a.selected)}">
-            <td>{{$index+1}}. {{a.entrant.competitorName}}</td>
+            <td>{{$index+1}}. <a href="https://games.crossfit.com/athlete/{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
             <td class="workout">{{a._rank}}</td>
             <td>{{a._total_rank}}</td>
