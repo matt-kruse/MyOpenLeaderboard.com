@@ -2,6 +2,9 @@
 
 <head>
 	<title>Crossfit Open Leaderboard</title>
+	<meta name="title" content="Crossfit Open Affiliate Leaderboard" />
+	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2018 Crossfit Open results!" />
+	<meta property="og:image" content="" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <style>
 body, * {
@@ -25,7 +28,7 @@ tr.selected { background-color:yellow !important; }
 <script>
 var app = angular.module("App", []);
 app.controller("Controller", function($scope, $http, $interval) {
-	$scope.sortby = 'overallrank';
+	$scope.sortby = '_rank';
 	$scope.sortdesc = false;
 	$scope.selected = null;
 	$scope.counter = 30;
@@ -150,10 +153,12 @@ app.controller("Controller", function($scope, $http, $interval) {
                 for (var i=0; i<5; i++) {
                     // Sort from highest to lowest
                     athletes = athletes.sort(function(a,b) {
-                        if (!a && !b) { return 0; }
-                        if (a && !b) { return -1; }
-                        if (!a && b) { return 1; }
-                        return b.scores[i].score - a.scores[i].score;
+                        var as = +a.scores[i].score || 0;
+                        var bs = +b.scores[i].score || 0;
+                        if (!as && !bs) { return 0; }
+                        if (!bs || (as>bs)) { return -1; }
+                        if (!as || (as<bs)) { return 1; }
+                        return 0;
                     });
                     
                     if (!athletes[0].scores[i].score) { break; }
@@ -179,10 +184,12 @@ app.controller("Controller", function($scope, $http, $interval) {
                 
                 // Now sort by overall rank by default
                 athletes = athletes.sort(function(a,b) {
-                    if (!a && !b) { return 0; }
-                    if (a && !b) { return 1; }
-                    if (!a && b) { return -1; }
-                    return +a._total_rank - +b._total_rank;
+                    var ar = +a._total_rank || 0;
+                    var br = +b._total_rank || 0;
+                    if (!ar && !br) { return 0; }
+                    if (ar>br) { return 1; }
+                    if (ar<br) { return -1; }
+                    return 0;
                 });
                 var rank=1;
                 athletes.forEach(function(a,i) {
