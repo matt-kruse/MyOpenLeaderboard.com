@@ -105,8 +105,14 @@ a:hover {
   stroke: #0056b8;
 }
 
+.bx--loading__percent {
+  display: block;
+  position: absolute;  
+}
+
 /* no results */
 .none-found {
   padding: 1rem;
   text-align: center;
+  font-size: 1rem;
 }
