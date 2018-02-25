@@ -1,6 +1,9 @@
 body, * {
   font-size: 13px;
-  background: white;
+  }
+
+  body {
+    background: white;
   }
 
   table { border:1px solid #666; border-collapse:collapse; cell-spacing:0; }
@@ -71,6 +74,7 @@ a:hover {
   padding-left: 0;
   text-align: center;
   height: auto;
+  background: white;
 }
 
 .bx--data-table-v2 th:first-of-type, .bx--data-table-v2 td {
