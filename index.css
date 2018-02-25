@@ -1,0 +1,118 @@
+body, * {
+  font-size: 13px;
+  }
+
+  body {
+    background: white;
+  }
+
+  table { border:1px solid #666; border-collapse:collapse; cell-spacing:0; }
+  td, th { border:1px solid #666; padding:1 1px; }
+  th { cursor: pointer; padding:2px 2px;font-size:12px; }
+  tbody tr:nth-child(even) { background-color:#ececec; }
+  .workout { border-left:3px solid #666; }
+  tbody tr { cursor:pointer; }
+  tr.selected { background-color:yellow !important; }
+  .positive { color:green; }
+  .negative { color:red; }
+  .empty { background-color:#faa; }
+  .time { color:#777; font-style:italic; font-size:80%; }
+  .loading { font-size:30px; font-weight:bold; }
+/* color overrides */
+a {
+  color: #0056b8;
+}
+
+a:hover {
+  color: #00428d;
+}
+
+.bx--btn--primary {
+  background: #0056b8;
+}
+
+.bx--btn--primary:hover {
+  background: #00428d;
+}
+/* Search */
+.search {
+  width: 100%;
+  padding: 1.25rem;
+}
+
+.search h1 {
+  padding-bottom: 1rem;
+}
+
+.search__box {
+  display: flex;
+  padding: 0 0 1.5rem 0;
+}
+
+.search__box #a {
+  width: 300px;
+}
+
+/* Results */
+.affiliates {
+
+}
+
+.bx--data-table-v2--compact {
+  font-size: 11px;
+}
+
+.bx--data-table-v2 tr {
+  height: auto;
+}
+
+.bx--data-table-v2--compact tbody tr {
+  height: auto;
+}
+
+.bx--data-table-v2--compact th {
+  padding-left: 0;
+  text-align: center;
+  height: auto;
+  background: white;
+}
+
+.bx--data-table-v2 th:first-of-type, .bx--data-table-v2 td {
+  text-align: center;
+  padding-left: 0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.bx--data-table-v2 th:first-of-type, .bx--data-table-v2 td:first-of-type {
+  padding-left: .5rem;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* text styles */
+.header__results {
+  display: flex;
+  align-items: center;
+}
+
+.header__results h3 {
+  padding-right: 1rem;
+}
+
+/* loading */
+.bx--loading__svg {
+  stroke: #0056b8;
+}
+
+.bx--loading__percent {
+  display: block;
+  position: absolute;  
+}
+
+/* no results */
+.none-found {
+  padding: 1rem;
+  text-align: center;
+  font-size: 1rem;
+}
