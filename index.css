@@ -79,3 +79,8 @@ body, * {
 .header__results h3 {
   padding-right: 1rem;
 }
+
+/* loading */
+.bx--loading__svg {
+  stroke: #5596e6;
+}
