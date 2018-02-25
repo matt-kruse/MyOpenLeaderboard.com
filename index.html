@@ -5,25 +5,9 @@
 	<meta name="title" content="Crossfit Open Affiliate Leaderboard" />
 	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2018 Crossfit Open results!" />
 	<meta property="og:image" content="" />
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<style>
-body, * {
-font-size:13px;
-font-family:arial;
-}
-table { border:1px solid #666; border-collapse:collapse; cell-spacing:0; }
-td, th { border:1px solid #666; padding:1 1px; }
-th { cursor: pointer; padding:2px 2px;font-size:12px; }
-tbody tr:nth-child(even) { background-color:#ececec; }
-.workout { border-left:3px solid #666; }
-tbody tr { cursor:pointer; }
-tr.selected { background-color:yellow !important; }
-.positive { color:green; }
-.negative { color:red; }
-.empty { background-color:#faa; }
-.time { color:#777; font-style:italic; font-size:80%; }
-.loading { font-size:30px; font-weight:bold; }
-</style>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/carbon-components@8.16.0/css/carbon-components.min.css" />
+    <link type="text/css" rel="stylesheet" href="index.css" />
 <script src="angular.js"></script>
 <script>
 var app = angular.module("App", []);
@@ -219,19 +203,19 @@ app.controller("Controller", function($scope, $http, $interval) {
 
 <div ng-controller="Controller">
 
-<div ng-if="!affiliates">
-	<b>Crossfit Open Affiliate Leaderboard</b>
-    <br>
-	<div>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</div>
-    <div><input id="a"><input type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value"></div>
-    <div>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</div>
+<div ng-if="!affiliates" class="search">
+	<h1>Crossfit Open Affiliate Leaderboard</h1>
+    
+	<p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
+    <div class="search__box"><input id="a" class="bx--text-input"><input class="bx--btn bx--btn--primary" type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value"></div>
+    <p>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</p>
 </div>
-<div ng-if="affiliates">
+<div ng-if="affiliates" class="affiliates">
 	<div ng-if="athletes==null" class="loading">Loading Data<span id="dotdotdot"> . . .</span></div>
 	<div ng-if="athletes && athletes.length==0">No athletes found for that affiliate ID</div>
 	<div ng-if="athletes && athletes.length>0">
-    <div><b>Crossfit Open Leaderboard - Affiliate {{affiliates}}</b> <i>(Click column headers to sort, click rows to select)</i> - Auto reload in {{counter}} minutes</div>
-    <table>
+    <div class="header__results"><h3>Crossfit Open Leaderboard - <strong>Affiliate {{affiliates}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
+    <table class="bx--data-table-v2 bx--data-table-v2--compact">
     <thead>
         <tr>
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
