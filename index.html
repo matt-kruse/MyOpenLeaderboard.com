@@ -63,6 +63,7 @@ app.controller("Controller", function($scope, $http, $interval) {
             
         };
         var request = function() {
+            $scope.load_count++;
             var url = dataurls[i] + "&page="+page;
             console.log(url);
             url = aws + encodeURIComponent( url );
@@ -192,6 +193,10 @@ app.controller("Controller", function($scope, $http, $interval) {
         
         var affiliates = $scope.affiliates.split(/\s*,\s*/);
         $scope.num_affiliates = affiliates.length;
+        
+        $scope.load_count = 0;
+        $scope.load_total = $scope.num_affiliates * 4;
+
         process_affiliate(affiliates[a]);
 
     }
@@ -218,7 +223,7 @@ app.controller("Controller", function($scope, $http, $interval) {
       <circle cx="0" cy="0" r="37.5" />
     </svg>
   </div>
-  <span class="bx--loading__percent">100%</span>
+  <span class="bx--loading__percent">{{100*(load_count/load_total)}}%</span>
 </div></div>
 	<div ng-if="athletes && athletes.length==0" class="none-found">No athletes found for that affiliate ID <br><a href="/">Search again</a></div>
 	<div ng-if="athletes && athletes.length>0">
