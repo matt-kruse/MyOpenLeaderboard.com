@@ -211,14 +211,7 @@ app.controller("Controller", function($scope, $http, $interval) {
     <p>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</p>
 </div>
 <div ng-if="affiliates" class="affiliates">
-	<div ng-if="athletes==null" class="loading"><div class="bx--loading-overlay">
-  <div data-loading class="bx--loading">
-    <svg class="bx--loading__svg" viewBox="-75 -75 150 150">
-      <title>Loading</title>
-      <circle cx="0" cy="0" r="37.5" />
-    </svg>
-  </div>
-</div></div>
+	<div ng-if="athletes==null" class="loading">Loading Data<span id="dotdotdot"> . . .</span></div>
 	<div ng-if="athletes && athletes.length==0" class="none-found">No athletes found for that affiliate ID <br><a href="/">Search again</a></div>
 	<div ng-if="athletes && athletes.length>0">
     <div class="header__results"><h3>Crossfit Open Leaderboard - <strong>Affiliate {{affiliates}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
