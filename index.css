@@ -1,5 +1,6 @@
 body, * {
   font-size: 13px;
+  background: white;
   }
 
   table { border:1px solid #666; border-collapse:collapse; cell-spacing:0; }
@@ -14,7 +15,22 @@ body, * {
   .empty { background-color:#faa; }
   .time { color:#777; font-style:italic; font-size:80%; }
   .loading { font-size:30px; font-weight:bold; }
+/* color overrides */
+a {
+  color: #0056b8;
+}
 
+a:hover {
+  color: #00428d;
+}
+
+.bx--btn--primary {
+  background: #0056b8;
+}
+
+.bx--btn--primary:hover {
+  background: #00428d;
+}
 /* Search */
 .search {
   width: 100%;
@@ -82,5 +98,11 @@ body, * {
 
 /* loading */
 .bx--loading__svg {
-  stroke: #5596e6;
+  stroke: #0056b8;
+}
+
+/* no results */
+.none-found {
+  padding: 1rem;
+  text-align: center;
 }

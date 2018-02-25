@@ -219,7 +219,7 @@ app.controller("Controller", function($scope, $http, $interval) {
     </svg>
   </div>
 </div></div>
-	<div ng-if="athletes && athletes.length==0">No athletes found for that affiliate ID</div>
+	<div ng-if="athletes && athletes.length==0" class="none-found">No athletes found for that affiliate ID <br><a href="/">Search again</a></div>
 	<div ng-if="athletes && athletes.length>0">
     <div class="header__results"><h3>Crossfit Open Leaderboard - <strong>Affiliate {{affiliates}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
     <table class="bx--data-table-v2 bx--data-table-v2--compact">
