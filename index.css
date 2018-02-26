@@ -27,6 +27,15 @@ a:hover {
   color: #00428d;
 }
 
+.filter-button {
+    height:1.6em;
+    padding:0 .5em;
+}
+.bx--btn--secondary.selected {
+    background-color:#3d70b2;
+    color:white;
+}
+
 .bx--btn--primary {
   background: #0056b8;
 }

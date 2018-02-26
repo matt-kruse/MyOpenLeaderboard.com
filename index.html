@@ -11,11 +11,14 @@
 <script src="angular.js"></script>
 <script>
 var app = angular.module("App", []);
-app.controller("Controller", function($scope, $http, $interval) {
+app.controller("Controller", function($scope, $http, $interval, $timeout) {
 	$scope.sortby = '_rank';
 	$scope.sortdesc = false;
 	$scope.selected = null;
 	$scope.counter = 30;
+    
+    $scope.sex = "";
+    
 	$interval(function() {
 		$scope.counter--;
 		if ($scope.counter<1) {
@@ -98,7 +101,7 @@ app.controller("Controller", function($scope, $http, $interval) {
                             process_affiliate( affiliates[a] );
                         }
                         else {
-                            process_athletes();
+                            $scope.process_athletes();
                         }
                     }
                 }
@@ -108,19 +111,25 @@ app.controller("Controller", function($scope, $http, $interval) {
             });
         };
         
-        var process_athletes = function() {
+        $scope.process_athletes = function() {
+            var filtered_athletes = [];
             if (athletes && athletes.length>0) {
                 // Filter out dupes
                 var uniques = {};
-                athletes = athletes.filter(function(a) {
+                filtered_athletes = athletes.filter(function(a) {
                     var id = a.entrant.competitorId;
                     if (uniques[id]) { return false; }
                     uniques[id] = true;
                     return true;
                 });
                 
+                // Apply filters
+                filtered_athletes = filtered_athletes.filter(function(a) {
+                    return ($scope.sex=="" || $scope.sex==a.entrant.gender);
+                });
+                
                 // Fix scores
-                athletes.forEach(function(a) {
+                filtered_athletes.forEach(function(a) {
                     a._total_rank = 0;
                     a._rank = 0;
                     for (var i=0; i<5; i++) {
@@ -137,7 +146,7 @@ app.controller("Controller", function($scope, $http, $interval) {
                 // For each workout, assign the real workout rank
                 for (var i=0; i<5; i++) {
                     // Sort from highest to lowest
-                    athletes = athletes.sort(function(a,b) {
+                    filtered_athletes = filtered_athletes.sort(function(a,b) {
                         var as = +a.scores[i].score || 0;
                         var bs = +b.scores[i].score || 0;
                         if (!as && !bs) { return 0; }
@@ -146,11 +155,11 @@ app.controller("Controller", function($scope, $http, $interval) {
                         return 0;
                     });
                     
-                    if (!athletes[0].scores[i].score) { break; }
+                    if (!filtered_athletes[0].scores[i].score) { break; }
                     
                     var rank = 0;
-                    athletes.forEach(function(a,index) {
-                        if (index==0 || a.scores[i].score != athletes[index-1].scores[i].score) {
+                    filtered_athletes.forEach(function(a,index) {
+                        if (index==0 || a.scores[i].score != filtered_athletes[index-1].scores[i].score) {
                             rank++;
                         }
                         a.scores[i]._workout_rank = rank;
@@ -168,7 +177,7 @@ app.controller("Controller", function($scope, $http, $interval) {
                 }
                 
                 // Now sort by overall rank by default
-                athletes = athletes.sort(function(a,b) {
+                filtered_athletes = filtered_athletes.sort(function(a,b) {
                     var ar = +a._total_rank || 0;
                     var br = +b._total_rank || 0;
                     if (!ar && !br) { return 0; }
@@ -177,18 +186,18 @@ app.controller("Controller", function($scope, $http, $interval) {
                     return 0;
                 });
                 var rank=1;
-                athletes.forEach(function(a,i) {
-                    if (i>0 && athletes[i]._total_rank != athletes[i-1]._total_rank) {
+                filtered_athletes.forEach(function(a,i) {
+                    if (i>0 && filtered_athletes[i]._total_rank != filtered_athletes[i-1]._total_rank) {
                         rank++;
                     }
                     a._rank = rank;
                 });
                 // Now compute rank %
-                athletes.forEach(function(a,i) {
+                filtered_athletes.forEach(function(a,i) {
                     a._pct = ((a._rank-1) / (rank-1))*100;
                 });
                 
-                $scope.athletes = athletes;
+                $scope.athletes = filtered_athletes;
             }
             else {
                 $scope.athletes = [];
@@ -204,6 +213,11 @@ app.controller("Controller", function($scope, $http, $interval) {
         process_affiliate(affiliates[a]);
 
     }
+    
+    $scope.reprocess = function(sex) {
+        $scope.sex = sex;
+        $timeout($scope.process_athletes,10);
+    };
 });
 </script>
 </head>
@@ -232,6 +246,11 @@ app.controller("Controller", function($scope, $http, $interval) {
 	<div ng-if="athletes && athletes.length==0" class="none-found">No athletes found for that affiliate ID <br><a href="/">Search again</a></div>
 	<div ng-if="athletes && athletes.length>0">
     <div class="header__results"><h3>Crossfit Open Leaderboard - <strong>Affiliate {{affiliates}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
+    <div>Show: 
+        <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='M'}" type="button" value="Male" ng-click="reprocess('M')"> 
+        <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='F'}" type="button" value="Female" ng-click="reprocess('F')"> 
+        <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex==''}" type="button" value="All" ng-click="reprocess('')"> 
+    </div>
     <table class="bx--data-table-v2 bx--data-table-v2--compact">
     <thead>
         <tr>
