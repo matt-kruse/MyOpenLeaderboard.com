@@ -15,7 +15,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 	$scope.sortby = '_rank';
 	$scope.sortdesc = false;
 	$scope.selected = null;
-	$scope.counter = 30;
+	$scope.counter = 60;
     
     $scope.sex = "";
     
@@ -48,68 +48,52 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         var page=1;
         var athletes=[];
         var dataurls = [];
-        var aws = 'https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=';
+        
         var proxy = true;
         
-        var process_affiliate = function(affiliate) {
-        
-            var dataurl = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2018/leaderboards?affiliate=' + affiliate;
-            dataurls = [];
-            
-            dataurls.push( dataurl + "&division=1&scaled=0" );
-            dataurls.push( dataurl + "&division=1&scaled=1" );
-            dataurls.push( dataurl + "&division=2&scaled=0" );
-            dataurls.push( dataurl + "&division=2&scaled=1" );
-            
-            // Launch the first request
-            request();
-            
-        };
-        var request = function() {
-            $scope.load_count++;
-            var url = dataurls[i] + "&page="+page;
-            console.log(url);
-            url = aws + encodeURIComponent( url );
-            if (document.getElementById('dotdotdot')) {
-                document.getElementById('dotdotdot').innerHTML += " . ";
-            }
-            $http.get(url).then( function(data) {
-                if (data) {
-                    data = JSON.parse(data.data.content);
-                    if (data && data.leaderboardRows && data.leaderboardRows.length>0) {
-                        console.log ( "Athlete Count",data.leaderboardRows.length );
-                        athletes = athletes.concat( data.leaderboardRows );
-                        page++;
-                        if (data.pagination && data.pagination.totalPages && page>data.pagination.totalPages) {
-                            i++;
-                            page=1;
-                        }
+        var loader = (function() {
+            var l ={};
+            l.proxy = 'https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=';
+            l.urls = [];
+            l.resolved = 0;
+            l.data = [];
+            l.add = function(url) {
+                l.urls.push(url);
+                $timeout(function(){$scope.load_total++;},1);
+            };
+            l.load = function() {
+                return new Promise(function(resolve,reject) {
+                    var load_url = function(url) {
+                        var aws_url = l.proxy + encodeURIComponent( url );
+                        $http.get(aws_url).then( function(data) {
+                            l.resolved++;
+                            $scope.load_count = l.resolved;
+                            if (data) {
+                                data = JSON.parse(data.data.content);
+                                if (data && data.leaderboardRows && data.leaderboardRows.length>0) {
+                                    console.log ( data.leaderboardRows.length, url );
+                                    l.data = l.data.concat(data.leaderboardRows);
+                                    if (data.pagination && data.pagination.totalPages && data.pagination.currentPage<data.pagination.totalPages) {
+                                        url = url.replace(/page=\d+/,"page="+(data.pagination.currentPage+1));
+                                        l.add(url);
+                                        load_url(url);
+                                    }
+
+                                }
+                            }
+                            if (l.resolved==l.urls.length) {
+                                // All done loading!
+                                resolve(l.data);
+                            }
+                        });
+                    };
+                    for (var i=0; i<l.urls.length; i++) {
+                        load_url(l.urls[i]);
                     }
-                    else {
-                        console.log("No athletes");
-                        i++;
-                        page=1;
-                    }
-                    if (i<dataurls.length) {
-                        request();
-                    }
-                    else {
-                        // All done with this affiliate!
-                        i=0;
-                        a++;
-                        if (a<affiliates.length) {
-                            process_affiliate( affiliates[a] );
-                        }
-                        else {
-                            $scope.process_athletes();
-                        }
-                    }
-                }
-                else {
-                    console.log("OH NO!");
-                }
-            });
-        };
+                });
+            };
+            return l;
+        })();
         
         $scope.process_athletes = function() {
             var filtered_athletes = [];
@@ -208,9 +192,21 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.num_affiliates = affiliates.length;
         
         $scope.load_count = 0;
-        $scope.load_total = $scope.num_affiliates * 4;
+        $scope.load_total = 0;
 
-        process_affiliate(affiliates[a]);
+        // Process each affiliate and add it to the loader
+        affiliates.forEach(function(affiliate) {
+            var dataurl = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2018/leaderboards?affiliate=' + affiliate;
+            loader.add( dataurl + "&division=1&scaled=0&page=1" );
+            loader.add( dataurl + "&division=1&scaled=1&page=1" );
+            loader.add( dataurl + "&division=2&scaled=0&page=1" );
+            loader.add( dataurl + "&division=2&scaled=1&page=1" );
+        });
+        
+        loader.load().then(function(a) {
+            athletes = a;
+            $timeout($scope.process_athletes,1);
+        });
 
     }
     
