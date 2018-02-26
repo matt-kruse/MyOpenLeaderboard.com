@@ -241,30 +241,30 @@ app.controller("Controller", function($scope, $http, $interval) {
             <th colspan="4">18.5</th>
         </tr>
         <tr>
-            <th class="workout" ng-click="sort('overallRank')">Rank</th>
-            <th ng-click="sort('overallscore')">Score</th>
+            <th class="workout" ng-click="sort('_rank')">Rank</th>
+            <th ng-click="sort('_rank_total')">Score</th>
 
             <th class="workout" ng-click="sort('scores[0].score')">Score</th>
-            <th ng-click="sort('scores[0].rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[0]._workout_rank')">WO<br>Rank</th>
             
             <th class="workout" ng-click="sort('scores[1].score')">Score</th>
-            <th ng-click="sort('scores[1].rank')">WO<br>Rank</th>
-            <th ng-click="sort('scores[1].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[1]._workout_rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[1]._overall_rank')">Overall<br>Rank</th>
             <th ng-click="sort('scores[1].rankchange',true)">Rank<br>Change</th>
             
             <th class="workout" ng-click="sort('scores[2].score')">Score</th>
-            <th ng-click="sort('scores[2].rank')">WO<br>Rank</th>
-            <th ng-click="sort('scores[2].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[2]._workout_rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
             <th ng-click="sort('scores[2].rankchange',true)">Rank<br>Change</th>
             
             <th class="workout" ng-click="sort('scores[3].score')">Score</th>
-            <th ng-click="sort('scores[3].rank')">WO<br>Rank</th>
-            <th ng-click="sort('scores[3].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
             <th ng-click="sort('scores[3].rankchange',true)">Rank<br>Change</th>
             
             <th class="workout" ng-click="sort('scores[4].score')">Score</th>
-            <th ng-click="sort('scores[4].rank')">WO<br>Rank</th>
-            <th ng-click="sort('scores[4].overallrank')">Overall<br>Rank</th>
+            <th ng-click="sort('scores[4]._workout_rank')">WO<br>Rank</th>
+            <th ng-click="sort('scores[4]._overall_rank')">Overall<br>Rank</th>
             <th ng-click="sort('scores[4].rankchange',true)">Rank<br>Change</th>
             
         </tr>
