@@ -80,6 +80,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                                     }
 
                                 }
+                                else {
+                                    console.log ( 0, url );
+                                }
                             }
                             if (l.resolved==l.urls.length) {
                                 // All done loading!
@@ -201,6 +204,14 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             loader.add( dataurl + "&division=1&scaled=1&page=1" );
             loader.add( dataurl + "&division=2&scaled=0&page=1" );
             loader.add( dataurl + "&division=2&scaled=1&page=1" );
+            loader.add( dataurl + "&division=7&scaled=0&page=1" );
+            loader.add( dataurl + "&division=7&scaled=1&page=1" );
+            loader.add( dataurl + "&division=8&scaled=0&page=1" );
+            loader.add( dataurl + "&division=8&scaled=1&page=1" );
+            loader.add( dataurl + "&division=9&scaled=0&page=1" );
+            loader.add( dataurl + "&division=9&scaled=1&page=1" );
+            loader.add( dataurl + "&division=10&scaled=0&page=1" );
+            loader.add( dataurl + "&division=10&scaled=1&page=1" );
         });
         
         loader.load().then(function(a) {
