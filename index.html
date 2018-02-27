@@ -15,7 +15,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 	$scope.sortby = '_rank';
 	$scope.sortdesc = false;
 	$scope.selected = null;
-	$scope.counter = 60;
+	$scope.counter = 180;
     
     $scope.sex = "";
     
@@ -88,10 +88,13 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                                     console.log ( 0, url );
                                 }
                             }
+                            
                             if (l.resolved==l.urls.length) {
                                 // All done loading!
                                 resolve(l.data);
                             }
+                        }).catch( function(e) {
+                        
                         });
                     };
                     for (var i=0; i<l.urls.length; i++) {
@@ -273,7 +276,14 @@ function donate() {
   </div>
   <span class="bx--loading__percent">{{(100*(load_count/load_total))|number:0}}%</span>
 </div></div>
-	<div ng-if="athletes && athletes.length==0" class="none-found">No athletes found for that affiliate ID <br><a href="/">Search again</a></div>
+	<div ng-if="athletes && athletes.length==0" class="none-found">
+        No athletes found for that affiliate ID <br><a href="/">Search again</a>
+        
+        <br><br><br>
+        <b>UPDATE 2018-02-27 2pm CST: Crossfit's servers are now blocking my requests for data. Until/unless I can get this resolved, the Leaderboard will show no results.</b>
+        <br><br>
+        <a href="https://www.reddit.com/r/crossfit/comments/80nsw5/myopenleaderboardcom_view_all_athletes_in_1_or/">View updates on Reddit</a>
+    </div>
 	<div ng-if="athletes && athletes.length>0">
     <div class="header__results"><h3>Crossfit Open Leaderboard - <strong>Affiliate {{affiliates}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
     <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. <span id="donate" ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" onclick="donate()">Send me a shirt</span> from your gym!
