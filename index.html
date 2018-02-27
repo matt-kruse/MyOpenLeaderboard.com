@@ -198,7 +198,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.load_total = 0;
 
         // Process each affiliate and add it to the loader
+        $scope.show_donate = true;
         affiliates.forEach(function(affiliate) {
+            if (affiliate==11328) { $scope.show_donate=false; } // Ignore home!
             var dataurl = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2018/leaderboards?affiliate=' + affiliate;
             loader.add( dataurl + "&division=1&scaled=0&page=1" );
             loader.add( dataurl + "&division=1&scaled=1&page=1" );
@@ -226,6 +228,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $timeout($scope.process_athletes,10);
     };
 });
+
+function donate() {
+    document.getElementById('donate_details').style.display="block";
+}
 </script>
 </head>
 
@@ -239,6 +245,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 	<p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
     <div class="search__box"><input id="a" class="bx--text-input"><input class="bx--btn bx--btn--primary" type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value"></div>
     <p>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</p>
+    <p>This Leaderboard is not affiliated with Crossfit or Crossfit.com!</p>
 </div>
 <div ng-if="affiliates" class="affiliates">
 	<div ng-if="athletes==null" class="loading"><div class="bx--loading-overlay">
@@ -253,6 +260,18 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 	<div ng-if="athletes && athletes.length==0" class="none-found">No athletes found for that affiliate ID <br><a href="/">Search again</a></div>
 	<div ng-if="athletes && athletes.length>0">
     <div class="header__results"><h3>Crossfit Open Leaderboard - <strong>Affiliate {{affiliates}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
+    <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. <span id="donate" ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" onclick="donate()">Send me a shirt</span> from your gym!
+        <span id="donate_details" style="display:none;font-weight:normal;border:1px solid #666;margin:10px;padding:10px;">
+        My name is Matt Kruse, and I'm a web developer and (very average) crossfitter. If you this this Leaderboard is cool, send me a shirt from your gym so I can wear it at mine!
+        <br><br>
+        Matt Kruse<br>
+        PO Box 165<br>
+        Hampton, IL 61256<br><br>
+        
+        Size: L<br><br>
+        Thank you!!!
+        </span>
+    </div>
     <div>Show: 
         <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='M'}" type="button" value="Male" ng-click="reprocess('M')"> 
         <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='F'}" type="button" value="Female" ng-click="reprocess('F')"> 
