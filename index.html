@@ -69,7 +69,11 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                             l.resolved++;
                             $scope.load_count = l.resolved;
                             if (data) {
-                                data = JSON.parse(data.data.content);
+                                try {
+                                    data = JSON.parse(data.data.content);
+                                } catch(e) {
+                                    data = null;
+                                }
                                 if (data && data.leaderboardRows && data.leaderboardRows.length>0) {
                                     console.log ( data.leaderboardRows.length, url );
                                     l.data = l.data.concat(data.leaderboardRows);
@@ -145,20 +149,25 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                     if (!filtered_athletes[0].scores[i].score) { break; }
                     
                     var rank = 0;
+                    var assigned_rank = 0;
                     filtered_athletes.forEach(function(a,index) {
                         if (index==0 || a.scores[i].score != filtered_athletes[index-1].scores[i].score) {
                             rank++;
+                            assigned_rank = rank;
                         }
-                        a.scores[i]._workout_rank = rank;
-                        a.scores[i]._overall_rank += rank;
-                        a._total_rank += rank;
+                        else {
+                            rank++;
+                        }
+                        a.scores[i]._workout_rank = assigned_rank;
+                        a.scores[i]._overall_rank += assigned_rank;
+                        a._total_rank += assigned_rank;
                         if (i==0 || a.scores[i-1]._overall_rank==0) {
                             // First workout, overall rank = workout rank
                             a.scores[i].rankchange = 0;
                         }
                         else {
                             // Look back at previous rank
-                            a.scores[i].rankchange = rank - a.scores[i-1]._overall_rank;
+                            a.scores[i].rankchange = a.scores[i].overall_rank - a.scores[i-1]._overall_rank;
                         }
                     });
                 }
@@ -172,12 +181,17 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                     if (ar<br) { return -1; }
                     return 0;
                 });
-                var rank=1;
+                var rank=0;
+                var assigned_rank=1;
                 filtered_athletes.forEach(function(a,i) {
-                    if (i>0 && filtered_athletes[i]._total_rank != filtered_athletes[i-1]._total_rank) {
+                    if (i==0 || filtered_athletes[i]._total_rank != filtered_athletes[i-1]._total_rank) {
+                        rank++;
+                        assigned_rank=rank;
+                    }
+                    else {
                         rank++;
                     }
-                    a._rank = rank;
+                    a._rank = assigned_rank;
                 });
                 // Now compute rank %
                 filtered_athletes.forEach(function(a,i) {
@@ -206,6 +220,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             loader.add( dataurl + "&division=1&scaled=1&page=1" );
             loader.add( dataurl + "&division=2&scaled=0&page=1" );
             loader.add( dataurl + "&division=2&scaled=1&page=1" );
+            /*
             loader.add( dataurl + "&division=7&scaled=0&page=1" );
             loader.add( dataurl + "&division=7&scaled=1&page=1" );
             loader.add( dataurl + "&division=8&scaled=0&page=1" );
@@ -214,6 +229,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             loader.add( dataurl + "&division=9&scaled=1&page=1" );
             loader.add( dataurl + "&division=10&scaled=0&page=1" );
             loader.add( dataurl + "&division=10&scaled=1&page=1" );
+            */
         });
         
         loader.load().then(function(a) {
