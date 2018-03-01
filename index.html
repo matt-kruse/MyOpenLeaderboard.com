@@ -222,6 +222,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 //console.log("affiliates",$scope.affiliate_ids);
 //console.log("athletes",$scope.athlete_ids);
         $scope.num_affiliates = $scope.affiliate_ids.length;
+        $scope.affiliate_name = null;
         
         $scope.load_count = 0;
         $scope.load_total = 0;
@@ -230,6 +231,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
         $http.get(url).then( function(data) {
             athletes = data.data;
+            if ($scope.num_affiliates==1 && athletes && athletes.length>0) {
+                $scope.affiliate_name = athletes[0].entrant.affiliateName;
+            }
             $timeout($scope.process_athletes,1);
         }).catch(function(e) {
             athletes = [];
@@ -272,7 +276,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     </div>
 	<div ng-if="athletes && athletes.length>0">
     <div ng-if="show_header">
-        <div class="header__results"><h3>Crossfit Open Leaderboard - <strong ng-if="affiliate_ids">Affiliate {{(affiliate_ids.join(','))}}</strong></h3> [Auto reload in {{counter}} minutes]</div>
+        <div class="header__results"><h3>Crossfit Open Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
         <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. 
             <span ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Send me a shirt</span> from your gym!</span> 
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
