@@ -36,12 +36,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 		$scope.sortdesc = (key==$scope.sortby) ? !$scope.sortdesc : (typeof desc=="boolean"?desc:false);
 		$scope.sortby = key;
 	};
-	$scope.affiliates = null;
+    $scope.ids = null;
 	$scope.athletes = null;
 	try {
-		$scope.affiliates = location.search.substring(1);
+		$scope.ids = location.search.substring(1);
 	} catch(e) { } 
-	if ($scope.affiliates) {
+	if ($scope.ids) {
         // Process each url to build up a list of athletes
         var i=0;
         var a=0;
@@ -152,19 +152,45 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             }
         };
         
-        var affiliates = $scope.affiliates.split(/\s*,\s*/);
-        $scope.num_affiliates = affiliates.length;
+        $scope.affiliate_ids = [];
+        $scope.athlete_ids = [];
+        // If affiliates are passed in the old way
+        if (/^[\d,]+$/.test($scope.ids)) {
+            $scope.affiliate_ids = $scope.ids.split(/\s*,\s*/);
+        }
+        else {
+            // Parse query stringvar 
+            var params = $scope.ids.split(/&/);
+            params.forEach(function(p) {
+                try {
+                    var kv = p.split(/=/);
+                    if (kv[0]=="athletes") {
+                        $scope.athlete_ids = kv[1].split(/\s*,\s*/);
+                    }
+                    else if (kv[0]=="affiliates") {
+                        $scope.affiliate_ids = kv[1].split(/\s*,\s*/);
+                    }
+                }
+                catch(e) { }
+            });
+        }
+//console.log("affiliates",$scope.affiliate_ids);
+//console.log("athletes",$scope.athlete_ids);
+        $scope.num_affiliates = $scope.affiliate_ids.length;
         
         $scope.load_count = 0;
         $scope.load_total = 0;
 
         // Process each affiliate and add it to the loader
         $scope.show_donate = true;
-        var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+affiliates;
+        var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
         $http.get(url).then( function(data) {
             athletes = data.data;
             $timeout($scope.process_athletes,1);
-        });
+        }).catch(function(e) {
+            athletes = [];
+            $timeout($scope.process_athletes,1);
+        });;
     }
     
     $scope.reprocess = function(sex) {
@@ -183,7 +209,7 @@ function donate() {
 
 <div ng-controller="Controller">
 
-<div ng-if="!affiliates" class="search">
+<div ng-if="!ids" class="search">
 	<h1>Crossfit Open Affiliate Leaderboard</h1>
     
 	<p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
@@ -191,7 +217,7 @@ function donate() {
     <p>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</p>
     <p>This Leaderboard is not affiliated with Crossfit or Crossfit.com!</p>
 </div>
-<div ng-if="affiliates" class="affiliates">
+<div ng-if="ids" class="affiliates">
 	<div ng-if="athletes==null" class="loading"><div class="bx--loading-overlay">
   <div data-loading class="bx--loading">
     <svg class="bx--loading__svg" viewBox="-75 -75 150 150">
@@ -199,7 +225,7 @@ function donate() {
       <circle cx="0" cy="0" r="37.5" />
     </svg>
   </div>
-  <span class="bx--loading__percent">{{(100*(load_count/load_total))|number:0}}%</span>
+  <span class="bx--loading__percent">Loading</span>
 </div></div>
 	<div ng-if="athletes && athletes.length==0" class="none-found">
         No athletes found for that affiliate ID <br><a href="/">Search again</a>
@@ -210,7 +236,7 @@ function donate() {
         <a href="https://www.reddit.com/r/crossfit/comments/80nsw5/myopenleaderboardcom_view_all_athletes_in_1_or/">View updates on Reddit</a>
     </div>
 	<div ng-if="athletes && athletes.length>0">
-    <div class="header__results"><h3>Crossfit Open Leaderboard - <strong>Affiliate {{affiliates}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
+    <div class="header__results"><h3>Crossfit Open Leaderboard - <strong ng-if="affiliate_ids">Affiliate {{(affiliate_ids.join(','))}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
     <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. <span id="donate" ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" onclick="donate()">Send me a shirt</span> from your gym!
         <span id="donate_details" style="display:none;font-weight:normal;border:1px solid #666;margin:10px;padding:10px;">
         My name is Matt Kruse, and I'm a web developer and (very average) crossfitter. If you this this Leaderboard is cool, send me a shirt from your gym so I can wear it at mine!
