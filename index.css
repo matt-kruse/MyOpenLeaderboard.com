@@ -26,7 +26,11 @@ a {
 a:hover {
   color: #00428d;
 }
-
+.info_box {
+    border:1px solid #666;
+    margin:10px;
+    padding:10px;
+}
 .filter-button {
     height:1.6em;
     padding:0 .5em;
@@ -35,7 +39,9 @@ a:hover {
     background-color:#3d70b2;
     color:white;
 }
-
+.button-spaced {
+    margin-left:10px;
+}
 .bx--btn--primary {
   background: #0056b8;
 }
@@ -125,3 +131,13 @@ a:hover {
   text-align: center;
   font-size: 1rem;
 }
+
+ul {
+    list-style:auto;
+    list-style-type: disc !important;
+}
+ul li {
+    margin-left:25px;
+}
+b { font-weight:bold; }
+

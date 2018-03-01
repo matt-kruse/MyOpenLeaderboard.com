@@ -182,8 +182,14 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         
         $scope.affiliate_ids = [];
         $scope.athlete_ids = [];
+        $scope.highlight = {};
         
         $scope.show_division = false;
+        $scope.show_help = false;
+        $scope.show_whats_new = false;
+        $scope.show_header = true;
+        $scope.show_donate = true;
+        $scope.show_donate_details = false;
         
         // If affiliates are passed in the old way
         if (/^[\d,]+$/.test($scope.ids)) {
@@ -201,6 +207,11 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                     else if (kv[0]=="affiliates") {
                         $scope.affiliate_ids = kv[1].split(/\s*,\s*/);
                     }
+                    else if (kv[0]=="highlight") {
+                        kv[1].split(/\s*,\s*/).forEach(function(i) {
+                            $scope.highlight[i] = true;
+                        });
+                    }
                     else {
                         $scope[kv[0]] = kv[1];
                     }
@@ -216,7 +227,6 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.load_total = 0;
 
         // Process each affiliate and add it to the loader
-        $scope.show_donate = true;
         var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
         $http.get(url).then( function(data) {
             athletes = data.data;
@@ -232,10 +242,6 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $timeout($scope.process_athletes,10);
     };
 });
-
-function donate() {
-    document.getElementById('donate_details').style.display="block";
-}
 </script>
 </head>
 
@@ -265,25 +271,55 @@ function donate() {
         No athletes found for that affiliate ID <br><a href="/">Search again</a>
     </div>
 	<div ng-if="athletes && athletes.length>0">
-    <div class="header__results"><h3>Crossfit Open Leaderboard - <strong ng-if="affiliate_ids">Affiliate {{(affiliate_ids.join(','))}}</strong></h3> <em>(Click column headers to sort, click rows to select)</em> - Auto reload in {{counter}} minutes</div>
-    <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. <span id="donate" ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" onclick="donate()">Send me a shirt</span> from your gym!
-        <span id="donate_details" style="display:none;font-weight:normal;border:1px solid #666;margin:10px;padding:10px;">
-        My name is Matt Kruse, and I'm a web developer and (very average) crossfitter. If you this this Leaderboard is cool, send me a shirt from your gym so I can wear it at mine!
-        <br><br>
-        Matt Kruse<br>
-        PO Box 165<br>
-        Hampton, IL 61256<br><br>
-        
-        Size: L<br><br>
-        Thank you!!!
-        </span>
-    </div>
-    <div>Show: 
-        <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='M'}" type="button" value="Male" ng-click="reprocess('M')"> 
-        <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='F'}" type="button" value="Female" ng-click="reprocess('F')"> 
-        <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex==''}" type="button" value="All" ng-click="reprocess('')"> 
-        &nbsp;&nbsp;&nbsp;
-        <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="show_division=!show_division"> 
+    <div ng-if="show_header">
+        <div class="header__results"><h3>Crossfit Open Leaderboard - <strong ng-if="affiliate_ids">Affiliate {{(affiliate_ids.join(','))}}</strong></h3> [Auto reload in {{counter}} minutes]</div>
+        <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. 
+            <span ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Send me a shirt</span> from your gym!</span> 
+            <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
+            <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
+            My name is Matt Kruse, and I'm a web developer and (very average) crossfitter. If you think this Leaderboard is cool, send me a shirt from your gym so I can wear it at mine!
+            <br><br>
+            Matt Kruse<br>
+            PO Box 165<br>
+            Hampton, IL 61256<br><br>
+            
+            Size: L<br><br>
+            Thank you!!!
+            </div>
+        </div>
+        <div ng-if="show_whats_new" class="info_box">
+            <div><b>2018-03-01</b></div>
+            <div>
+                <ul>
+                    <li>Improved caching to improve performance and reduce load on crossfit's servers
+                    <li>You can now pass in parameters to control default display behavior, including highlighting certain athletes
+                    <li>Toggle the "Division" column to show each athlete's registered age division
+                    <li>Added "Help"
+                    <li>Added "What's New"
+                </ul>
+            </div>
+        </div>
+        <div>Show: 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='M'}" type="button" value="Male" ng-click="reprocess('M')"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='F'}" type="button" value="Female" ng-click="reprocess('F')"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex==''}" type="button" value="All" ng-click="reprocess('')"> 
+            <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
+            <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help"> 
+        </div>
+        <div ng-if="show_help" class="info_box">
+            <h3>Help</h3>
+            <div>Click on column headers to sort by any column.</div>
+            <div>Click on a row to highlight it yellow. This is useful to find yourself in the list, and track your rown as you sort by different columns.</div>
+            <div>Parameters can be passed in via url. Available parameters:
+                <ul>
+                    <li><b>affiliates=123,456 : </b>A comma-separated list of affiliate ID's to load
+                    <li><b>show_division=[1,0] : </b>Show the division column by default (1=yes, 0=no)
+                    <li><b>sex=[M,F] : </b>Show only Male or Female by default
+                    <li><b>highlight=123,456 : </b>A comma-separated list of athlete ID's to highlight by default
+                    <li><b>show_header=[1,0] : </b>Show or hide the entire header with filters, text, etc.
+                </ul>
+            </div>
+        </div>
     </div>
     <table class="bx--data-table-v2 bx--data-table-v2--compact">
     <thead>
@@ -329,7 +365,7 @@ function donate() {
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank']" ng-click="a.selected = !a.selected" ng-class="{'selected':(a.selected)}">
+        <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
             <td>{{$index+1}}. <a href="https://games.crossfit.com/athlete/{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
             <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
