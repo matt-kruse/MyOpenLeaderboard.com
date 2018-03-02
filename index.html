@@ -110,7 +110,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 });
                 
                 // For each workout, assign the real workout rank
-                for (var i=0; i<5; i++) {
+                for (var i=0; i<6; i++) {
                     // Sort from highest to lowest
                     filtered_athletes = filtered_athletes.sort(function(a,b) {
                         var as = +a.scores[i].score || 0;
