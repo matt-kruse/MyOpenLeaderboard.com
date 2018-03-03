@@ -106,6 +106,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                         }
                         s._workout_rank = null;
                         s._overall_rank = null;
+                        s._overall_score = 0;
                     }
                 });
                 
@@ -134,17 +135,46 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                             rank++;
                         }
                         a.scores[i]._workout_rank = assigned_rank;
-                        a.scores[i]._overall_rank += assigned_rank;
+                        a.scores[i]._overall_score += assigned_rank
                         a._total_rank += assigned_rank;
+                    });
+
+                    // Sort by overall score in this workout
+                    filtered_athletes = filtered_athletes.sort(function(a,b) {
+                        var as = +a.scores[i]._overall_score || 999;
+                        var bs = +b.scores[i]._overall_score || 999;
+                        if (!as && !bs) { return 0; }
+                        if (!bs || (as>bs)) { return 1; }
+                        if (!as || (as<bs)) { return -1; }
+                        return 0;
+                    });
+                    
+                    // Now assign them overall rank for this workout
+                    var rank = 0;
+                    var assigned_rank = 0;
+                    filtered_athletes.forEach(function(a,index) {
+                        if (index==0 || a.scores[i]._overall_score != filtered_athletes[index-1].scores[i]._overall_score) {
+                            rank++;
+                            assigned_rank = rank;
+                        }
+                        else {
+                            rank++;
+                        }
+                        a.scores[i]._overall_rank = assigned_rank;
+                    });
+                    
+                    // Calculate the change in overall rank
+                    filtered_athletes.forEach(function(a,index) {
                         if (i==0 || a.scores[i-1]._overall_rank==0 || a.scores[i].score==0) {
                             // First workout, overall rank = workout rank
                             a.scores[i].rankchange = 0;
                         }
                         else {
                             // Look back at previous rank
-                            a.scores[i].rankchange = a.scores[i]._overall_rank - a.scores[i-1]._overall_rank;
+                            a.scores[i].rankchange = a.scores[i-1]._overall_rank - a.scores[i]._overall_rank;
                         }
                     });
+                    
                 }
                 
                 // Now sort by overall rank by default
@@ -354,27 +384,27 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <th class="workout" ng-click="sort('-scores[1].score')">Score</th>
             <th ng-click="sort('scores[1]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[1]._overall_rank')">Overall<br>Rank</th>
-            <th ng-click="sort('scores[1].rankchange',true)">Rank<br>Change</th>
+            <th ng-click="sort('-scores[1].rankchange',true)">Rank<br>Change</th>
             
             <th class="workout" ng-click="sort('-scores[2].score')">Score</th>
             <th ng-click="sort('scores[2]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
-            <th ng-click="sort('scores[2].rankchange',true)">Rank<br>Change</th>
+            <th ng-click="sort('-scores[2].rankchange',true)">Rank<br>Change</th>
             
             <th class="workout" ng-click="sort('-scores[3].score')">Score</th>
             <th ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
-            <th ng-click="sort('scores[3].rankchange',true)">Rank<br>Change</th>
+            <th ng-click="sort('-scores[3].rankchange',true)">Rank<br>Change</th>
             
             <th class="workout" ng-click="sort('-scores[4].score')">Score</th>
             <th ng-click="sort('scores[4]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[4]._overall_rank')">Overall<br>Rank</th>
-            <th ng-click="sort('scores[4].rankchange',true)">Rank<br>Change</th>
+            <th ng-click="sort('-scores[4].rankchange',true)">Rank<br>Change</th>
 
             <th class="workout" ng-click="sort('-scores[5].score')">Score</th>
             <th ng-click="sort('scores[5]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[5]._overall_rank')">Overall<br>Rank</th>
-            <th ng-click="sort('scores[5].rankchange',true)">Rank<br>Change</th>
+            <th ng-click="sort('-scores[5].rankchange',true)">Rank<br>Change</th>
             
         </tr>
     </thead>
