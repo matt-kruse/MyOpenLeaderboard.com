@@ -141,3 +141,6 @@ ul li {
 }
 b { font-weight:bold; }
 
+tbody tr:hover {
+    outline:2px solid #3D70B2;
+}
