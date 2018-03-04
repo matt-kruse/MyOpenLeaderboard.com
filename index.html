@@ -309,16 +309,17 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     <div ng-if="show_header">
         <div class="header__results"><h3>Crossfit Open Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
         <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. 
-            <span ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Send me a shirt</span> from your gym!</span> 
+            <span ng-if="show_donate">Like this Leaderboard? Donate or <span style="color:red;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Send me a shirt</span> from your gym!</span> 
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
             <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
-            My name is Matt Kruse, and I'm a web developer and (very average) crossfitter. If you think this Leaderboard is cool, send me a shirt from your gym so I can wear it at mine!
+            My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very average) crossfitter. If you think this Leaderboard is cool, send me a shirt <strong>( size L )</strong> from your gym so I can wear it at mine!
             <br><br>
             Matt Kruse<br>
             PO Box 165<br>
-            Hampton, IL 61256<br><br>
-            
-            Size: L<br><br>
+            Hampton, IL 61256
+            <br><br>
+            Or if you feel generous, you can donate to support hosting cost and development time: <a href="http://paypal.me/krusematt" target="_blank">Paypal</a> <a href="bitcoin:15mrXfBXFDoyEr54upsnsF5tMvfo1N5WUA" target="_blank">bitcoin</a> <a href="http://gofundme.com/SocialFixer" target="_blank">Go Fund Me</a> (in the name of another app I built, <a href="http://SocialFixer.com/" target="_blank">Social Fixer</a> for Facebook).
+            <br><br>
             Thank you!!!
             </div>
         </div>
