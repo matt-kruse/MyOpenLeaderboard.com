@@ -99,7 +99,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                         // check all the workouts
                         for (var i=0; i<6; i++) {
                             try {
-                                if ($scope.filters.scaled != a.scores[0].scaled) { return false; }
+                                if (a.scores[i] && ($scope.filters.scaled != a.scores[i].scaled)) { return false; }
                             } catch(e) { }
                         }
                     }
