@@ -17,7 +17,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 	$scope.selected = null;
 	$scope.counter = 180;
     
-    $scope.sex = "";
+    $scope.filters = {
+        "sex":""
+        ,"scaled":""
+    };
     
 	$interval(function() {
 		$scope.counter--;
@@ -91,14 +94,23 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 
                 // Apply filters
                 filtered_athletes = filtered_athletes.filter(function(a) {
-                    return ($scope.sex=="" || $scope.sex==a.entrant.gender);
+                    if ($scope.filters.sex!="" && $scope.filters.sex!=a.entrant.gender) { return false; }
+                    if ($scope.filters.scaled!="") { 
+                        // check all the workouts
+                        for (var i=0; i<6; i++) {
+                            try {
+                                if ($scope.filters.scaled != a.scores[0].scaled) { return false; }
+                            } catch(e) { }
+                        }
+                    }
+                    return true;
                 });
                 
                 // Fix scores
                 filtered_athletes.forEach(function(a) {
                     a._total_rank = 0;
                     a._rank = 0;
-                    for (var i=0; i<5; i++) {
+                    for (var i=0; i<6; i++) {
                         a.scores[i] = a.scores[i] || {};
                         var s = a.scores[i];
                         if (s.score) {
@@ -243,6 +255,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                             $scope.highlight[i] = true;
                         });
                     }
+                    else if (kv[0]=="sex") {
+                        $scope.filters.sex=kv[1];
+                    }
+                    else if (kv[0]=="scaled") {
+                        $scope.filters.scaled=kv[1];
+                    }
                     else {
                         $scope[kv[0]] = kv[1];
                     }
@@ -272,8 +290,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         });;
     }
     
-    $scope.reprocess = function(sex) {
-        $scope.sex = sex;
+    $scope.apply_filter = function(filter,val) {
+        $scope.filters[filter] = val;
         $timeout($scope.process_athletes,10);
     };
 });
@@ -324,6 +342,14 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </div>
         </div>
         <div ng-if="show_whats_new" class="info_box">
+            <div><b>2018-03-05</b></div>
+            <div>
+                <ul>
+                    <li>Fixed some affiliates not loading all athletes
+                    <li>Added "RX/Scaled" filter
+                    <li>Hid columns for future workouts for better mobile display
+                </ul>
+            </div>
             <div><b>2018-03-03</b></div>
             <div>
                 <ul>
@@ -344,9 +370,14 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </div>
         </div>
         <div>Show: 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='M'}" type="button" value="Male" ng-click="reprocess('M')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex=='F'}" type="button" value="Female" ng-click="reprocess('F')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:sex==''}" type="button" value="All" ng-click="reprocess('')"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='M'}" type="button" value="Male" ng-click="apply_filter('sex','M')"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='F'}" type="button" value="Female" ng-click="apply_filter('sex','F')"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex==''}" type="button" value="All" ng-click="apply_filter('sex','')"> 
+            <span class="spacer">|</span>
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='0'}" type="button" value="RX" ng-click="apply_filter('scaled','0')"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='1'}" type="button" value="Scaled" ng-click="apply_filter('scaled','1')"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')"> 
+            <span class="spacer">|</span>
             <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
             <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help"> 
         </div>
@@ -360,6 +391,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                     <li><b>affiliates=123,456 : </b>A comma-separated list of affiliate ID's to load
                     <li><b>show_division=[1,0] : </b>Show the division column by default (1=yes, 0=no)
                     <li><b>sex=[M,F] : </b>Show only Male or Female by default
+                    <li><b>scaled=[1,0] : </b>Show only rx (0) or scaled (1) athletes by default
                     <li><b>highlight=123,456 : </b>A comma-separated list of athlete ID's to highlight by default
                     <li><b>show_header=[1,0] : </b>Show or hide the entire header with filters, text, etc. Useful if you display this on a monitor in your gym!
                 </ul>
@@ -367,7 +399,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <div style="margin-top:5px;">Example URL: <a href="http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0">http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0</a></div>
         </div>
     </div>
-    <table class="bx--data-table-v2 bx--data-table-v2--compact">
+    <table class="bx--data-table-v2 bx--data-table-v2--compact" style="width:auto;">
     <thead>
         <tr>
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
@@ -377,9 +409,11 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <th colspan="2">18.1</th>
             <th colspan="4">18.2</th>
             <th colspan="4">18.2A</th>
+            <!--
             <th colspan="4">18.3</th>
             <th colspan="4">18.4</th>
             <th colspan="4">18.5</th>
+            -->
         </tr>
         <tr>
             <th class="workout" ng-click="sort('_rank')">Rank</th>
@@ -398,7 +432,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <th ng-click="sort('scores[2]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
             <th ng-click="sort('-scores[2].rankchange',true)">Rank<br>Change</th>
-            
+            <!--
             <th class="workout" ng-click="sort('-scores[3].score')">Score</th>
             <th ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
@@ -413,7 +447,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <th ng-click="sort('scores[5]._workout_rank')">WO<br>Rank</th>
             <th ng-click="sort('scores[5]._overall_rank')">Overall<br>Rank</th>
             <th ng-click="sort('-scores[5].rankchange',true)">Rank<br>Change</th>
-            
+            -->
         </tr>
     </thead>
     <tbody>
@@ -444,7 +478,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 <span ng-if="a.scores[2].rankchange>0" class="positive">+{{a.scores[2].rankchange}}</span>
                 <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
             </td>
-
+            <!--
             <td class="workout" title="{{a.scores[3].breakdown}} ({{a.scores[3].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
             <td>{{a.scores[3]._workout_rank}}</td>
             <td title="Overall Score: {{a.scores[3]._overall_score}}">{{a.scores[3]._overall_rank}}</td>
@@ -471,7 +505,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 <span ng-if="a.scores[5].rankchange>0" class="positive">+{{a.scores[5].rankchange}}</span>
                 <span ng-if="a.scores[5].rankchange<0" class="negative">{{a.scores[5].rankchange}}</span>
             </td>
-
+            -->
         </tr>
     </tbody>
     </table>

@@ -144,3 +144,7 @@ b { font-weight:bold; }
 tbody tr:hover {
     outline:2px solid #3D70B2;
 }
+.spacer {
+    padding-left:7px;
+    padding-right:7px;
+}
