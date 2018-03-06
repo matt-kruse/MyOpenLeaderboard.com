@@ -273,16 +273,37 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.num_affiliates = $scope.affiliate_ids.length;
         $scope.affiliate_name = null;
         
-        $scope.load_count = 0;
-        $scope.load_total = 0;
-
         // Process each affiliate and add it to the loader
-        var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
+        //var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
+        var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
         $http.get(url).then( function(data) {
-            athletes = data.data;
+        /*
+        {
+            "affiliates": {
+                "123": {
+                    "id":123,
+                    ,"name":"Crossfit Bob"
+                    ,"athletes": [ ... ]
+                    ,"athletes_loaded_on": 123456789
+                    ,"cached": BOOL
+                    ,"cache_age": 123
+                    ,"cache_source": (memory|db)
+                }
+            }
+        */
+            if (!data || !data.data || !data.data.affiliates) {
+                return;
+            }
+            // Combine all affiliate lists together
+            $scope.affiliates = data.data.affiliates;
+            athletes = [];
+            for (id in $scope.affiliates) {
+                athletes = athletes.concat( $scope.affiliates[id].athletes );
+            }
             if ($scope.num_affiliates==1 && athletes && athletes.length>0) {
                 $scope.affiliate_name = athletes[0].entrant.affiliateName;
             }
+            $scope.athletes = athletes;
             $timeout($scope.process_athletes,1);
         }).catch(function(e) {
             athletes = [];
@@ -509,6 +530,17 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         </tr>
     </tbody>
     </table>
+        <div style="margin-top:10px;"><strong>Data Details</strong></div>
+        <div><em>(Athlete lists are loaded at most once per hour, then served from cache)</em></div>
+        <div ng-repeat="a in affiliates">
+        {{a.athletes[0].entrant.affiliateName}}
+        <span ng-if="a.cached">
+        retrieved from {{a.cache_source}}, updated {{a.cache_age}} seconds ago.
+        </span>
+        <span ng-if="!a.cached">
+        retrieved from crossfit.com and cached
+        </span>
+        </div>
 	</div>
 
 	</div>
