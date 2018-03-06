@@ -6,7 +6,7 @@
 	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2018 Crossfit Open results!" />
 	<meta property="og:image" content="" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/carbon-components@8.16.0/css/carbon-components.min.css" />
+    <link type="text/css" rel="stylesheet" href="carbon-components.min.css" />
     <link type="text/css" rel="stylesheet" href="index.css" />
 <script src="angular.js"></script>
 <script>
@@ -213,7 +213,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 });
                 // Now compute rank %
                 filtered_athletes.forEach(function(a,i) {
-                    a._pct = ((a._rank-1) / (rank-1))*100;
+                    a._pct = ((rank-a._rank-1) / (rank-1))*100;
                 });
                 
                 $scope.athletes = filtered_athletes;
@@ -274,8 +274,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.affiliate_name = null;
         
         // Process each affiliate and add it to the loader
-        var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids; // prod
-        //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids; // test
+        var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // prod
+        //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // test
         $http.get(url).then( function(data) {
         /*
         {
@@ -294,11 +294,15 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             if (!data || !data.data || !data.data.affiliates) {
                 return;
             }
-            // Combine all affiliate lists together
+            // Combine all affiliate and athlete lists together
             $scope.affiliates = data.data.affiliates;
+            $scope.individual_athletes = data.data.athletes;
             athletes = [];
             for (id in $scope.affiliates) {
                 athletes = athletes.concat( $scope.affiliates[id].athletes );
+            }
+            for (id in $scope.individual_athletes) {
+                athletes = athletes.concat( $scope.individual_athletes[id].athlete );
             }
             if ($scope.num_affiliates==1 && athletes && athletes.length>0) {
                 $scope.affiliate_name = athletes[0].entrant.affiliateName;
@@ -326,8 +330,16 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 <div ng-if="!ids" class="search">
 	<h1>Crossfit Open Affiliate Leaderboard</h1>
     
-	<p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
-    <div class="search__box"><input id="a" class="bx--text-input"><input class="bx--btn bx--btn--primary" type="button" value="Go" onclick="window.location=window.location.href.replace(/\?.*/,'')+'?'+document.getElementById('a').value"></div>
+    <form method="get" action="index.html">
+        <p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
+        <div class="search__box"><input id="a" name="affiliates" class="bx--text-input"></div>
+        <div style="font-weight:bold;font-size:120%;"> AND / OR </div>
+        <p>Enter an athlete ID (ex: 1234) or multiple comma-separated athlete ID's (1234,5677).</p>
+        <div class="search__box"><input id="a" name="athletes" class="bx--text-input"></div>
+        <div>
+            <input class="bx--btn bx--btn--primary" type="submit" value="Go" >
+        </div>
+    </form>
     <p>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</p>
     <p>This Leaderboard is not affiliated with Crossfit or Crossfit.com!</p>
 </div>
@@ -366,6 +378,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <div><b>2018-03-06</b></div>
             <div>
                 <ul>
+                    <li>Add individual athlete ID's to the board!
+                    <li>Teen athletes now included in affiliate leaderboards
                     <li>Greatly improved caching and speed
                 </ul>
             </div>
@@ -538,14 +552,25 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     </table>
         <div style="margin-top:10px;"><strong>Data Details</strong></div>
         <div><em>(Athlete lists are loaded at most once per hour, then served from cache)</em></div>
+        
         <div ng-repeat="a in affiliates">
-        {{a.athletes[0].entrant.affiliateName}}
-        <span ng-if="a.cached">
-        retrieved from {{a.cache_source}}, updated {{a.cache_age}} seconds ago.
-        </span>
-        <span ng-if="!a.cached">
-        retrieved from crossfit.com and cached
-        </span>
+            {{a.athletes[0].entrant.affiliateName}}
+            <span ng-if="a.cached">
+            retrieved from {{a.cache_source}}, updated {{a.cache_age}} seconds ago.
+            </span>
+            <span ng-if="!a.cached">
+            retrieved from crossfit.com and cached
+            </span>
+        </div>
+        
+        <div ng-repeat="a in individual_athletes">
+            {{a.athlete.entrant.competitorName}}
+            <span ng-if="a.cached">
+            retrieved from {{a.cache_source}}, updated {{a.cache_age}} seconds ago.
+            </span>
+            <span ng-if="!a.cached">
+            retrieved from crossfit.com and cached
+            </span>
         </div>
 	</div>
 
