@@ -274,8 +274,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.affiliate_name = null;
         
         // Process each affiliate and add it to the loader
-        //var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
-        var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids;
+        var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids; // prod
+        //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids; // test
         $http.get(url).then( function(data) {
         /*
         {
@@ -363,6 +363,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </div>
         </div>
         <div ng-if="show_whats_new" class="info_box">
+            <div><b>2018-03-06</b></div>
+            <div>
+                <ul>
+                    <li>Greatly improved caching and speed
+                </ul>
+            </div>
             <div><b>2018-03-05</b></div>
             <div>
                 <ul>
