@@ -270,7 +270,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         }
 //console.log("affiliates",$scope.affiliate_ids);
 //console.log("athletes",$scope.athlete_ids);
-        $scope.num_affiliates = $scope.affiliate_ids.length;
+        $scope.num_affiliates = 0;
         $scope.affiliate_name = null;
         
         // Process each affiliate and add it to the loader
@@ -299,6 +299,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             $scope.individual_athletes = data.data.athletes;
             athletes = [];
             for (id in $scope.affiliates) {
+                $scope.num_affiliates++;
                 athletes = athletes.concat( $scope.affiliates[id].athletes );
             }
             for (id in $scope.individual_athletes) {
