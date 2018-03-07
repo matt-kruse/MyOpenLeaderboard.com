@@ -10,7 +10,7 @@ body, * {
   td, th { border:1px solid #666; padding:1 1px; }
   th { cursor: pointer; padding:2px 2px;font-size:12px; }
   tbody tr:nth-child(even) { background-color:#ececec; }
-  .workout { border-left:3px solid #666; }
+  .separator { border-left:3px solid #3c5a83; }
   tbody tr { cursor:pointer; }
   tr.selected { background-color:yellow !important; }
   .positive { color:green; }
@@ -147,4 +147,9 @@ tbody tr:hover {
 .spacer {
     padding-left:7px;
     padding-right:7px;
+}
+.workout_header:hover {
+    cursor:col-resize;
+    background-color:#3D70B2;
+    color:white;
 }
