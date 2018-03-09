@@ -8,6 +8,11 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <link type="text/css" rel="stylesheet" href="carbon-components.min.css" />
     <link type="text/css" rel="stylesheet" href="index.css" />
+<!--
+<link href="c3.min.css" rel="stylesheet">
+<script src="d3.min.js" charset="utf-8"></script>
+<script src="c3.min.js"></script>
+-->
 <script src="angular.js"></script>
 <script>
 var app = angular.module("App", []);
@@ -237,7 +242,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.show_18_1 = 1;
         $scope.show_18_2 = 1;
         $scope.show_18_2a = 1;
-        $scope.show_18_3 = 0;
+        $scope.show_18_3 = 1;
         $scope.show_18_4 = 0;
         $scope.show_18_5 = 0;
         
@@ -328,13 +333,22 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $timeout($scope.process_athletes,10);
     };
 });
+/*
+        var chart = c3.generate({
+            bindto: '#chart',
+            data: {
+              columns: [
+                []
+              ]
+            }
+};
+*/
 </script>
 </head>
 
 <body ng-app="App">
 
 <div ng-controller="Controller">
-
 <div ng-if="!ids" class="search">
 	<h1>Crossfit Open Affiliate Leaderboard</h1>
     
@@ -433,7 +447,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='1'}" type="button" value="Scaled" ng-click="apply_filter('scaled','1')"> 
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')"> 
             <span class="spacer">|</span>
-            <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
             <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help"> 
         </div>
         <div ng-if="show_help" class="info_box">
@@ -454,6 +468,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </div>
             <div style="margin-top:5px;">Example URL: <a href="http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0">http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0</a></div>
         </div>
+        <!--<div style="width:800px;height:300px;position:relative;" id="chart"></div>-->
     </div>
     <table class="bx--data-table-v2 bx--data-table-v2--compact" style="width:auto;margin-top:10px;">
     <thead>
