@@ -153,3 +153,13 @@ tbody tr:hover {
     background-color:#3D70B2;
     color:white;
 }
+.chart-selector span {
+    font-size:140%;
+    margin:0 20px;
+    display:inline-block;
+    cursor:pointer;
+}
+.chart-selector span.selected {
+    border-bottom:4px solid #3D70B2;
+}
+
