@@ -31,13 +31,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 			window.location.reload(true);
 		}
 	}, 1000*60 );
-	$scope.time = function(s) {
-		if (typeof s!="number") { return "x"; }
-		var m = Math.floor(s/60);
-		s = (s-m*60);
-		if (s<10) { s="0"+s; }
-		return m+":"+s;
-	};
+    $scope.time = function(s) {
+        if (typeof s!="number") { return "(invalid)"; }
+        var m = Math.floor(s/60);
+        s = Math.floor(s-m*60);
+        return m+" min "+s+" sec";
+    };
 	$scope.sort = function(key,desc) {
 //		$scope.sortdesc = (key==$scope.sortby) ? !$scope.sortdesc : (typeof desc=="boolean"?desc:false);
         if (key==$scope.sortby) {
@@ -703,7 +702,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         <div ng-repeat="a in affiliates">
             {{a.athletes[0].entrant.affiliateName}}
             <span ng-if="a.cached">
-            retrieved from {{a.cache_source}}, updated {{a.cache_age}} seconds ago.
+            retrieved from {{a.cache_source}}, updated {{time(a.cache_age)}} ago.
             </span>
             <span ng-if="!a.cached">
             retrieved from crossfit.com and cached
@@ -713,7 +712,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         <div ng-repeat="a in individual_athletes">
             {{a.athlete.entrant.competitorName}}
             <span ng-if="a.cached">
-            retrieved from {{a.cache_source}}, updated {{a.cache_age}} seconds ago.
+            retrieved from {{a.cache_source}}, updated {{time(a.cache_age)}} ago.
             </span>
             <span ng-if="!a.cached">
             retrieved from crossfit.com and cached
