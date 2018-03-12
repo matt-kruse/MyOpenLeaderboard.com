@@ -292,7 +292,14 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                             else if (workout_num==1 && s.scaled==1 && score<=1100000) {
                                 score = 1100000 - (2*(1100000 - score)/10000);
                             }
-                            
+                            else if (workout_num==3) {
+                                if (s.scaled==0) {
+                                    score = Math.floor((score-10000000)/10000);
+                                }
+                                else {
+                                    score = Math.floor(score/10000);
+                                }
+                            }
                             if (s.scaled==1) {
                                 tooltips[1].push(" "+s.scoreDisplay+" ("+a.entrant.competitorName+")");
                                 scaled_data.push(score);
@@ -305,6 +312,11 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                             }
                         }
                     });
+                    
+                    // Adjust axes per workout
+                    $scope.options.scales.yAxes[0].ticks= (workout_num==3) ? {"min":0,"max":948} : {};
+                    $scope.options.scales.yAxes[1].ticks= (workout_num==3) ? {"min":0,"max":948} : {};
+
                     $scope.data = [rx_data,scaled_data];
                 }
                 $scope.update_chart();
