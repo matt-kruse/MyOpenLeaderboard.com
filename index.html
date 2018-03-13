@@ -223,6 +223,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 $scope.athletes = filtered_athletes;
 
                 $scope.update_chart = function(workout_num) {
+console.log(workout_num);
                     if (typeof workout_num!="undefined") {
                         $scope.chart_workout = workout_num;
                     }
@@ -318,10 +319,18 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 
                     $scope.data = [rx_data,scaled_data];
                 }
-                $scope.update_chart();
+                if ($scope.show_chart) {
+                    $scope.update_chart();
+                }
             }
             else {
                 $scope.athletes = [];
+            }
+        };
+        $scope.toggle_chart = function() {
+            $scope.show_chart = !$scope.show_chart;
+            if ($scope.show_chart) {
+                $scope.update_chart();
             }
         };
         
@@ -552,7 +561,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')"> 
             <span class="spacer">|</span>
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="$parent.show_chart=!$parent.show_chart"> 
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()"> 
             <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help"> 
         </div>
         <div ng-if="show_help" class="info_box">
@@ -573,7 +582,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </div>
             <div style="margin-top:5px;">Example URL: <a href="http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0">http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0</a></div>
         </div>
-        <div style="width:90vw;height:50vh;margin:10px;border:1px solid black;padding:20px 10px 40px 10px;" ng-show="show_chart">
+        <div style="width:90vw;height:80vh;margin:10px;border:1px solid black;padding:20px 10px 40px 10px;" ng-if="show_chart">
             <div class="chart-selector">
                 <span ng-class="{selected:chart_workout==0}" ng-click="update_chart(0)">18.1</span>
                 <span ng-class="{selected:chart_workout==1}" ng-click="update_chart(1)">18.2</span>
