@@ -480,8 +480,8 @@ console.log(workout_num);
 	<div ng-if="athletes && athletes.length>0">
     <div ng-if="show_header">
         <div class="header__results"><h3>Crossfit Open Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
-        <div>This Leaderboard is not affiliated with Crossfit or Crossfit.com. 
-            <span ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Donate or send me a shirt from your gym!</span></span> 
+        <div>Not affiliated with Crossfit.com. 
+            <span ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Donate or send me a shirt from your gym!</span> ... update: none yet :(</span> 
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
             <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
             My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very average) crossfitter. If you think this Leaderboard is cool, send me a shirt <strong>( size L )</strong> from your gym so I can wear it at mine!
