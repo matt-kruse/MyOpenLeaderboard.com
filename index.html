@@ -480,7 +480,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     <div ng-if="show_header">
         <div class="header__results"><h3>Crossfit Open Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
         <div>Not affiliated with Crossfit.com. 
-            <span ng-if="show_donate">Like this Leaderboard? <span style="color:red;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Donate or send me a shirt from your gym!</span> ... update: none yet :(</span> 
+            <span ng-if="show_donate" style="font-weight:bold;">Like this Leaderboard? <span style="color:red;font-weight:bold;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Click here to donate or send me a shirt from your gym!</span> ... update: no shirts yet <img src="sad.png"></span> 
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
             <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
             My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very average) crossfitter. If you think this Leaderboard is cool, send me a shirt <strong>( size L )</strong> from your gym so I can wear it at mine!
