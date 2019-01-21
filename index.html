@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <link type="text/css" rel="stylesheet" href="carbon-components.min.css" />
     <link type="text/css" rel="stylesheet" href="index.css" />
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="angular.min.js"></script>
 
     <script src="chart.min.js"></script>
@@ -443,16 +444,58 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 });
 
 </script>
+    <style>
+        #promo {
+            width:400px;
+            max-width:33vw;
+            float:right;
+            border:3px solid #0C4C95;
+            margin:5px;
+            padding:15px;
+            border-radius:10px;
+            box-shadow: 10px 10px 12px #aaa;
+        }
+        #promo img { border:none; }
+        #promo li { font-size:1rem !important; }
+        #promo h2 { font-weight:bold; }
+        #logo { float:left; margin:0 20px 50px 0; width:192px; }
+    </style>
 </head>
 
 <body ng-app="App">
 
 <div ng-controller="Controller">
 <div ng-if="!ids" class="search">
-	<h1>Crossfit Open 2019 Leaderboard</h1>
-    
+    <div id="promo">
+        <h2>Community Support!</h2>
+        <p>Hi! My name is <a href="http://MattKruse.com" target="_blank">Matt Kruse</a>. Development and hosting of this app costs me real time and money. To offset my time and <a href="https://aws.amazon.com/" target="_blank">AWS</a> costs, I'm asking the awesome Crossfit community to <b>donate to support this site</b> during the 2019 Open. It will help me justify to my wife the hours I spend on this ;) <b>Thanks!</b></p>
+        <div>
+            <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
+            Or use Paypal: <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>
+        </div>
+        <div>
+            <h4>Potential features coming for 2019:</h4>
+            <ul>
+                <li>Improved look and feel</li>
+                <li>Manual entry of scores (participate even if you haven't registered for the Open!)</li>
+                <li>Search affiliates/athletes by name</li>
+                <li>Download results to XLS</li>
+                <li>Faster data refreshes (if donations offset increased cost)</li>
+                <li>Saved and shareable leaderboards?</li>
+                <li>Alexa integration?</li>
+            </ul>
+        </div>
+    </div>
+    <div id="logo">
+        <img src="logo_192.png" id="logo">
+        <div style="padding:15px;border:1px solid #aaa;margin:10px;display:inline-block;">
+            <a href="2018/index.html">View the 2018 Leaderboard</a>
+        </div>
+    </div>
+	<h1>2019 Crossfit Open Leaderboard</h1>
     <form method="get" action="index.html">
         <p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
+        To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it,<br> and look at the ID in the address of the affiliate's page.
         <div class="search__box"><input id="a" name="affiliates" class="bx--text-input"></div>
         <div style="font-weight:bold;font-size:120%;"> AND / OR </div>
         <p>Enter an athlete ID (ex: 1234) or multiple comma-separated athlete ID's (1234,5677).</p>
@@ -461,15 +504,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <input class="bx--btn bx--btn--primary" type="submit" value="Go" >
         </div>
     </form>
-    <p>To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it, and look at the ID in the address of the affiliate's page.</p>
-    <p>This Leaderboard is not affiliated with Crossfit or Crossfit.com!</p>
-    <div style="padding:15px;border:1px solid #aaa;margin:10px;display:inline-block;">
-      <a href="2018/index.html">View the 2018 Leaderboard</a>
-    </div>
+    <br style="clear:left;"/>
     <div>
-      <h2>Sample Output:</h2>
-      <img src="sample.jpg" style="max-width:95vw;border:1px solid #aaa;">
+      <h2><a href="http://MyOpenLeaderboard.com/2018/index.html?affiliates=505">Sample Output</a>:</h2>
+        <a href="http://MyOpenLeaderboard.com/2018/index.html?affiliates=505" target="_blank"><img src="sample.jpg" style="max-width:95vw;border:1px solid #aaa;"></a>
     </div>
+    <p>This Leaderboard is not affiliated with Crossfit or Crossfit.com!</p>
 </div>
 <div ng-if="ids" class="affiliates">
 	<div ng-if="athletes==null" class="loading"><div class="bx--loading-overlay">

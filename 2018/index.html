@@ -480,7 +480,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     </div>
 	<div ng-if="athletes && athletes.length>0">
     <div ng-if="show_header">
-        <div class="header__results"><h3>Crossfit Open Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
+        <div class="header__results"><h3>Crossfit Open 2018 Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
         <div>Not affiliated with Crossfit.com. 
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
             <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
