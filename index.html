@@ -640,7 +640,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
+        <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
             <td>{{$index+1}}. <a href="https://games.crossfit.com/athlete/{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
             <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
