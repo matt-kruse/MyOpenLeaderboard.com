@@ -72,7 +72,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     
     $scope.ids = null;
 	$scope.athletes = null;
-    $scope.chart_workout = 5;
+    $scope.chart_workout = 0;
     
 	try {
 		$scope.ids = location.search.substring(1);
@@ -347,10 +347,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.show_chart = false;
         
         $scope.show_19_1 = 1;
-        $scope.show_19_2 = 1;
-        $scope.show_19_3 = 1;
-        $scope.show_19_4 = 1;
-        $scope.show_19_5 = 1;
+        $scope.show_19_2 = 0;
+        $scope.show_19_3 = 0;
+        $scope.show_19_4 = 0;
+        $scope.show_19_5 = 0;
         
         // If affiliates are passed in the old way
         if (/^[\d,]+$/.test($scope.ids)) {
