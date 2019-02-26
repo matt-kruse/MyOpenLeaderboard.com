@@ -14,6 +14,26 @@
     <script src="chart.min.js"></script>
     <script src="angular-chart.min.js"></script>
 <script>
+var $ = angular.element;
+function download_to_excel(el,table) {
+  var $el = $(el);
+  var contentType = 'data:application/vnd.ms-excel;base64';
+  var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" ><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{sheetname}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>{table}</body></html>';
+  var format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) };
+  var blobbed = function(data) {
+	var blob = new Blob([format(html, data)], { type: contentType });
+	var blobURL = window.URL.createObjectURL(blob);
+	if (blobURL) {
+	  el.setAttribute('href', blobURL);
+	  el.setAttribute('download', data['name']);
+	}
+  };
+  blobbed({ 
+    sheetname: 'OpenData',
+    name: 'OpenData.xls', 
+    table: '<table>'+$(table).html()+'</table>'
+  });
+}
 var app = angular.module("App", ['chart.js']);
 app.controller("Controller", function($scope, $http, $interval, $timeout) {
 	$scope.sortby = '_rank';
@@ -479,7 +499,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 <li>Improved look and feel</li>
                 <li>Manual entry of scores (participate even if you haven't registered for the Open!)</li>
                 <li>Search affiliates/athletes by name</li>
-                <li>Download results to XLS</li>
+                <li><b>DONE!</b> Download results to XLS</li>
                 <li>Faster data refreshes (if donations offset increased cost)</li>
                 <li>Saved and shareable leaderboards?</li>
                 <li>Alexa integration?</li>
@@ -545,6 +565,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </div>
         </div>
         <div ng-if="show_whats_new" class="info_box">
+            <div><b>2019-02-26</b></div>
+            <div>
+                <ul>
+                    <li>Download to Excel
+                </ul>
+            </div>
             <div><b>2019-01-15</b></div>
             <div>
                 <ul>
@@ -563,6 +589,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <span class="spacer">|</span>
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()"> 
+            <span class="spacer">|</span>
+			<a class="button-spaced bx--btn bx--btn--secondary filter-button" href="#" onclick="download_to_excel(this,document.getElementById('leaderboard'))">Download XLS</a>
+            <span class="spacer">|</span>
             <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help"> 
         </div>
         <div ng-if="show_help" class="info_box">
@@ -597,7 +626,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <div>(Hover over data points to see score/athlete)</div>
         </div>
     </div>
-    <table class="bx--data-table-v2 bx--data-table-v2--compact" style="width:auto;margin-top:10px;">
+    <table id="leaderboard" class="bx--data-table-v2 bx--data-table-v2--compact" style="width:auto;margin-top:10px;">
     <thead>
         <tr>
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
