@@ -359,6 +359,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.highlight = {};
         
         $scope.show_division = false;
+		$scope.show_country = false;
         $scope.show_help = false;
         $scope.show_whats_new = false;
         $scope.show_header = true;
@@ -565,6 +566,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </div>
         </div>
         <div ng-if="show_whats_new" class="info_box">
+            <div><b>2019-03-02</b></div>
+            <div>
+                <ul>
+                    <li>Added optional "Country" column
+                </ul>
+            </div>
             <div><b>2019-02-26</b></div>
             <div>
                 <ul>
@@ -588,6 +595,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')"> 
             <span class="spacer">|</span>
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
+			<input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_country}" type="button" value="Country" ng-click="$parent.show_country=!$parent.show_country"> 
             <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()"> 
             <span class="spacer">|</span>
 			<a class="button-spaced bx--btn bx--btn--secondary filter-button" href="#" onclick="download_to_excel(this,document.getElementById('leaderboard'))">Download XLS</a>
@@ -632,6 +640,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
             <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="num_affiliates>1">Affiliate</th>
             <th rowspan="2" ng-click="sort('entrant.divisionId')" ng-if="show_division">Division</th>
+			<th rowspan="2" ng-click="sort('entrant.countryOfOriginName')" ng-if="show_country">Country</th>
             <th colspan="3">Overall</th>
             <th class="workout_header" colspan="{{(show_19_1?2:1)}}" ng-click="show_19_1=1-show_19_1">19.1</th>
             <th class="workout_header" colspan="{{(show_19_2?4:1)}}" ng-click="show_19_2=1-show_19_2">19.2</th>
@@ -673,6 +682,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <td>{{$index+1}}. <a href="https://games.crossfit.com/athlete/{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
             <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
+			<td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
             <td class="separator">{{a._rank}}</td>
             <td>{{a._total_rank}}</td>
             <td>{{a._pct|number:0}}%</td>
