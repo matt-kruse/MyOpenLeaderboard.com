@@ -626,9 +626,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <div class="chart-selector">
                 <span ng-class="{selected:chart_workout==0}" ng-click="update_chart(0)">19.1</span>
                 <span ng-class="{selected:chart_workout==1}" ng-click="update_chart(1)">19.2</span>
-                <span ng-class="{selected:chart_workout==2}" ng-click="update_chart(3)">19.3</span>
-                <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(4)">19.4</span>
-                <span ng-class="{selected:chart_workout==4}" ng-click="update_chart(5)">19.5</span>
+                <span ng-class="{selected:chart_workout==2}" ng-click="update_chart(2)">19.3</span>
+                <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(3)">19.4</span>
+                <span ng-class="{selected:chart_workout==4}" ng-click="update_chart(4)">19.5</span>
             </div>
             <canvas id="line" class="chart chart-line" chart-data="data"
                 chart-labels="labels" chart-series="series" chart-options="options"
