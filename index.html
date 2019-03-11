@@ -415,6 +415,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.num_affiliates = 0;
         $scope.affiliate_name = null;
         
+		if ($scope.affiliate_ids=="memory") { $scope.num_affiliates=99; }
+		
         // Process each affiliate and add it to the loader
         var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // prod
         //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // test
