@@ -553,21 +553,29 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     <div ng-if="show_header">
         <div class="header__results"><h3>Crossfit Open Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
         <div>Not affiliated with Crossfit.com. 
-        <!--
-            <span ng-if="show_donate" style="font-weight:bold;">Like this Leaderboard? <span style="color:red;font-weight:bold;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Click here to donate or send me a shirt from your gym!</span> ... update: no shirts yet <img src="sad.png"></span> 
-        -->
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
+        <br>
+        <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px; font-size:120%;">
+        So far in 2019, MyOpenLeaderboard.com has been used for over <b>1,100 affiliates</b> and <b>400</b> individual athletes, and loaded over <b>30,000</b> times (!), incurring over $200 in Amazon AWS costs.<br>
+        Please consider donating to support this site! I'm one guy, doing this in my spare time. Help me out!
+        <span style="color:red;font-weight:bold;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Show donation details</span>.
+        
             <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
-            My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very average) crossfitter. If you think this Leaderboard is cool, send me a shirt <strong>( size L )</strong> from your gym so I can wear it at mine!
-            <br><br>
-            Matt Kruse<br>
-            PO Box 165<br>
-            Hampton, IL 61256
-            <br><br>
-            Or if you feel generous, you can donate to support hosting cost and development time: <a href="http://paypal.me/krusematt" target="_blank">Paypal</a> <a href="bitcoin:15mrXfBXFDoyEr54upsnsF5tMvfo1N5WUA" target="_blank">bitcoin</a> <a href="http://gofundme.com/SocialFixer" target="_blank">Go Fund Me</a> (in the name of another app I built, <a href="http://SocialFixer.com/" target="_blank">Social Fixer</a> for Facebook).
-            <br><br>
-            Thank you!!!
+            My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very <a href="http://myopenleaderboard.com/?athletes=759861">average</a>) crossfitter. I setup a GoFundMe page for donations for MyOpenLeaderboard.com, or you can use <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>.
+            <div>
+                <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
+                <br>
+                Or, if you prefer, here's my postal address where you can send a t-shirt or socks from your gym. :) 
+                <div>
+                  Matt Kruse<br>
+                  PO Box 165<br>
+                  Hampton, IL 61256                
+                </div>
+            <br>Thank you!!!
             </div>
+        </div> 
+            
+
         </div>
         <div ng-if="show_whats_new" class="info_box">
             <div><b>2019-03-02</b></div>
