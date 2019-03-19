@@ -420,6 +420,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 		
         // Process each affiliate and add it to the loader
         var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // prod
+        if ("reddit"==$scope.view) {
+          url = "reddit.json";
+        }
         //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // test
         $http.get(url).then( function(data) {
         /*
@@ -742,6 +745,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         </tr>
     </tbody>
     </table>
+    <div ng-show="!view">
         <div style="margin-top:10px;"><strong>Data Details</strong></div>
         <div><em>(Athlete lists are loaded at most once per hour, then served from cache)</em></div>
         
@@ -764,6 +768,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             retrieved from crossfit.com and cached
             </span>
         </div>
+    </div>
 	</div>
 
 	</div>
