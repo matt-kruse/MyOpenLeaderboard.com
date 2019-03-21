@@ -419,9 +419,11 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 		if ($scope.affiliate_ids=="memory") { $scope.num_affiliates=99; }
 		
         // Process each affiliate and add it to the loader
+        $scope.user_base_url = "https://games.crossfit.com/athlete/";
         var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // prod
         if ("reddit"==$scope.view) {
           url = "reddit.json";
+          $scope.user_base_url = "http://reddit.com/user/";
         }
         //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // test
         $http.get(url).then( function(data) {
@@ -695,7 +697,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     </thead>
     <tbody>
         <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
-            <td>{{$index+1}}. <a href="https://games.crossfit.com/athlete/{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
+            <td>{{$index+1}}. <a href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
             <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
 			<td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
