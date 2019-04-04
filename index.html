@@ -93,12 +93,13 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $scope.ids = null;
 	$scope.athletes = null;
     $scope.chart_workout = 0;
+
+	$scope.logo = "logo_192.png";
     
 	try {
 		$scope.ids = location.search.substring(1);
 	} catch(e) { } 
 	if ($scope.ids) {
-        // Process each url to build up a list of athletes
         var i=0;
         var a=0;
         var page=1;
@@ -375,7 +376,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         $scope.show_19_3 = 1;
         $scope.show_19_4 = 1;
         $scope.show_19_5 = 1;
-        
+		
         // If affiliates are passed in the old way
         if (/^[\d,]+$/.test($scope.ids)) {
             $scope.affiliate_ids = $scope.ids.split(/\s*,\s*/);
@@ -411,12 +412,23 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 catch(e) { }
             });
         }
-//console.log("affiliates",$scope.affiliate_ids);
-//console.log("athletes",$scope.athlete_ids);
-        $scope.num_affiliates = 0;
-        $scope.affiliate_name = null;
-        
-		if ($scope.affiliate_ids=="memory") { $scope.num_affiliates=99; }
+		//console.log("affiliates",$scope.affiliate_ids);
+		//console.log("athletes",$scope.athlete_ids);
+		
+		if ("ccc"==$scope.view) {
+			$scope.affiliate_ids = [6209,6043,14615,14848,13981,22162,18370,9403,11320,15751,5589,20782,18758,17918,20497,16949,15165,16780,16834,17223,10926,4416,2594,19372,16190,1244,2244,3533,8278,20430,7560,12170,15884,18160,18194,11804,14730,18925,16841,16200,1461,20409,15238,11337,8126,254,3165,10694,16036,20314,20817];
+			$scope.affiliate_name = "Carribean Crossfitter Community";
+			$scope.logo = "ccc/ccc_250.jpg";
+			$scope.show_country = true;
+			$scope.num_affiliates = $scope.affiliate_ids.length;
+			$scope.show_donate = false;
+			$scope.leaderboard_logo = "ccc/ccc_128.jpg";
+		}
+		else {
+			$scope.num_affiliates = 0;
+			$scope.affiliate_name = null;
+			if ($scope.affiliate_ids=="memory") { $scope.num_affiliates=99; }
+		}
 		
         // Process each affiliate and add it to the loader
         $scope.user_base_url = "https://games.crossfit.com/athlete/";
@@ -498,12 +510,21 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 <div ng-controller="Controller">
 <div ng-if="!ids" class="search">
     <div id="promo">
-        <h2>Community Support!</h2>
+        <h2>Thank You!</h2>
+		<p>
+		MyOpenLeaderboard.com is generously sponsored by the <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Caribbean Crossfitter Community</a>.
+		<br>
+		<a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity"><img src="ccc/ccc_300.jpg"></a>
+		</p>
+		<p style="margin-top:20px;">If you would like to support the site, donations are welcome!</p>
+		<!--
         <p>Hi! My name is <a href="http://MattKruse.com" target="_blank">Matt Kruse</a>. Development and hosting of this app costs me real time and money. To offset my time and <a href="https://aws.amazon.com/" target="_blank">AWS</a> costs, I'm asking the awesome Crossfit community to <b>donate to support this site</b> during the 2019 Open. It will help me justify to my wife the hours I spend on this ;) <b>Thanks!</b></p>
+		-->
         <div>
             <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
             Or use Paypal: <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>
         </div>
+		<!--
         <div>
             <h4>Potential features coming for 2019:</h4>
             <ul>
@@ -516,9 +537,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 <li>Alexa integration?</li>
             </ul>
         </div>
+		-->
     </div>
     <div id="logo">
-        <img src="logo_192.png" id="logo">
+        <img ng-src="{{logo}}">
         <div style="padding:15px;border:1px solid #aaa;margin:10px;display:inline-block;">
             <a href="2018/index.html">View the 2018 Leaderboard</a>
         </div>
@@ -557,6 +579,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     </div>
 	<div ng-if="athletes && athletes.length>0">
     <div ng-if="show_header">
+		<img ng-if="leaderboard_logo" ng-src="{{leaderboard_logo}}" style="float:left;margin-right:20px;">
         <div class="header__results"><h3>Crossfit Open Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
         <div>Not affiliated with Crossfit.com. 
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
@@ -652,7 +675,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <div>(Hover over data points to see score/athlete)</div>
         </div>
     </div>
-    <table id="leaderboard" class="bx--data-table-v2 bx--data-table-v2--compact" style="width:auto;margin-top:10px;">
+    <table id="leaderboard" class="bx--data-table-v2 bx--data-table-v2--compact" style="width:auto;margin-top:10px;clear:both;">
     <thead>
         <tr>
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
