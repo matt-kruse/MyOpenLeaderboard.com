@@ -512,7 +512,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     <div id="promo">
         <h2>Thank You!</h2>
 		<p>
-		MyOpenLeaderboard.com is generously sponsored by the <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Caribbean Crossfitter Community</a>.
+		MyOpenLeaderboard.com is generously sponsored by the <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Caribbean Crossfitter Community</a>. We are dedicated to promoting the Caribbean CrossFit community, events and athletes. <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Follow us</a> and find out about the various events in the Caribbean.
 		<br>
 		<a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity"><img src="ccc/ccc_300.jpg"></a>
 		</p>
@@ -585,9 +585,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
         <br>
         <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px; font-size:120%;">
+        MyOpenLeaderboard.com is generously sponsored by the <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Caribbean Crossfitter Community</a>. We are dedicated to promoting the Caribbean CrossFit community, events and athletes. <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Follow us</a> and find out about the various events in the Caribbean.
+        <!--
         So far in 2019, MyOpenLeaderboard.com has been used for over <b>1,100 affiliates</b> and <b>400</b> individual athletes, and loaded over <b>30,000</b> times (!), incurring over $200 in Amazon AWS costs.<br>
         Please consider donating to support this site! I'm one guy, doing this in my spare time. Help me out!
         <span style="color:red;font-weight:bold;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Show donation details</span>.
+        -->
         
             <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
             My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very <a href="http://myopenleaderboard.com/?athletes=759861">average</a>) crossfitter. I setup a GoFundMe page for donations for MyOpenLeaderboard.com, or you can use <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>.
