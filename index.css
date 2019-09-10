@@ -7,7 +7,7 @@ body, * {
   }
 
   table { border:1px solid #666; border-collapse:collapse; cell-spacing:0; }
-  td, th { border:1px solid #666; padding:1 1px; }
+  td, th { border:1px solid #666; padding:1px 1px; }
   th { cursor: pointer; padding:2px 2px;font-size:12px; }
   tbody tr:nth-child(even) { background-color:#ececec; }
   .separator { border-left:3px solid #3c5a83; }
