@@ -1,0 +1,41 @@
+table { border:2px solid #666; margin:0 5px; }
+thead th {
+    background-color: #ffe1bf !important;
+}
+tbody tr:nth-child(even) {
+    background-color: #C8ECF2;
+}
+
+.separator {
+    border-left: 3px solid #0B2240;
+}
+
+tr.selected {
+    background-color: #f7cf00 !important;
+}
+
+.empty {
+    background-color: #fd5b5a;
+}
+
+/* color overrides */
+a {
+    color: #0B2240;
+}
+
+a:hover {
+    color: #00428d;
+}
+
+.bx--btn--secondary.selected {
+    background-color: #A9E2EB;
+    color: #333;
+}
+
+.bx--btn--primary {
+    background: #0056b8;
+}
+
+.bx--btn--primary:hover {
+    background: #00428d;
+}
