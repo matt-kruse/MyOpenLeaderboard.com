@@ -162,4 +162,6 @@ tbody tr:hover {
 .chart-selector span.selected {
     border-bottom:4px solid #3D70B2;
 }
-
+.division-filter, .division-filter select {
+    font-size:140%;
+}

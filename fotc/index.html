@@ -1,12 +1,12 @@
 <html>
 
 <head>
-	<title>Crossfit Open 2019 Leaderboard</title>
-	<meta name="title" content="Crossfit Open 2019 Leaderboard" />
-	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2019 Crossfit Open results!" />
+	<title>Fittest of the Coast Qualifier Leaderboard</title>
+	<meta name="title" content="Fittest of the Coast Qualifier Leaderboard" />
+	<meta name="description" content="View the Crossfit Open results leaderboard that will feed into the FotC Invitational" />
 	<meta property="og:image" content="http://MyOpenLeaderboard.com/share2.jpg" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <link type="text/css" rel="stylesheet" href="../carbon-components.min.css" />
+    <link type="text/css" rel="stylesheet" href="carbon.css" />
     <link type="text/css" rel="stylesheet" href="../index.css" />
     <link rel="icon" type="image/png" href="../favicon.png">
     <script src="../angular.min.js"></script>
@@ -29,21 +29,21 @@ function download_to_excel(el,table) {
 	}
   };
   blobbed({ 
-    sheetname: 'OpenData',
-    name: 'OpenData.xls', 
+    sheetname: 'FotC',
+    name: 'FotC.xls',
     table: '<table>'+$(table).html()+'</table>'
   });
 }
 var app = angular.module("App", ['chart.js']);
 app.controller("Controller", function($scope, $http, $interval, $timeout) {
-	$scope.sortby = '_rank';
-	$scope.sortdesc = false;
-	$scope.selected = null;
-	$scope.counter = 180;
-      $scope.ids = null;
-      $scope.athletes = null;
-      $scope.chart_workout = 0;
-      $scope.logo = "logo_192.png";
+  $scope.sortby = '_rank';
+  $scope.sortdesc = false;
+  $scope.selected = null;
+  $scope.counter = 180;
+  $scope.ids = null;
+  $scope.athletes = null;
+  $scope.chart_workout = 0;
+  $scope.logo = "logo_192.png";
   $scope.affiliate_ids = [];
   $scope.athlete_ids = [];
   $scope.highlight = {};
@@ -59,394 +59,443 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   $scope.show_19_4 = 1;
   $scope.show_19_5 = 1;
 
-      // FITTEST OF THE COAST CONFIG
-      $scope.affiliate_ids = [2955,17680,4005,14997,24292,2376,20106,10639,3887,3929,3392,21579,10174,19409,19207,10507,18741,18528,15897,16410,2421,15555,4372,5920,2011,14358,9172,5875,3576,3687,1747,19306,4747];
-      $scope.affiliate_name = "2020 Fittest of the Coast Qualifier";
-      $scope.logo = "logo.png";
-      $scope.show_country = true;
-      $scope.num_affiliates = $scope.affiliate_ids.length;
-      $scope.show_donate = false;
-      $scope.leaderboard_logo = "logo.png";
+  // FITTEST OF THE COAST CONFIG
+  $scope.affiliate_ids = [2955, 17680, 4005, 14997, 24292, 2376, 20106, 10639, 3887, 3929, 3392, 21579, 10174, 19409, 19207, 10507, 18741, 18528, 15897, 16410, 2421, 15555, 4372, 5920, 2011, 14358, 9172, 5875, 3576, 3687, 1747, 19306, 4747];
+  $scope.affiliate_name = "2020 Fittest of the Coast Qualifier";
+  $scope.logo = "logo.png";
+  $scope.show_country = false;
+  $scope.num_affiliates = $scope.affiliate_ids.length;
+  $scope.show_donate = false;
+  $scope.leaderboard_logo = "logo.png";
 
-      $scope.ids = $scope.affiliate_ids.join(",");
-    $scope.filters = {
-        "sex":""
-        ,"scaled":""
-    };
-    
-	$interval(function() {
-		$scope.counter--;
-		if ($scope.counter<1) {
-			window.location.reload(true);
-		}
-	}, 1000*60 );
-    $scope.time = function(s) {
-        if (typeof s!="number") { return "(invalid)"; }
-        var m = Math.floor(s/60);
-        s = Math.floor(s-m*60);
-        return m+" min "+s+" sec";
-    };
-	$scope.sort = function(key,desc) {
-        if (key===$scope.sortby) {
-            $scope.sortby = "-"+key;
-        }
-        else {
-            $scope.sortby = key;
-        }
-	};
-    
-    $scope.divisions = {
-        '2': 'Women',
-        '1': 'Men',
-        '11': 'Team',
-        '15': 'Girls (14-15)',
-        '14': 'Boys (14-15)',
-        '17': 'Girls (16-17)',
-        '16': 'Boy (16-17)',
-        '19': 'Women (35-39)',
-        '18': 'Men (35-39)',
-        '13': 'Women (40-44)',
-        '12': 'Men (40-44)',
-        '4': 'Women (45-49)',
-        '3': 'Men (45-49)',
-        '6': 'Women (50-54)',
-        '5': 'Men (50-54)',
-        '8': 'Women (55-59)',
-        '7': 'Men (55-59)',
-        '10': 'Women (60+)',
-        '9': 'Men (60+)'
-    };
-    
+  $scope.ids = $scope.affiliate_ids.join(",");
+  $scope.filters = {
+    division:""
+  };
 
-	if (true) {
-        var i=0;
-        var a=0;
-        var page=1;
-        var athletes=[];
-        var dataurls = [];
-        
-        $scope.process_athletes = function() {
-            var filtered_athletes = [];
-            if (athletes && athletes.length>0) {
-                // Filter out dupes
-                var uniques = {};
-                filtered_athletes = athletes.filter(function(a) {
-                    var id = a.entrant.competitorId;
-                    if (uniques[id]) { return false; }
-                    uniques[id] = true;
-                    return true;
-                });
-                
-                // Apply filters
-                filtered_athletes = filtered_athletes.filter(function(a) {
-                    if ($scope.filters.sex!="" && $scope.filters.sex!=a.entrant.gender) { return false; }
-                    if ($scope.filters.scaled!="") { 
-                        // check all the workouts
-                        for (var i=0; i<6; i++) {
-                            try {
-                                if (typeof a.scores[i].scaled!="undefined" && ($scope.filters.scaled != a.scores[i].scaled)) { return false; }
-                            } catch(e) { }
-                        }
-                    }
-                    return true;
-                });
-                
-                // Fix scores
-                filtered_athletes.forEach(function(a) {
-                    a._total_rank = 0;
-                    a._rank = 0;
-                    for (var i=0; i<6; i++) {
-                        a.scores[i] = a.scores[i] || {};
-                        var s = a.scores[i];
-                        if (s.score) {
-                            s.score = +s.score;
-                        }
-                        s._workout_rank = null;
-                        s._overall_rank = null;
-                        s._overall_score = 0;
-                    }
-                });
-                
-                // For each workout, assign the real workout rank
-                for (var i=0; i<6; i++) {
-                    // Sort from highest to lowest
-                    filtered_athletes = filtered_athletes.sort(function(a,b) {
-                        var as = +a.scores[i].score || 0;
-                        var bs = +b.scores[i].score || 0;
-                        if (!as && !bs) { return 0; }
-                        if (!bs || (as>bs)) { return -1; }
-                        if (!as || (as<bs)) { return 1; }
-                        return 0;
-                    });
-                    
-                    if (!filtered_athletes[0].scores[i].score) { break; }
-                    
-                    var rank = 0;
-                    var assigned_rank = 0;
-                    filtered_athletes.forEach(function(a,index) {
-                        if (index==0 || a.scores[i].score != filtered_athletes[index-1].scores[i].score) {
-                            rank++;
-                            assigned_rank = rank;
-                        }
-                        else {
-                            rank++;
-                        }
-                        a.scores[i]._workout_rank = assigned_rank;
-                        var previous = (i==0) ? 0 : a.scores[i-1]._overall_score;
-                        a.scores[i]._overall_score = previous + assigned_rank;
-                        a._total_rank += assigned_rank;
-                    });
+  $scope.$watch('filters.division', function() {
+    $scope.process_athletes();
+  });
 
-                    // Sort by overall score in this workout
-                    filtered_athletes = filtered_athletes.sort(function(a,b) {
-                        var as = +a.scores[i]._overall_score || 999;
-                        var bs = +b.scores[i]._overall_score || 999;
-                        if (!as && !bs) { return 0; }
-                        if (!bs || (as>bs)) { return 1; }
-                        if (!as || (as<bs)) { return -1; }
-                        return 0;
-                    });
-                    
-                    // Now assign them overall rank for this workout
-                    var rank = 0;
-                    var assigned_rank = 0;
-                    filtered_athletes.forEach(function(a,index) {
-                        if (index==0 || a.scores[i]._overall_score != filtered_athletes[index-1].scores[i]._overall_score) {
-                            rank++;
-                            assigned_rank = rank;
-                        }
-                        else {
-                            rank++;
-                        }
-                        a.scores[i]._overall_rank = assigned_rank;
-                    });
-                    
-                    // Calculate the change in overall rank
-                    filtered_athletes.forEach(function(a,index) {
-                        if (i==0 || a.scores[i-1]._overall_rank==0 || a.scores[i].score==0) {
-                            // First workout, overall rank = workout rank
-                            a.scores[i].rankchange = 0;
-                        }
-                        else {
-                            // Look back at previous rank
-                            a.scores[i].rankchange = a.scores[i-1]._overall_rank - a.scores[i]._overall_rank;
-                        }
-                    });
-                    
-                }
-                
-                // Now sort by overall rank by default
-                filtered_athletes = filtered_athletes.sort(function(a,b) {
-                    var ar = +a._total_rank || 0;
-                    var br = +b._total_rank || 0;
-                    if (!ar && !br) { return 0; }
-                    if (ar>br) { return 1; }
-                    if (ar<br) { return -1; }
-                    return 0;
-                });
-                var rank=0;
-                var assigned_rank=1;
-                filtered_athletes.forEach(function(a,i) {
-                    if (i==0 || filtered_athletes[i]._total_rank != filtered_athletes[i-1]._total_rank) {
-                        rank++;
-                        assigned_rank=rank;
-                    }
-                    else {
-                        rank++;
-                    }
-                    a._rank = assigned_rank;
-                });
-                // Now compute rank %
-                filtered_athletes.forEach(function(a,i) {
-                    a._pct = ((rank-a._rank-1) / (rank-1))*100;
-                });
-                
-                $scope.athletes = filtered_athletes;
-
-                $scope.update_chart = function(workout_num) {
-                    if (typeof workout_num!="undefined") {
-                        $scope.chart_workout = workout_num;
-                    }
-                    else {
-                        workout_num = $scope.chart_workout;
-                    }
-                    
-                    var tooltips = [ [], [] ];
-                    function data_label(item,data) {
-                        return (item.index>tooltips[item.datasetIndex].length-1) ? "unknown" : tooltips[item.datasetIndex][item.index];
-                    };
-                    // Update chart data
-                    $scope.label_index=0;
-                    $scope.labels = [];
-                    $scope.series = ['RX','Scaled'];
-                    $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-                    $scope.options = {
-                        maintainAspectRatio:false,
-                        tooltips: {
-                            callbacks: {
-                                label:data_label
-                            }
-                        },
-                        legend: {
-                            display:true,
-                            position:'bottom'
-                        },
-                        scales: {
-                          yAxes: [
-                            {
-                              id: 'y-axis-1',
-                              type: 'linear',
-                              display: false,
-                              position: 'left'
-                            },
-                            {
-                              id: 'y-axis-2',
-                              type: 'linear',
-                              display: false,
-                              position: 'right'
-                            }
-                          ]
-                        }
-                      };
-                    var rx_data = [];
-                    var scaled_data = [];
-                    var label_max = 0;
-                   // Sort from highest to lowest
-                    var chart_data = $scope.athletes.sort(function(a,b) {
-                        var as = +a.scores[workout_num].score || 0;
-                        var bs = +b.scores[workout_num].score || 0;
-                        if (!as && !bs) { return 0; }
-                        if (!bs || (as>bs)) { return -1; }
-                        if (!as || (as<bs)) { return 1; }
-                        return 0;
-                    });
-                    chart_data.forEach(function(a) {
-                        var s = a.scores[workout_num];
-                        var score;
-                        if (s && s.score) {
-                            score = s.score;
-                            /* Individual Workout adjustments! */
-							/*
-                            if (workout_num==1 && s.scaled==0 && score<=11100000) {
-                                score = 11100000 - (2*(11100000 - score)/10000);
-                            }
-                            else if (workout_num==1 && s.scaled==1 && score<=1100000) {
-                                score = 1100000 - (2*(1100000 - score)/10000);
-                            }
-                            else if (workout_num==3) {
-                                if (s.scaled==0) {
-                                    score = Math.floor((score-10000000)/10000);
-                                }
-                                else {
-                                    score = Math.floor(score/10000);
-                                }
-                            }
-							*/
-                            if (s.scaled==1) {
-                                tooltips[1].push(" "+s.scoreDisplay+" ("+a.entrant.competitorName+")");
-                                scaled_data.push(score);
-                            }
-                            else {
-                                tooltips[0].push(" "+s.scoreDisplay+" ("+a.entrant.competitorName+")");
-                                $scope.label_index++;
-                                $scope.labels.push($scope.label_index);
-                                rx_data.push(score);
-                            }
-                        }
-                    });
-                    
-                    // Adjust axes per workout
-                    //$scope.options.scales.yAxes[0].ticks = {"min":0};
-                    //$scope.options.scales.yAxes[0].ticks= (workout_num==3) ? {"min":0,"max":948} : {};
-                    //$scope.options.scales.yAxes[1].ticks= (workout_num==3) ? {"min":0,"max":948} : {};
-
-                    $scope.data = [rx_data,scaled_data];
-                }
-                if ($scope.show_chart) {
-                    $scope.update_chart();
-                }
-            }
-            else {
-                $scope.athletes = [];
-            }
-        };
-        $scope.toggle_chart = function() {
-            $scope.show_chart = !$scope.show_chart;
-            if ($scope.show_chart) {
-                $scope.update_chart();
-            }
-        };
-        
-		//console.log("affiliates",$scope.affiliate_ids);
-		//console.log("athletes",$scope.athlete_ids);
-
-        // Process each affiliate and add it to the loader
-        $scope.user_base_url = "https://games.crossfit.com/athlete/";
-        var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // prod
-        //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // test
-        $http.get(url).then( function(data) {
-        /*
-        {
-            "affiliates": {
-                "123": {
-                    "id":123,
-                    ,"name":"Crossfit Bob"
-                    ,"athletes": [ ... ]
-                    ,"athletes_loaded_on": 123456789
-                    ,"cached": BOOL
-                    ,"cache_age": 123
-                    ,"cache_source": (memory|db)
-                }
-            }
-        */
-            if (!data || !data.data || !data.data.affiliates) {
-                return;
-            }
-
-            // Combine all affiliate and athlete lists together
-            $scope.affiliates = data.data.affiliates;
-            $scope.individual_athletes = data.data.athletes;
-            athletes = [];
-            for (id in $scope.affiliates) {
-                $scope.num_affiliates++;
-                athletes = athletes.concat( $scope.affiliates[id].athletes );
-            }
-            for (id in $scope.individual_athletes) {
-                athletes = athletes.concat( $scope.individual_athletes[id].athlete );
-            }
-            if ($scope.num_affiliates==1 && athletes && athletes.length>0) {
-                $scope.affiliate_name = athletes[0].entrant.affiliateName;
-            }
-            $scope.athletes = athletes;
-            $timeout($scope.process_athletes,1);
-        }).catch(function(e) {
-            athletes = [];
-            $timeout($scope.process_athletes,1);
-        });
+  $interval(function () {
+    $scope.counter--;
+    if ($scope.counter < 1) {
+      window.location.reload(true);
     }
-    
-    $scope.apply_filter = function(filter,val) {
-        $scope.filters[filter] = val;
-        $timeout($scope.process_athletes,10);
-    };
+  }, 1000 * 60);
+  $scope.time = function (s) {
+    if (typeof s != "number") {
+      return "(invalid)";
+    }
+    var m = Math.floor(s / 60);
+    s = Math.floor(s - m * 60);
+    return m + " min " + s + " sec";
+  };
+  $scope.sort = function (key, desc) {
+    if (key === $scope.sortby) {
+      $scope.sortby = "-" + key;
+    } else {
+      $scope.sortby = key;
+    }
+  };
+
+  $scope.divisions = [
+    {id:1,desc:'Women (18-34)'},
+    {id:2,desc:'Men (18-34)'},
+    {id:3,desc:'Teenage Girls (14-17)'},
+    {id:4,desc:'Teenage Boys (14-17)'},
+    {id:5,desc:'Women Masters (35-44)'},
+    {id:6,desc:'Men Masters (35-44)'},
+    {id:7,desc:'Women Masters+ (45+)'},
+    {id:8,desc:'Men Masters+ (45+)'}
+  ];
+
+  $scope.meta_divisions = {
+    '2': 'Women (18-34)',
+    '1': 'Men (18-34)',
+
+    '15': 'Teenage Girls (14-17)',
+    '14': 'Teenage Boys (14-17)',
+    '17': 'Teenage Girls (14-17)',
+    '16': 'Teenage Boys (14-17)',
+
+    '19': 'Women Masters (35-44)',
+    '18': 'Men Masters (35-44)',
+    '13': 'Women Masters (35-44)',
+    '12': 'Men Masters (35-44)',
+
+    '4': 'Women Masters+ (45+)',
+    '3': 'Men Masters+ (45+)',
+    '6': 'Women Masters+ (45+)',
+    '5': 'Men Masters+ (45+)',
+    '8': 'Women Masters+ (45+)',
+    '7': 'Men Masters+ (45+)',
+    '10': 'Women Masters+ (45+)',
+    '9': 'Men Masters+ (45+)'
+  };
+
+  /*
+  $scope.divisions = {
+    '2': 'Women (18-34)',
+    '1': 'Men (18-34)',
+    '11': 'Team',
+    '15': 'Girls (14-15)',
+    '14': 'Boys (14-15)',
+    '17': 'Girls (16-17)',
+    '16': 'Boy (16-17)',
+    '19': 'Women (35-39)',
+    '18': 'Men (35-39)',
+    '13': 'Women (40-44)',
+    '12': 'Men (40-44)',
+    '4': 'Women (45-49)',
+    '3': 'Men (45-49)',
+    '6': 'Women (50-54)',
+    '5': 'Men (50-54)',
+    '8': 'Women (55-59)',
+    '7': 'Men (55-59)',
+    '10': 'Women (60+)',
+    '9': 'Men (60+)'
+  };
+  */
+
+  var athletes = [];
+
+  $scope.process_athletes = function () {
+    var filtered_athletes = [];
+    if (athletes && athletes.length > 0) {
+      // Filter out dupes
+      var uniques = {};
+      filtered_athletes = athletes.filter(function (a) {
+        var id = a.entrant.competitorId;
+        if (uniques[id]) {
+          return false;
+        }
+        uniques[id] = true;
+
+        // Assign a meta division
+        a.entrant.division = $scope.meta_divisions[a.entrant.divisionId];
+
+        return true;
+      });
+
+      // Apply filters
+      filtered_athletes = filtered_athletes.filter(function (a) {
+        return ($scope.filters.division !== "" && $scope.filters.division === a.entrant.division);
+      });
+
+      if (filtered_athletes && filtered_athletes.length) {
+        // Fix scores
+        filtered_athletes.forEach(function (a) {
+          a._total_rank = 0;
+          a._rank = 0;
+          for (var i = 0; i < 6; i++) {
+            a.scores[i] = a.scores[i] || {};
+            var s = a.scores[i];
+            if (s.score) {
+              s.score = +s.score;
+            }
+            s._workout_rank = null;
+            s._overall_rank = null;
+            s._overall_score = 0;
+          }
+        });
+
+        // For each workout, assign the real workout rank
+        for (var i = 0; i < 6; i++) {
+          // Sort from highest to lowest
+          filtered_athletes = filtered_athletes.sort(function (a, b) {
+            var as = +a.scores[i].score || 0;
+            var bs = +b.scores[i].score || 0;
+            if (!as && !bs) {
+              return 0;
+            }
+            if (!bs || (as > bs)) {
+              return -1;
+            }
+            if (!as || (as < bs)) {
+              return 1;
+            }
+            return 0;
+          });
+
+          if (!filtered_athletes[0].scores[i].score) {
+            break;
+          }
+
+          var rank = 0;
+          var assigned_rank = 0;
+          filtered_athletes.forEach(function (a, index) {
+            if (index === 0 || a.scores[i].score !== filtered_athletes[index - 1].scores[i].score) {
+              rank++;
+              assigned_rank = rank;
+            } else {
+              rank++;
+            }
+            a.scores[i]._workout_rank = assigned_rank;
+            var previous = (i === 0) ? 0 : a.scores[i - 1]._overall_score;
+            a.scores[i]._overall_score = previous + assigned_rank;
+            a._total_rank += assigned_rank;
+          });
+
+          // Sort by overall score in this workout
+          filtered_athletes = filtered_athletes.sort(function (a, b) {
+            var as = +a.scores[i]._overall_score || 999;
+            var bs = +b.scores[i]._overall_score || 999;
+            if (!as && !bs) {
+              return 0;
+            }
+            if (!bs || (as > bs)) {
+              return 1;
+            }
+            if (!as || (as < bs)) {
+              return -1;
+            }
+            return 0;
+          });
+
+          // Now assign them overall rank for this workout
+          var rank = 0;
+          var assigned_rank = 0;
+          filtered_athletes.forEach(function (a, index) {
+            if (index === 0 || a.scores[i]._overall_score !== filtered_athletes[index - 1].scores[i]._overall_score) {
+              rank++;
+              assigned_rank = rank;
+            } else {
+              rank++;
+            }
+            a.scores[i]._overall_rank = assigned_rank;
+          });
+
+          // Calculate the change in overall rank
+          filtered_athletes.forEach(function (a, index) {
+            if (i === 0 || a.scores[i - 1]._overall_rank === 0 || a.scores[i].score === 0) {
+              // First workout, overall rank = workout rank
+              a.scores[i].rankchange = 0;
+            } else {
+              // Look back at previous rank
+              a.scores[i].rankchange = a.scores[i - 1]._overall_rank - a.scores[i]._overall_rank;
+            }
+          });
+
+        }
+
+        // Now sort by overall rank by default
+        filtered_athletes = filtered_athletes.sort(function (a, b) {
+          var ar = +a._total_rank || 0;
+          var br = +b._total_rank || 0;
+          if (!ar && !br) {
+            return 0;
+          }
+          if (ar > br) {
+            return 1;
+          }
+          if (ar < br) {
+            return -1;
+          }
+          return 0;
+        });
+        var rank = 0;
+        var assigned_rank = 1;
+        filtered_athletes.forEach(function (a, i) {
+          if (i === 0 || filtered_athletes[i]._total_rank !== filtered_athletes[i - 1]._total_rank) {
+            rank++;
+            assigned_rank = rank;
+          } else {
+            rank++;
+          }
+          a._rank = assigned_rank;
+        });
+
+        // Now compute rank %
+        filtered_athletes.forEach(function (a) {
+          a._pct = ((rank - a._rank - 1) / (rank - 1)) * 100;
+        });
+      }
+
+      $scope.athletes = filtered_athletes;
+
+      $scope.update_chart = function (workout_num) {
+        if (typeof workout_num != "undefined") {
+          $scope.chart_workout = workout_num;
+        } else {
+          workout_num = $scope.chart_workout;
+        }
+
+        var tooltips = [[], []];
+
+        function data_label(item) {
+          return (item.index > tooltips[item.datasetIndex].length - 1) ? "unknown" : tooltips[item.datasetIndex][item.index];
+        };
+
+        // Update chart data
+        $scope.label_index = 0;
+        $scope.labels = [];
+        $scope.series = ['RX', 'Scaled'];
+        $scope.datasetOverride = [{yAxisID: 'y-axis-1'}, {yAxisID: 'y-axis-2'}];
+        $scope.options = {
+          maintainAspectRatio: false,
+          tooltips: {
+            callbacks: {
+              label: data_label
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom'
+          },
+          scales: {
+            yAxes: [
+              {
+                id: 'y-axis-1',
+                type: 'linear',
+                display: false,
+                position: 'left'
+              },
+              {
+                id: 'y-axis-2',
+                type: 'linear',
+                display: false,
+                position: 'right'
+              }
+            ]
+          }
+        };
+
+        var rx_data = [];
+        var scaled_data = [];
+
+        // Sort from highest to lowest
+        var chart_data = $scope.athletes.sort(function (a, b) {
+          var as = +a.scores[workout_num].score || 0;
+          var bs = +b.scores[workout_num].score || 0;
+          if (!as && !bs) {
+            return 0;
+          }
+          if (!bs || (as > bs)) {
+            return -1;
+          }
+          if (!as || (as < bs)) {
+            return 1;
+          }
+          return 0;
+        });
+        chart_data.forEach(function (a) {
+          var s = a.scores[workout_num];
+          var score;
+          if (s && s.score) {
+            score = s.score;
+            /* Individual Workout adjustments! */
+            /*
+            if (workout_num==1 && s.scaled==0 && score<=11100000) {
+                score = 11100000 - (2*(11100000 - score)/10000);
+            }
+            else if (workout_num==1 && s.scaled==1 && score<=1100000) {
+                score = 1100000 - (2*(1100000 - score)/10000);
+            }
+            else if (workout_num==3) {
+                if (s.scaled==0) {
+                    score = Math.floor((score-10000000)/10000);
+                }
+                else {
+                    score = Math.floor(score/10000);
+                }
+            }
+            */
+            if (s.scaled === 1) {
+              tooltips[1].push(" " + s.scoreDisplay + " (" + a.entrant.competitorName + ")");
+              scaled_data.push(score);
+            } else {
+              tooltips[0].push(" " + s.scoreDisplay + " (" + a.entrant.competitorName + ")");
+              $scope.label_index++;
+              $scope.labels.push($scope.label_index);
+              rx_data.push(score);
+            }
+          }
+        });
+
+        // Adjust axes per workout
+        //$scope.options.scales.yAxes[0].ticks = {"min":0};
+        //$scope.options.scales.yAxes[0].ticks= (workout_num==3) ? {"min":0,"max":948} : {};
+        //$scope.options.scales.yAxes[1].ticks= (workout_num==3) ? {"min":0,"max":948} : {};
+
+        $scope.data = [rx_data, scaled_data];
+      };
+
+      if ($scope.show_chart) {
+        $scope.update_chart();
+      }
+    } else {
+      $scope.athletes = [];
+    }
+  };
+  $scope.toggle_chart = function () {
+    $scope.show_chart = !$scope.show_chart;
+    if ($scope.show_chart) {
+      $scope.update_chart();
+    }
+  };
+
+  //console.log("affiliates",$scope.affiliate_ids);
+  //console.log("athletes",$scope.athlete_ids);
+
+  // Process each affiliate and add it to the loader
+  $scope.user_base_url = "https://games.crossfit.com/athlete/";
+  var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates=' + $scope.affiliate_ids + "&athletes=" + $scope.athlete_ids; // prod
+  //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // test
+  $http.get(url).then(function (data) {
+    /*
+    {
+        "affiliates": {
+            "123": {
+                "id":123,
+                ,"name":"Crossfit Bob"
+                ,"athletes": [ ... ]
+                ,"athletes_loaded_on": 123456789
+                ,"cached": BOOL
+                ,"cache_age": 123
+                ,"cache_source": (memory|db)
+            }
+        }
+    */
+    if (!data || !data.data || !data.data.affiliates) {
+      return;
+    }
+
+    // Combine all affiliate and athlete lists together
+    var _affiliates = data.data.affiliates;
+    var _athletes = data.data.athletes;
+
+    athletes = [];
+    for (id in _affiliates) {
+      $scope.num_affiliates++;
+      athletes = athletes.concat(_affiliates[id].athletes);
+    }
+    for (id in _athletes) {
+      athletes = athletes.concat(_athletes[id].athlete);
+    }
+    if ($scope.num_affiliates === 1 && athletes && athletes.length > 0) {
+      $scope.affiliate_name = athletes[0].entrant.affiliateName;
+    }
+
+    $scope.affiliates = _affiliates;
+    $scope.individual_athletes = _athletes;
+    $scope.athletes = athletes;
+
+    $scope.process_athletes();
+    //$timeout($scope.process_athletes, 1);
+  }).catch(function (e) {
+    athletes = [];
+    $timeout($scope.process_athletes, 1);
+  });
+
+  $scope.apply_filter = function (v) {
+    //$timeout($scope.process_athletes, 1);
+  };
     
 });
 
 </script>
     <style>
-        #promo {
-            width:400px;
-            max-width:33vw;
-            float:right;
-            border:3px solid #0C4C95;
-            margin:5px;
-            padding:15px;
-            border-radius:10px;
-            box-shadow: 10px 10px 12px #aaa;
-        }
-        #promo img { border:none; }
-        #promo li { font-size:1rem !important; }
-        #promo h2 { font-weight:bold; }
         #logo { float:left; margin:0 20px 50px 0; width:192px; }
         .leaderboard_logo { max-height:128px; }
     </style>
@@ -469,10 +518,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
                 <span class="bx--loading__percent">Loading</span>
             </div>
         </div>
-	<div ng-if="athletes && athletes.length==0" class="none-found">
-        No athletes found for that affiliate ID <br><a href="/">Search again</a>
-    </div>
-	<div ng-if="athletes && athletes.length>0">
+	<div ng-if="athletes">
     <div ng-if="show_header">
 		<img class="leaderboard_logo" ng-if="leaderboard_logo" ng-src="{{leaderboard_logo}}" style="float:left;margin-right:20px;">
         <div>
@@ -481,22 +527,20 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             <div>[Auto reload in {{counter}} minutes]</div>
         </div>
 
-        <div style="margin:5px 0 5px 10px;">Show: 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='M'}" type="button" value="Male" ng-click="apply_filter('sex','M')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='F'}" type="button" value="Female" ng-click="apply_filter('sex','F')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex==''}" type="button" value="All" ng-click="apply_filter('sex','')"> 
+        <div style="margin:5px 0 5px 10px;">
+            <span class="division-filter">
+                <select ng-model="filters.division" ng-change="apply_filter(this)" ng-options="div.desc as div.desc for div in divisions track by div.id">
+                    <option value="">Select a Division</option>
+                </select>
+            </span>
+
+            <!--
+            Show:
+            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()">
             <span class="spacer">|</span>
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='0'}" type="button" value="RX" ng-click="apply_filter('scaled','0')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='1'}" type="button" value="Scaled" ng-click="apply_filter('scaled','1')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')"> 
-            <span class="spacer">|</span>
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
-			<input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_country}" type="button" value="Country" ng-click="$parent.show_country=!$parent.show_country"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()"> 
-            <span class="spacer">|</span>
+            -->
 			<a class="button-spaced bx--btn bx--btn--secondary filter-button" href="#" onclick="download_to_excel(this,document.getElementById('leaderboard'))">Download XLS</a>
         </div>
-
 
         <div style="width:90vw;height:80vh;margin:10px;border:1px solid black;padding:20px 10px 40px 10px;" ng-if="show_chart">
             <div class="chart-selector">
@@ -517,8 +561,6 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         <tr>
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
             <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="num_affiliates>1">Affiliate</th>
-            <th rowspan="2" ng-click="sort('entrant.divisionId')" ng-if="show_division">Division</th>
-			<th rowspan="2" ng-click="sort('entrant.countryOfOriginName')" ng-if="show_country">Country</th>
             <th colspan="3">Overall</th>
             <th class="workout_header" colspan="{{(show_19_1?2:1)}}" ng-click="show_19_1=1-show_19_1">19.1</th>
             <th class="workout_header" colspan="{{(show_19_2?4:1)}}" ng-click="show_19_2=1-show_19_2">19.2</th>
@@ -559,8 +601,6 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
             <td>{{$index+1}}. <a href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
-            <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
-			<td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
             <td class="separator">{{a._rank}}</td>
             <td>{{a._total_rank}}</td>
             <td>{{a._pct|number:0}}%</td>
@@ -607,6 +647,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         </tr>
     </tbody>
     </table>
+
+        <!--
     <div ng-show="!view">
         <div style="margin-top:10px;"><strong>Data Details</strong></div>
         <div><em>(Athlete lists are loaded at most once per hour, then served from cache)</em></div>
@@ -631,6 +673,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             </span>
         </div>
     </div>
+    -->
+
 	</div>
 
 	</div>
