@@ -6,7 +6,7 @@
 	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2019 Crossfit Open results!" />
 	<meta property="og:image" content="http://MyOpenLeaderboard.com/share2.jpg" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <link type="text/css" rel="stylesheet" href="carbon-components.min.css" />
+    <link type="text/css" rel="stylesheet" href="carbon.css" />
     <link type="text/css" rel="stylesheet" href="index.css" />
     <link rel="icon" type="image/png" href="favicon.png">
     <script src="angular.min.js"></script>
@@ -415,21 +415,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 		//console.log("affiliates",$scope.affiliate_ids);
 		//console.log("athletes",$scope.athlete_ids);
 		
-		if ("ccc"==$scope.view) {
-			$scope.affiliate_ids = [6209,6043,14615,14848,13981,22162,18370,9403,11320,15751,5589,20782,18758,17918,20497,16949,15165,16780,16834,17223,10926,4416,2594,19372,16190,1244,2244,3533,8278,20430,7560,12170,15884,18160,18194,11804,14730,18925,16841,16200,1461,20409,15238,11337,8126,254,3165,10694,16036,20314,20817];
-			$scope.affiliate_name = "Carribean Crossfitter Community";
-			$scope.logo = "ccc/ccc_250.jpg";
-			$scope.show_country = true;
-			$scope.num_affiliates = $scope.affiliate_ids.length;
-			$scope.show_donate = false;
-			$scope.leaderboard_logo = "ccc/ccc_128.jpg";
-		}
-		else {
-			$scope.num_affiliates = 0;
-			$scope.affiliate_name = null;
-			if ($scope.affiliate_ids=="memory") { $scope.num_affiliates=99; }
-		}
-		
+        $scope.num_affiliates = 0;
+        $scope.affiliate_name = null;
+        if ($scope.affiliate_ids=="memory") { $scope.num_affiliates=99; }
+
         // Process each affiliate and add it to the loader
         $scope.user_base_url = "https://games.crossfit.com/athlete/";
         var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // prod
@@ -476,7 +465,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         }).catch(function(e) {
             athletes = [];
             $timeout($scope.process_athletes,1);
-        });;
+        });
     }
     
     $scope.apply_filter = function(filter,val) {
@@ -511,15 +500,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 <div ng-if="!ids" class="search">
     <div id="promo">
         <h2>Thank You!</h2>
-		<p>
-		MyOpenLeaderboard.com is generously sponsored by the <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Caribbean Crossfitter Community</a>. We are dedicated to promoting the Caribbean CrossFit community, events and athletes. <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Follow us</a> and find out about the various events in the Caribbean.
-		<br>
-		<a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity"><img src="ccc/ccc_300.jpg"></a>
-		</p>
 		<p style="margin-top:20px;">If you would like to support the site, donations are welcome!</p>
-		<!--
         <p>Hi! My name is <a href="http://MattKruse.com" target="_blank">Matt Kruse</a>. Development and hosting of this app costs me real time and money. To offset my time and <a href="https://aws.amazon.com/" target="_blank">AWS</a> costs, I'm asking the awesome Crossfit community to <b>donate to support this site</b> during the 2019 Open. It will help me justify to my wife the hours I spend on this ;) <b>Thanks!</b></p>
-		-->
         <div>
             <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
             Or use Paypal: <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>
