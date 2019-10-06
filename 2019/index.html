@@ -1,9 +1,9 @@
 <html>
 
 <head>
-	<title>Crossfit Open 2020 Leaderboard</title>
-	<meta name="title" content="Crossfit Open 2020 Leaderboard" />
-	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2020 Crossfit Open results!" />
+	<title>Crossfit Open 2019 Leaderboard</title>
+	<meta name="title" content="Crossfit Open 2019 Leaderboard" />
+	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2019 Crossfit Open results!" />
 	<meta property="og:image" content="http://MyOpenLeaderboard.com/share2.jpg" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <link type="text/css" rel="stylesheet" href="carbon.css" />
@@ -39,14 +39,14 @@
     <div id="promo">
         <h2>Thank You!</h2>
 		<p style="margin-top:20px;">If you would like to support the site, donations are welcome!</p>
-        <p>Hi! My name is <a href="http://MattKruse.com" target="_blank">Matt Kruse</a>. Development and hosting of this app costs me real time and money. To offset my time and <a href="https://aws.amazon.com/" target="_blank">AWS</a> costs, I'm asking the awesome Crossfit community to <b>donate to support this site</b> during the 2020 Open. It will help me justify to my wife the hours I spend on this ;) <b>Thanks!</b></p>
+        <p>Hi! My name is <a href="http://MattKruse.com" target="_blank">Matt Kruse</a>. Development and hosting of this app costs me real time and money. To offset my time and <a href="https://aws.amazon.com/" target="_blank">AWS</a> costs, I'm asking the awesome Crossfit community to <b>donate to support this site</b> during the 2019 Open. It will help me justify to my wife the hours I spend on this ;) <b>Thanks!</b></p>
         <div>
             <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
             Or use Paypal: <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>
         </div>
 		<!--
         <div>
-            <h4>Potential features coming for 2020:</h4>
+            <h4>Potential features coming for 2019:</h4>
             <ul>
                 <li>Improved look and feel</li>
                 <li>Manual entry of scores (participate even if you haven't registered for the Open!)</li>
@@ -67,7 +67,7 @@
         </div>
         -->
     </div>
-	<h3>2020 Crossfit Open Leaderboard</h3>
+	<h3>2019 Crossfit Open Leaderboard</h3>
     <form method="get" action="index.html">
         <p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
         To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it,<br> and look at the ID in the address of the affiliate's page.
@@ -102,11 +102,12 @@
 	<div id="results" ng-if="athletes && athletes.length>0">
     <div ng-if="show_header">
 		<img ng-if="leaderboard_logo" ng-src="{{leaderboard_logo}}" style="float:left;margin-right:20px;">
-        <div class="header__results"><h3>Crossfit Open 2020 Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
+        <div class="header__results"><h3>Crossfit Open 2019 Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
         <div>Not affiliated with Crossfit.com. 
             <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
         <br>
         <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px; font-size:120%;">
+        MyOpenLeaderboard.com is generously sponsored by the <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Caribbean Crossfitter Community</a>. We are dedicated to promoting the Caribbean CrossFit community, events and athletes. <a target="_blank" href="http://instagram.com/caribbeancrossfittercommunity">Follow us</a> and find out about the various events in the Caribbean.
         <!--
         So far in 2019, MyOpenLeaderboard.com has been used for over <b>1,100 affiliates</b> and <b>400</b> individual athletes, and loaded over <b>30,000</b> times (!), incurring over $200 in Amazon AWS costs.<br>
         Please consider donating to support this site! I'm one guy, doing this in my spare time. Help me out!
@@ -134,7 +135,7 @@
             <div><b>2019-10-04</b></div>
             <div>
                 <ul>
-                    <li>Updated for 2020!
+                    <li>Updated for 2019!
                 </ul>
             </div>
         </div>
@@ -175,11 +176,11 @@
         </div>
         <div style="width:90vw;height:80vh;margin:10px;border:1px solid black;padding:20px 10px 40px 10px;" ng-if="show_chart">
             <div class="chart-selector">
-                <span ng-class="{selected:chart_workout==0}" ng-click="update_chart(0)">20.1</span>
-                <span ng-class="{selected:chart_workout==1}" ng-click="update_chart(1)">20.2</span>
-                <span ng-class="{selected:chart_workout==2}" ng-click="update_chart(2)">20.3</span>
-                <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(3)">20.4</span>
-                <span ng-class="{selected:chart_workout==4}" ng-click="update_chart(4)">20.5</span>
+                <span ng-class="{selected:chart_workout==0}" ng-click="update_chart(0)">19.1</span>
+                <span ng-class="{selected:chart_workout==1}" ng-click="update_chart(1)">19.2</span>
+                <span ng-class="{selected:chart_workout==2}" ng-click="update_chart(2)">19.3</span>
+                <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(3)">19.4</span>
+                <span ng-class="{selected:chart_workout==4}" ng-click="update_chart(4)">19.5</span>
             </div>
             <canvas id="line" class="chart chart-line" chart-data="data"
                 chart-labels="labels" chart-series="series" chart-options="options"
@@ -195,39 +196,39 @@
             <th rowspan="2" ng-click="sort('entrant.divisionId')" ng-if="show_division">Division</th>
 			<th rowspan="2" ng-click="sort('entrant.countryOfOriginName')" ng-if="show_country">Country</th>
             <th colspan="3">Overall</th>
-            <th class="workout_header" colspan="{{(show_20_1?2:1)}}" ng-click="show_20_1=1-show_20_1">20.1</th>
-            <th class="workout_header" colspan="{{(show_20_2?4:1)}}" ng-click="show_20_2=1-show_20_2">20.2</th>
-            <th class="workout_header" colspan="{{(show_20_3?4:1)}}" ng-click="show_20_3=1-show_20_3">20.3</th>
-            <th class="workout_header" colspan="{{(show_20_4?4:1)}}" ng-click="show_20_4=1-show_20_4">20.4</th>
-            <th class="workout_header" colspan="{{(show_20_5?4:1)}}" style="padding-right:0;" ng-click="show_20_5=1-show_20_5">20.5</th>
+            <th class="workout_header" colspan="{{(show_19_1?2:1)}}" ng-click="show_19_1=1-show_19_1">19.1</th>
+            <th class="workout_header" colspan="{{(show_19_2?4:1)}}" ng-click="show_19_2=1-show_19_2">19.2</th>
+            <th class="workout_header" colspan="{{(show_19_3?4:1)}}" ng-click="show_19_3=1-show_19_3">19.3</th>
+            <th class="workout_header" colspan="{{(show_19_4?4:1)}}" ng-click="show_19_4=1-show_19_4">19.4</th>
+            <th class="workout_header" colspan="{{(show_19_5?4:1)}}" style="padding-right:0;" ng-click="show_19_5=1-show_19_5">19.5</th>
         </tr>
         <tr>
             <th class="separator" ng-click="sort('_rank')">Rank</th>
             <th ng-click="sort('_rank_total')">Score</th>
             <th ng-click="sort('_pct')">Rank<br>Pct</th>
 
-            <th ng-show="show_20_1" class="separator" ng-click="sort('-scores[0].score')">Score</th>
-            <th xng-show="show_20_1" ng-class="{separator:!show_20_1}" ng-click="sort('scores[0]._workout_rank')">WO<br>Rank</th>
+            <th ng-show="show_19_1" class="separator" ng-click="sort('-scores[0].score')">Score</th>
+            <th xng-show="show_19_1" ng-class="{separator:!show_19_1}" ng-click="sort('scores[0]._workout_rank')">WO<br>Rank</th>
             
-            <th ng-show="show_20_2" class="separator" ng-click="sort('-scores[1].score')">Score</th>
-            <th xng-show="show_20_2" ng-class="{separator:!show_20_2}" ng-click="sort('scores[1]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_2" ng-click="sort('scores[1]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_2" ng-click="sort('-scores[1].rankchange',true)">Rank<br>Change</th>
+            <th ng-show="show_19_2" class="separator" ng-click="sort('-scores[1].score')">Score</th>
+            <th xng-show="show_19_2" ng-class="{separator:!show_19_2}" ng-click="sort('scores[1]._workout_rank')">WO<br>Rank</th>
+            <th ng-show="show_19_2" ng-click="sort('scores[1]._overall_rank')">Overall<br>Rank</th>
+            <th ng-show="show_19_2" ng-click="sort('-scores[1].rankchange',true)">Rank<br>Change</th>
             
-            <th ng-show="show_20_3" class="separator" ng-click="sort('-scores[2].score')">Score</th>
-            <th xng-show="show_20_3" ng-class="{separator:!show_20_3}" ng-click="sort('scores[2]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_3" ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_3" ng-click="sort('-scores[2].rankchange',true)">Rank<br>Change</th>
+            <th ng-show="show_19_3" class="separator" ng-click="sort('-scores[2].score')">Score</th>
+            <th xng-show="show_19_3" ng-class="{separator:!show_19_3}" ng-click="sort('scores[2]._workout_rank')">WO<br>Rank</th>
+            <th ng-show="show_19_3" ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
+            <th ng-show="show_19_3" ng-click="sort('-scores[2].rankchange',true)">Rank<br>Change</th>
 
-            <th ng-show="show_20_4" class="separator" ng-click="sort('-scores[3].score')">Score</th>
-            <th xng-show="show_20_4" ng-class="{separator:!show_20_4}" ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_4" ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_4" ng-click="sort('-scores[3].rankchange',true)">Rank<br>Change</th>
+            <th ng-show="show_19_4" class="separator" ng-click="sort('-scores[3].score')">Score</th>
+            <th xng-show="show_19_4" ng-class="{separator:!show_19_4}" ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
+            <th ng-show="show_19_4" ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
+            <th ng-show="show_19_4" ng-click="sort('-scores[3].rankchange',true)">Rank<br>Change</th>
             
-            <th ng-show="show_20_5" class="separator" ng-click="sort('-scores[4].score')">Score</th>
-            <th xng-show="show_20_5" ng-class="{separator:!show_20_5}" ng-click="sort('scores[4]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_5" ng-click="sort('scores[4]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_5" ng-click="sort('-scores[4].rankchange',true)">Rank<br>Change</th>
+            <th ng-show="show_19_5" class="separator" ng-click="sort('-scores[4].score')">Score</th>
+            <th xng-show="show_19_5" ng-class="{separator:!show_19_5}" ng-click="sort('scores[4]._workout_rank')">WO<br>Rank</th>
+            <th ng-show="show_19_5" ng-click="sort('scores[4]._overall_rank')">Overall<br>Rank</th>
+            <th ng-show="show_19_5" ng-click="sort('-scores[4].rankchange',true)">Rank<br>Change</th>
         </tr>
     </thead>
     <tbody>
@@ -240,40 +241,40 @@
             <td>{{a._total_rank}}</td>
             <td>{{a._pct|number:0}}%</td>
             
-            <td ng-show="show_20_1" class="separator" title="{{a.scores[0].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0]._workout_rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_1}">{{a.scores[0]._workout_rank}}</td>
+            <td ng-show="show_19_1" class="separator" title="{{a.scores[0].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0]._workout_rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
+            <td ng-class="{separator:!show_19_1}">{{a.scores[0]._workout_rank}}</td>
             
-            <td ng-show="show_20_2" class="separator" title="{{a.scores[1].breakdown}} ({{a.scores[1].score}})" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1]._workout_rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_2}">{{a.scores[1]._workout_rank}}</td>
-            <td ng-show="show_20_2" title="Overall Score: {{a.scores[1]._overall_score}}">{{a.scores[1]._overall_rank}}</td>
-            <td ng-show="show_20_2">
+            <td ng-show="show_19_2" class="separator" title="{{a.scores[1].breakdown}} ({{a.scores[1].score}})" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1]._workout_rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span></td>
+            <td ng-class="{separator:!show_19_2}">{{a.scores[1]._workout_rank}}</td>
+            <td ng-show="show_19_2" title="Overall Score: {{a.scores[1]._overall_score}}">{{a.scores[1]._overall_rank}}</td>
+            <td ng-show="show_19_2">
                 <span ng-if="a.scores[1].rankchange==0">-</span>
                 <span ng-if="a.scores[1].rankchange>0" class="positive">+{{a.scores[1].rankchange}}</span>
                 <span ng-if="a.scores[1].rankchange<0" class="negative">{{a.scores[1].rankchange}}</span>
             </td>
 
-            <td ng-show="show_20_3" class="separator" title="{{a.scores[2].breakdown}} ({{a.scores[2].score}})" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2]._workout_rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_3}">{{a.scores[2]._workout_rank}}</td>
-            <td ng-show="show_20_3" title="Overall Score: {{a.scores[2]._overall_score}}">{{a.scores[2]._overall_rank}}</td>
-            <td ng-show="show_20_3">
+            <td ng-show="show_19_3" class="separator" title="{{a.scores[2].breakdown}} ({{a.scores[2].score}})" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2]._workout_rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span></td>
+            <td ng-class="{separator:!show_19_3}">{{a.scores[2]._workout_rank}}</td>
+            <td ng-show="show_19_3" title="Overall Score: {{a.scores[2]._overall_score}}">{{a.scores[2]._overall_rank}}</td>
+            <td ng-show="show_19_3">
                 <span ng-if="a.scores[2].rankchange==0">-</span>
                 <span ng-if="a.scores[2].rankchange>0" class="positive">+{{a.scores[2].rankchange}}</span>
                 <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
             </td>
             
-            <td ng-show="show_20_4" class="separator" title="{{a.scores[3].breakdown}} ({{a.scores[3].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_4}">{{a.scores[3]._workout_rank}}</td>
-            <td ng-show="show_20_4" title="Overall Score: {{a.scores[3]._overall_score}}">{{a.scores[3]._overall_rank}}</td>
-            <td ng-show="show_20_4">
+            <td ng-show="show_19_4" class="separator" title="{{a.scores[3].breakdown}} ({{a.scores[3].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
+            <td ng-class="{separator:!show_19_4}">{{a.scores[3]._workout_rank}}</td>
+            <td ng-show="show_19_4" title="Overall Score: {{a.scores[3]._overall_score}}">{{a.scores[3]._overall_rank}}</td>
+            <td ng-show="show_19_4">
                 <span ng-if="a.scores[3].rankchange==0">-</span>
                 <span ng-if="a.scores[3].rankchange>0" class="positive">+{{a.scores[3].rankchange}}</span>
                 <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>
             </td>
 
-            <td ng-show="show_20_5" class="separator" title="{{a.scores[4].breakdown}} ({{a.scores[4].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_5}">{{a.scores[4]._workout_rank}}</td>
-            <td ng-show="show_20_5" title="Overall Score: {{a.scores[4]._overall_score}}">{{a.scores[4]._overall_rank}}</td>
-            <td ng-show="show_20_5">
+            <td ng-show="show_19_5" class="separator" title="{{a.scores[4].breakdown}} ({{a.scores[4].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>
+            <td ng-class="{separator:!show_19_5}">{{a.scores[4]._workout_rank}}</td>
+            <td ng-show="show_19_5" title="Overall Score: {{a.scores[4]._overall_score}}">{{a.scores[4]._overall_rank}}</td>
+            <td ng-show="show_19_5">
                 <span ng-if="a.scores[4].rankchange==0">-</span>
                 <span ng-if="a.scores[4].rankchange>0" class="positive">+{{a.scores[4].rankchange}}</span>
                 <span ng-if="a.scores[4].rankchange<0" class="negative">{{a.scores[4].rankchange}}</span>
