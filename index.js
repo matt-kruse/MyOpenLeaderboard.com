@@ -351,7 +351,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $scope.show_help = false;
     $scope.show_whats_new = false;
     $scope.show_header = true;
-    $scope.show_donate = true;
+    $scope.show_donate = false;
     $scope.show_donate_details = false;
     $scope.show_chart = false;
 
