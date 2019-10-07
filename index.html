@@ -70,11 +70,32 @@
 	<h3>2020 Crossfit Open Leaderboard</h3>
     <form method="get" action="index.html">
         <p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
-        To find an affiliate ID, use Crossfit's <a href="https://games.crossfit.com/search" target="_blank">Search Form</a> to find the affiliate, click on it,<br> and look at the ID in the address of the affiliate's page.
-        <div class="search__box"><input id="a" name="affiliates" class="bx--text-input"></div>
+        <div class="search__box">
+            <input id="a" name="affiliates" class="bx--text-input">
+            <div>
+                Search for an Affiliate by name: <input id="aac" size="10" ng-keyup="aac_update(this)"/>
+                <div ng-if="aac_list.length==0">No matches</div>
+                <div id="aac-results" ng-if="aac_list.length>0">
+                    Click an affiliate to add it's ID to the selection list:
+                    <span ng-repeat="a in aac_list" class="aac-item" style="cursor:pointer;border:1px solid #333; margin:2px;padding:3px;display:inline-block;background-color:#E9F1F4;" ng-click="affiliate_select(a.id.substring(1))">{{a.label}} ({{a.id.substring(1)}})</span>
+                </div>
+            </div>
+        </div>
+
         <div style="font-weight:bold;font-size:120%;"> AND / OR </div>
+
         <p>Enter an athlete ID (ex: 1234) or multiple comma-separated athlete ID's (1234,5677).</p>
-        <div class="search__box"><input id="a" name="athletes" class="bx--text-input"></div>
+        <div class="search__box">
+            <input id="c" name="athletes" class="bx--text-input">
+            <div>
+                Search for an Athlete by name: <input id="cac" size="10" ng-keyup="cac_update(this)"/>
+                <div ng-if="cac_list.length==0">No matches</div>
+                <div id="cac-results" ng-if="cac_list.length>0">
+                    Click an athlete to add their ID to the selection list:
+                    <span ng-repeat="a in cac_list" class="cac-item" style="cursor:pointer;border:1px solid #333; margin:2px;padding:3px;display:inline-block;background-color:#E9F1F4;" ng-click="athlete_select(a.id)">{{a.name}} @ {{a.affiliate}} ({{a.id}})</span>
+                </div>
+            </div>
+        </div>
         <div>
             <input class="bx--btn bx--btn--primary" type="submit" value="Go" style="color:white;">
         </div>
@@ -191,7 +212,7 @@
     <thead>
         <tr>
             <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
-            <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="num_affiliates>1">Affiliate</th>
+            <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="!affiliate_name>1">Affiliate</th>
             <th rowspan="2" ng-click="sort('entrant.divisionId')" ng-if="show_division">Division</th>
 			<th rowspan="2" ng-click="sort('entrant.countryOfOriginName')" ng-if="show_country">Country</th>
             <th colspan="3">Overall</th>
@@ -233,7 +254,7 @@
     <tbody>
         <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
             <td>{{$index+1}}. <a href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
-            <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
+            <td ng-if="!affiliate_name">{{a.entrant.affiliateName}}</td>
             <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
 			<td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
             <td class="separator">{{a._rank}}</td>

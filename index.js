@@ -446,7 +446,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
       for (id in $scope.individual_athletes) {
         athletes = athletes.concat( $scope.individual_athletes[id].athlete );
       }
-      if ($scope.num_affiliates==1 && athletes && athletes.length>0) {
+      if ($scope.num_affiliates==1 && (!athletes || athletes.length===0)) {
         $scope.affiliate_name = athletes[0].entrant.affiliateName;
       }
       $scope.athletes = athletes;
@@ -457,6 +457,78 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     });
   }
 
+  $scope.aac_list = null;
+  var aac_timeout = null;
+  $scope.aac_update = function(i) {
+    var val = document.getElementById('aac').value;
+    if (val.length >= 3) {
+      aac_timeout && $timeout.cancel(aac_timeout);
+      aac_timeout = $timeout($scope.aac, 300);
+    }
+  };
+  $scope.aac = function() {
+    var term = document.getElementById('aac').value;
+    $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https%3A%2F%2Fgames.crossfit.com%2Fac.php%3Ftype%3Daffiliates%26limit%3D50%26term%3D"+encodeURIComponent(term)).then(function(data) {
+      try {
+        $scope.aac_list = JSON.parse(data.data.content);
+        console.log($scope.aac_list);
+      }
+      catch(e) {
+        $scope.aac_list = null;
+      }
+    });
+  };
+  $scope.affiliate_select = function(id) {
+    var a = document.getElementById('a');
+    var list = a.value;
+    if (a.value.length>0) {
+      list = a.value.split(/\s*,\s*/);
+    }
+    else {
+      list = [];
+    }
+    if (list.indexOf(id)===-1) {
+      list.push(id);
+    }
+    a.value = list.join(",");
+  };
+
+  $scope.cac_list = null;
+  var cac_timeout = null;
+  $scope.cac_update = function(i) {
+    var val = document.getElementById('cac').value;
+    if (val.length >= 3) {
+      cac_timeout && $timeout.cancel(cac_timeout);
+      cac_timeout = $timeout($scope.cac, 300);
+    }
+  };
+  $scope.cac = function() {
+    var term = document.getElementById('cac').value;
+    $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https://games.crossfit.com/competitions/api/v1/competitions/open/2020/athletes%3Fterm="+encodeURIComponent(term)).then(function(data) {
+      try {
+        $scope.cac_list = JSON.parse(data.data.content);
+        console.log($scope.cac_list);
+      }
+      catch(e) {
+        $scope.cac_list = null;
+      }
+    });
+  };
+  $scope.athlete_select = function(id) {
+    var a = document.getElementById('c');
+    var list = a.value;
+    if (a.value.length>0) {
+      list = a.value.split(/\s*,\s*/);
+    }
+    else {
+      list = [];
+    }
+    if (list.indexOf(id)===-1) {
+      list.push(id);
+    }
+    a.value = list.join(",");
+  };
+  
   $scope.apply_filter = function(filter,val) {
     $scope.filters[filter] = val;
     $timeout($scope.process_athletes,10);

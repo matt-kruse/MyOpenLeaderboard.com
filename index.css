@@ -60,11 +60,10 @@ a:hover {
 }
 
 .search__box {
-  display: flex;
   padding: 0 0 1.5rem 0;
 }
 
-.search__box #a {
+.search__box #a, .search__box #c  {
   width: 300px;
 }
 
