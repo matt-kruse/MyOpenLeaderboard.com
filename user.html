@@ -1,0 +1,200 @@
+<html>
+
+<head>
+	<title>Crossfit Open 2020 User Scores</title>
+	<meta name="title" content="Crossfit Open 2020 User Scores" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="carbon.css" />
+    <link type="text/css" rel="stylesheet" href="index.css" />
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script src="angular.min.js"></script>
+    <style>
+        #promo {
+            width:400px;
+            max-width:33vw;
+            float:right;
+            border:3px solid #0C4C95;
+            margin:5px;
+            padding:15px;
+            border-radius:10px;
+            box-shadow: 10px 10px 12px #aaa;
+        }
+        #promo img { border:none; }
+        #promo li { font-size:1rem !important; }
+        #promo h2 { font-weight:bold; }
+        #logo { float:left; margin:0 20px 500px 0; width:192px; }
+        p { margin:10px; font-size:120%; }
+        i { font-style:italic; }
+        h4 {
+            font-size:120%;
+            font-weight:bold;
+            margin:20px 0;
+        }
+        button { font-size:110%; padding:3px 10px; border-radius:5px; }
+    </style>
+    <script>
+      var $ = angular.element;
+      var app = angular.module("App",[]);
+      app.controller("Controller", function($scope, $http, $interval, $timeout) {
+        $scope.user = {};
+        $scope.logged_in = false;
+        $scope.new_user = false;
+        $scope.message = "";
+
+        $scope.divisions = {
+          '2': 'Women',
+          '1': 'Men',
+          '11': 'Team',
+          '15': 'Girls (14-15)',
+          '14': 'Boys (14-15)',
+          '17': 'Girls (16-17)',
+          '16': 'Boy (16-17)',
+          '19': 'Women (35-39)',
+          '18': 'Men (35-39)',
+          '13': 'Women (40-44)',
+          '12': 'Men (40-44)',
+          '4': 'Women (45-49)',
+          '3': 'Men (45-49)',
+          '6': 'Women (50-54)',
+          '5': 'Men (50-54)',
+          '8': 'Women (55-59)',
+          '7': 'Men (55-59)',
+          '10': 'Women (60+)',
+          '9': 'Men (60+)'
+        };
+        $scope.genders = {
+          'M':'Male',
+          'F':'Female'
+        };
+
+        var msg = function(m) {
+          $scope.message = m;
+          $timeout(function() {
+            $scope.message = "";
+          },3000);
+        };
+        var err = function(m) {
+          $scope.error = m;
+          $timeout(function() {
+            $scope.error = "";
+          },3000);
+        };
+        $scope.login = function() {
+          var data = encodeURIComponent( JSON.stringify($scope.user) );
+          $scope.message = "Logging in ...";
+          $http.get("https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?action=login&data=" + data).then(function(data) {
+            if (data.data.error) {
+              err(data.data.error);
+            }
+            else {
+              $scope.user = data.data;
+              $scope.logged_in = true;
+              $scope.new_user = false;
+              msg("You have been logged in.");
+            }
+          });
+        };
+        $scope.create = function() {
+          var data = encodeURIComponent( JSON.stringify($scope.user) );
+          var password = $scope.user.password_new;
+          $scope.message = "Creating user ...";
+          $http.get("https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?action=create_user&data=" + data).then(function(data) {
+            if (data.data.error) {
+              err(data.data.error);
+            }
+            else {
+              $scope.user = data.data;
+              $scope.user.password = password;
+              $scope.logged_in = true;
+              $scope.new_user = true;
+              msg("Your user has been created!");
+            }
+          });
+        };
+        $scope.update = function() {
+          var data = encodeURIComponent( JSON.stringify($scope.user) );
+          $scope.message = "Saving ...";
+          $http.get("https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?action=update_user&data=" + data).then(function(data) {
+            if (data.data.error) {
+              err(data.data.error);
+            }
+            else {
+              msg("Saved Successful");
+            }
+          });
+        };
+      });
+    </script>
+</head>
+
+<body ng-app="App">
+<div ng-controller="Controller">
+    <div id="promo">
+        <h2>Thank You!</h2>
+        <p style="margin-top:20px;">If you would like to support the site, donations are welcome!</p>
+        <p>Hi! My name is <a href="http://MattKruse.com" target="_blank">Matt Kruse</a>. Development and hosting of this app costs me real time and money. To offset my time and <a href="https://aws.amazon.com/" target="_blank">AWS</a> costs, I'm asking the awesome Crossfit community to <b>donate to support this site</b> during the 2020 Open. It will help me justify to my wife the hours I spend on this ;) <b>Thanks!</b></p>
+        <div>
+            <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
+            Or use Paypal: <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>
+        </div>
+    </div>
+    <div id="logo">
+        <img src="logo_192.png">
+    </div>
+    <h3>2020 Crossfit Open User Scores</h3>
+
+    <select ng-options="key as value for (key , value) in divisions" ng-model="x.y"></select>
+
+    <div>
+        <p>MyOpenLeaderboard allows you to save your scores and include them in leaderboards on this site!</p>
+        <p>Your scores will <b>not</b> appear on Crossfit.com or the overall leaderboards there. But you can include yourself here in your affiliate's leaderboard, or with your friends, etc.</p>
+        <p>These scores may be <b>completely anonymous</b> if you wish. They are not tied to your Crossfit ID, social media, or anything else. You decide which name to display for yourself when you are included in a leaderboard here.</p>
+        <p>These scores are <b>not validated</b>, since they won't be displayed anywhere unless you or someone else intentionally chooses to include them in a leaderboard.</p>
+
+        <div ng-if="message" style="display:inline-block;background-color:#2bb54e;color:white;">{{message}}</div>
+        <div ng-if="!logged_in">
+            <form>
+                <p>To enter scores, either login below or create a new user.</p>
+                <h4>Login</h4>
+                <div>
+                    User ID: <input ng-model="user.id"><br>
+                    Password: <input ng-model="user.password"><br>
+                    <button ng-click="login()">Login</button>
+                </div>
+                <h4>Create A New User</h4>
+                <div>
+                    User ID: <i>(Will be auto-generated)</i><br>
+                    Display Name: <input ng-model="user.name"> (This will be displayed in the leaderboard)<br>
+                    Password: <input ng-model="user.password_new"><br>
+                    <button ng-click="create()">Create New User</button>
+                </div>
+            </form>
+        </div>
+
+        <div ng-if="logged_in">
+            <form>
+                <h4>User Details and Scores</h4>
+                <p ng-if="new_user"><b>Write down your User ID and password used!</b> They cannot be recovered if lost or forgotten, and you will need to login with them to record your scores.</p>
+                <div>
+                    User ID: {{user.id}} (Enter this in the athlete ID box on the main page)<br>
+                    Display Name: <input ng-model="user.athlete.entrant.competitorName"> (This will be displayed in the leaderboard)<br>
+                    Affiliate Name: <input ng-model="user.athlete.entrant.affiliateName"> <br>
+                    Division: <select ng-options="key as value for (key , value) in divisions" ng-model="user.athlete.entrant.divisionId"></select> <br>
+                    Gender: <select ng-options="key as value for (key , value) in genders" ng-model="user.athlete.entrant.gender"></select> <br>
+                    Country of Origin Name: <input ng-model="user.athlete.entrant.countryOfOriginName">
+                </div>
+                <div>
+                    <h4>Scores</h4>
+                    <div>
+                        Entry fields for each workout will be added the weekend after they are announced.
+                    </div>
+                </div>
+                <div>
+                    <button ng-click="update()">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

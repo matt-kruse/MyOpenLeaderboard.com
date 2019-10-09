@@ -253,7 +253,7 @@
     </thead>
     <tbody>
         <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
-            <td>{{$index+1}}. <a href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
+            <td>{{$index+1}}. <a ng-if="a.entrant.competitorId<5000000" href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a><span ng-if="a.entrant.competitorId>=5000000">{{a.entrant.competitorName}}</span></td>
             <td ng-if="!affiliate_name">{{a.entrant.affiliateName}}</td>
             <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
 			<td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
