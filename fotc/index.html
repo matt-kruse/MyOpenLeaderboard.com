@@ -68,6 +68,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   // FITTEST OF THE COAST CONFIG
   $scope.affiliate_ids = [2955, 17680, 4005, 14997, 24292, 2376, 20106, 10639, 3887, 3929, 3392, 21579, 10174, 19409, 19207, 10507, 18741, 18528, 15897, 16410, 2421, 15555, 4372, 5920, 2011, 14358, 9172, 5875, 3576, 3687, 1747, 19306, 4747];
   $scope.affiliate_name = "2020 Fittest of the Coast Qualifier";
+  $scope.athlete_ids = [719114,171287,347651,1046279,145510];
   $scope.logo = "logo.png";
   $scope.show_country = false;
   $scope.num_affiliates = $scope.affiliate_ids.length;
@@ -112,9 +113,24 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     {id:4,desc:'Teenage Boys (14-17)'},
     {id:5,desc:'Women Masters (35-44)'},
     {id:6,desc:'Men Masters (35-44)'},
-    {id:7,desc:'Women Masters+ (45+)'},
-    {id:8,desc:'Men Masters+ (45+)'}
+    {id:7,desc:'Women Masters+ (45-54)'},
+    {id:8,desc:'Men Masters+ (45-54)'},
+    {id:9,desc:'Women Masters+ (55+)'},
+    {id:10,desc:'Men Masters+ (55+)'}
   ];
+
+  $scope.division_cutoff = {
+    'Women (18-34)':30,
+    'Men (18-34)':30,
+    'Teenage Girls (14-17)':30,
+    'Teenage Boys (14-17)':30,
+    'Women Masters (35-44)':30,
+    'Men Masters (35-44)':30,
+    'Women Masters+ (45-54)':20,
+    'Men Masters+ (45-54)':20,
+    'Women Masters+ (55+)':10,
+    'Men Masters+ (55+)':10
+  };
 
   $scope.meta_divisions = {
     '2': 'Women (18-34)',
@@ -130,14 +146,14 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     '13': 'Women Masters (35-44)',
     '12': 'Men Masters (35-44)',
 
-    '4': 'Women Masters+ (45+)',
-    '3': 'Men Masters+ (45+)',
-    '6': 'Women Masters+ (45+)',
-    '5': 'Men Masters+ (45+)',
-    '8': 'Women Masters+ (45+)',
-    '7': 'Men Masters+ (45+)',
-    '10': 'Women Masters+ (45+)',
-    '9': 'Men Masters+ (45+)'
+    '4': 'Women Masters+ (45-54)',
+    '3': 'Men Masters+ (45-54)',
+    '6': 'Women Masters+ (45-54)',
+    '5': 'Men Masters+ (45-54)',
+    '8': 'Women Masters+ (55+)',
+    '7': 'Men Masters+ (55+)',
+    '10': 'Women Masters+ (55+)',
+    '9': 'Men Masters+ (55+)'
   };
 
   /*
@@ -504,6 +520,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     <style>
         #logo { float:left; margin:0 20px 50px 0; width:192px; }
         .leaderboard_logo { max-height:128px; }
+        tr.cutoff td { border-bottom: 10px solid #24C2D6;}
     </style>
 </head>
 
@@ -604,7 +621,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
+        <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId]),'cutoff':(division_cutoff[filters.division]==$index+1)}">
             <td>{{$index+1}}. <a href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a></td>
             <td ng-if="num_affiliates>1">{{a.entrant.affiliateName}}</td>
             <td class="separator">{{a._rank}}</td>
