@@ -84,6 +84,7 @@
                         <b>Affiliates:</b> <input id="a" name="affiliates" class="bx--text-input">
                         <div>
                             To find an affiliate ID, search by name and click on a result: <input id="aac" size="15" ng-keyup="aac_update(this)"/>
+                            <div ng-if="aac_searching">Searching ...</div>
                             <div ng-if="aac_list.length==0">No matches</div>
                             <div id="aac-results" ng-if="aac_list.length>0">
                                 <div ng-repeat="a in aac_list" class="aac-item" style="cursor:pointer;border:1px solid #333;font-size:80%;margin:2px;padding:2px;display:inline-block;background-color:#E9F1F4;" ng-click="affiliate_select(a.id.substring(1))">{{a.label}} ({{a.id.substring(1)}})</div>
@@ -98,6 +99,7 @@
                         <b>Athletes:</b> <input id="c" name="athletes" class="bx--text-input">
                         <div>
                             To find an athlete ID, search by name and click on a result: <input id="cac" size="15" ng-keyup="cac_update(this)"/>
+                            <div ng-if="cac_searching">Searching ...</div>
                             <div ng-if="cac_list.length==0">No matches</div>
                             <div id="cac-results" ng-if="cac_list.length>0">
                                 <span ng-repeat="a in cac_list" class="cac-item" style="cursor:pointer;border:1px solid #333;font-size:80%;margin:2px;padding:2px;display:inline-block;background-color:#E9F1F4;" ng-click="athlete_select(a.id)">{{a.name}} @ {{a.affiliate}} ({{a.id}})</span>

@@ -458,6 +458,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   }
 
   $scope.aac_list = null;
+  $scope.aac_searching = false;
   var aac_timeout = null;
   $scope.aac_update = function(i) {
     var val = document.getElementById('aac').value;
@@ -471,7 +472,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   };
   $scope.aac = function() {
     var term = document.getElementById('aac').value;
+    $scope.aac_searching = true;
+    $scope.aac_list = null;
     $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https%3A%2F%2Fgames.crossfit.com%2Fac.php%3Ftype%3Daffiliates%26limit%3D50%26term%3D"+encodeURIComponent(term)).then(function(data) {
+      $scope.aac_searching = false;
       try {
         $scope.aac_list = JSON.parse(data.data.content);
       }
@@ -496,6 +500,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   };
 
   $scope.cac_list = null;
+  $scope.cac_searching = false;
   var cac_timeout = null;
   $scope.cac_update = function(i) {
     var val = document.getElementById('cac').value;
@@ -506,7 +511,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   };
   $scope.cac = function() {
     var term = document.getElementById('cac').value;
+    $scope.cac_searching = true;
+    $scope.cac_list = null;
     $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https://games.crossfit.com/competitions/api/v1/competitions/open/2020/athletes%3Fterm="+encodeURIComponent(term)).then(function(data) {
+      $scope.cac_searching = false;
       try {
         $scope.cac_list = JSON.parse(data.data.content);
       }
