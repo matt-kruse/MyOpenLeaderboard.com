@@ -6,7 +6,6 @@
 	<meta name="description" content="See how you rank compared to other athletes in your gym, or several gyms. A sortable summary of your 2020 Crossfit Open results!" />
 	<meta property="og:image" content="http://MyOpenLeaderboard.com/share2.jpg" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <link type="text/css" rel="stylesheet" href="carbon.css" />
     <link type="text/css" rel="stylesheet" href="index.css" />
     <link rel="icon" type="image/png" href="favicon.png">
     <script src="angular.min.js"></script>
@@ -28,7 +27,6 @@
         #promo img { border:none; }
         #promo li { font-size:1rem !important; }
         #promo h2 { font-weight:bold; }
-        #logo { float:left; margin:0 20px 50px 0; width:192px; }
     </style>
 </head>
 
@@ -50,56 +48,70 @@
             <ul>
                 <li>Improved look and feel</li>
                 <li>Manual entry of scores (participate even if you haven't registered for the Open!)</li>
-                <li>Search affiliates/athletes by name</li>
-                <li><b>DONE!</b> Download results to XLS</li>
-                <li>Faster data refreshes (if donations offset increased cost)</li>
                 <li>Saved and shareable leaderboards?</li>
                 <li>Alexa integration?</li>
             </ul>
         </div>
 		-->
     </div>
-    <div id="logo">
-        <img ng-src="{{logo}}">
-        <!--
-        <div style="padding:15px;border:1px solid #aaa;margin:10px;display:inline-block;">
-            <a href="2018/index.html">View the 2018 Leaderboard</a>
+    <div class="flex">
+        <div id="logo" class="flex-left">
+            <img ng-src="{{logo}}">
+            <div style="padding:15px;border:1px solid #ddd;margin:10px;display:inline-block;">
+                Previous Years:<br>
+                <a href="2018/index.html">2018</a><br>
+                <a href="2019/index.html">2019</a>
+            </div>
         </div>
-        -->
+        <div class="flex-content">
+            <h1>2020 Crossfit Open Leaderboard</h1>
+            <p>
+                MyOpenLeaderboard lets you view results of the Crossfit Open in a customizable way.
+                You can combine multiple affiliates and/or individual athletes into a single leaderboard. Compare results within your gym, or across all gyms in your town, or maybe create a custom leaderboard with just your friends.
+            </p>
+            <p>
+                The generated Leaderboard can be sorted and filtered, and offers a lot more detailed information than the official Leaderboard from Crossfit. You can even compare results across divisions, or combine RX and Scaled into one view.
+            </p>
+            <p>
+                <b>New for 2020:</b> Enter your own scores without signing up for the Open! Scores entered on this site can be included on Leaderboards from this site. So even if someone isn't officially in the Open, you can include their scores.
+                <input type="button" onclick="location.href='user.html'" class="bx--btn bx--btn--primary" style="background-color:#0C4C95;color:white;display:inline-block;" value="Manual Score Entry">
+            </p>
+            <form method="get" action="index.html">
+                <div>
+                    <h3>Build Your Leaderboard</h3>
+                    <p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
+                    <div class="search__box">
+                        <b>Affiliates:</b> <input id="a" name="affiliates" class="bx--text-input">
+                        <div>
+                            To find an affiliate ID, search by name and click on a result: <input id="aac" size="15" ng-keyup="aac_update(this)"/>
+                            <div ng-if="aac_list.length==0">No matches</div>
+                            <div id="aac-results" ng-if="aac_list.length>0">
+                                <div ng-repeat="a in aac_list" class="aac-item" style="cursor:pointer;border:1px solid #333;font-size:80%;margin:2px;padding:2px;display:inline-block;background-color:#E9F1F4;" ng-click="affiliate_select(a.id.substring(1))">{{a.label}} ({{a.id.substring(1)}})</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="font-weight:bold;font-size:120%;"> AND / OR </div>
+
+                    <p>Enter an athlete ID (ex: 1234) or multiple comma-separated athlete ID's (12345,5000010). To include an athlete with manually-entered scores, enter the ID assigned to them when their user was created. It will be greater than 5000000.</p>
+                    <div class="search__box">
+                        <b>Athletes:</b> <input id="c" name="athletes" class="bx--text-input">
+                        <div>
+                            To find an athlete ID, search by name and click on a result: <input id="cac" size="15" ng-keyup="cac_update(this)"/>
+                            <div ng-if="cac_list.length==0">No matches</div>
+                            <div id="cac-results" ng-if="cac_list.length>0">
+                                <span ng-repeat="a in cac_list" class="cac-item" style="cursor:pointer;border:1px solid #333;font-size:80%;margin:2px;padding:2px;display:inline-block;background-color:#E9F1F4;" ng-click="athlete_select(a.id)">{{a.name}} @ {{a.affiliate}} ({{a.id}})</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <input class="bx--btn bx--btn--primary" type="submit" value="Build Your Leaderboard!" style="background-color:#E90827;color:white;">
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-	<h3>2020 Crossfit Open Leaderboard</h3>
-    <form method="get" action="index.html">
-        <p>Enter an affiliate ID (ex: 1234) or multiple comma-separated affiliate ID's (1234,5677).</p>
-        <div class="search__box">
-            <input id="a" name="affiliates" class="bx--text-input">
-            <div>
-                Search for an Affiliate by name: <input id="aac" size="10" ng-keyup="aac_update(this)"/>
-                <div ng-if="aac_list.length==0">No matches</div>
-                <div id="aac-results" ng-if="aac_list.length>0">
-                    Click an affiliate to add it's ID to the selection list:
-                    <span ng-repeat="a in aac_list" class="aac-item" style="cursor:pointer;border:1px solid #333; margin:2px;padding:3px;display:inline-block;background-color:#E9F1F4;" ng-click="affiliate_select(a.id.substring(1))">{{a.label}} ({{a.id.substring(1)}})</span>
-                </div>
-            </div>
-        </div>
 
-        <div style="font-weight:bold;font-size:120%;"> AND / OR </div>
-
-        <p>Enter an athlete ID (ex: 1234) or multiple comma-separated athlete ID's (1234,5677).</p>
-        <div class="search__box">
-            <input id="c" name="athletes" class="bx--text-input">
-            <div>
-                Search for an Athlete by name: <input id="cac" size="10" ng-keyup="cac_update(this)"/>
-                <div ng-if="cac_list.length==0">No matches</div>
-                <div id="cac-results" ng-if="cac_list.length>0">
-                    Click an athlete to add their ID to the selection list:
-                    <span ng-repeat="a in cac_list" class="cac-item" style="cursor:pointer;border:1px solid #333; margin:2px;padding:3px;display:inline-block;background-color:#E9F1F4;" ng-click="athlete_select(a.id)">{{a.name}} @ {{a.affiliate}} ({{a.id}})</span>
-                </div>
-            </div>
-        </div>
-        <div>
-            <input class="bx--btn bx--btn--primary" type="submit" value="Go" style="color:white;">
-        </div>
-    </form>
     <br style="clear:left;"/>
     <div>
       <h2><a href="http://MyOpenLeaderboard.com/2018/index.html?affiliates=505">Sample Output</a>:</h2>
@@ -107,227 +119,233 @@
     </div>
     <p>This Leaderboard is not affiliated with Crossfit or Crossfit.com!</p>
 </div>
+
 <div ng-if="ids" class="affiliates">
-	<div ng-if="athletes==null" class="loading"><div class="bx--loading-overlay">
-  <div data-loading class="bx--loading">
-    <svg class="bx--loading__svg" viewBox="-75 -75 150 150">
-      <title>Loading</title>
-      <circle cx="0" cy="0" r="37.5" />
-    </svg>
-  </div>
-  <span class="bx--loading__percent">Loading</span>
-</div></div>
+	<div ng-if="athletes==null" class="loading">
+        <div class="bx--loading-overlay">
+            <div data-loading class="bx--loading">
+                <svg class="bx--loading__svg" viewBox="-75 -75 150 150">
+                    <title>Loading</title>
+                    <circle cx="0" cy="0" r="37.5" />
+                </svg>
+            </div>
+            <span class="bx--loading__percent">Loading</span>
+        </div>
+    </div>
 	<div ng-if="athletes && athletes.length==0" class="none-found">
         No athletes found for that affiliate ID <br><a href="/">Search again</a>
     </div>
 	<div id="results" ng-if="athletes && athletes.length>0">
-    <div ng-if="show_header">
-		<img ng-if="leaderboard_logo" ng-src="{{leaderboard_logo}}" style="float:left;margin-right:20px;">
-        <div class="header__results"><h3>Crossfit Open 2020 Leaderboard <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> [Auto reload in {{counter}} minutes]</div>
-        <div>Not affiliated with Crossfit.com. 
-            <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
-        <br>
-        <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px; font-size:120%;">
-        <!--
-        So far in 2019, MyOpenLeaderboard.com has been used for over <b>1,100 affiliates</b> and <b>400</b> individual athletes, and loaded over <b>30,000</b> times (!), incurring over $200 in Amazon AWS costs.<br>
-        Please consider donating to support this site! I'm one guy, doing this in my spare time. Help me out!
-        <span style="color:red;font-weight:bold;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Show donation details</span>.
-        -->
-        
-            <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
-            My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very <a href="http://myopenleaderboard.com/?athletes=759861">average</a>) crossfitter. I setup a GoFundMe page for donations for MyOpenLeaderboard.com, or you can use <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>.
+        <div ng-if="show_header">
+            <img ng-if="leaderboard_logo" ng-src="{{leaderboard_logo}}" style="float:left;margin-right:20px;">
+            <div class="header__results"><h3 style="display:inline-block;"><a href="index.html" style="text-decoration:none;color:inherit;">Crossfit Open 2020 Leaderboard</a> <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> <span class="reload">[Auto reload in {{counter}} minutes]</span></div>
             <div>
-                <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
-                <br>
-                Or, if you prefer, here's my postal address where you can send a t-shirt or socks from your gym. :) 
-                <div>
-                  Matt Kruse<br>
-                  PO Box 165<br>
-                  Hampton, IL 61256                
+                <div style="color:#666;font-size:90%;">
+                    Not affiliated with Crossfit.com.
+                    <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
                 </div>
-            <br>Thank you!!!
+                <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px; font-size:120%;">
+                <!--
+                So far in 2019, MyOpenLeaderboard.com has been used for over <b>1,100 affiliates</b> and <b>400</b> individual athletes, and loaded over <b>30,000</b> times (!), incurring over $200 in Amazon AWS costs.<br>
+                Please consider donating to support this site! I'm one guy, doing this in my spare time. Help me out!
+                <span style="color:red;font-weight:bold;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Show donation details</span>.
+                -->
+
+                    <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
+                    My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very <a href="http://myopenleaderboard.com/?athletes=759861">average</a>) crossfitter. I setup a GoFundMe page for donations for MyOpenLeaderboard.com, or you can use <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>.
+                    <div>
+                        <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
+                        <br>
+                        Or, if you prefer, here's my postal address where you can send a t-shirt or socks from your gym. :)
+                        <div>
+                          Matt Kruse<br>
+                          PO Box 165<br>
+                          Hampton, IL 61256
+                        </div>
+                    <br>Thank you!!!
+                    </div>
+                </div>
+
+
+                </div>
+                <div ng-if="show_whats_new" class="info_box">
+                    <div><b>2019-10-04</b></div>
+                    <div>
+                        <ul>
+                            <li>Updated for 2020!
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin:5px 0 5px 10px;">Show:
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='M'}" type="button" value="Male" ng-click="apply_filter('sex','M')">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='F'}" type="button" value="Female" ng-click="apply_filter('sex','F')">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex==''}" type="button" value="All" ng-click="apply_filter('sex','')">
+                    <span class="spacer">|</span>
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='0'}" type="button" value="RX" ng-click="apply_filter('scaled','0')">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='1'}" type="button" value="Scaled" ng-click="apply_filter('scaled','1')">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')">
+                    <span class="spacer">|</span>
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_country}" type="button" value="Country" ng-click="$parent.show_country=!$parent.show_country">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()">
+                    <span class="spacer">|</span>
+                    <a class="button-spaced bx--btn bx--btn--secondary filter-button" href="#" onclick="download_to_excel(this,document.getElementById('leaderboard'))">Download XLS</a>
+                    <span class="spacer">|</span>
+                    <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help">
+                </div>
+                <div ng-if="show_help" class="info_box">
+                    <h3>Help</h3>
+                    <div>Click on column headers to sort by any column.</div>
+                    <div>Click on a row to highlight it yellow. This is useful to find yourself in the list, and track your rown as you sort by different columns.</div>
+                    <div>Click on any athlete to visit their Crossfit Games profile</div>
+                    <div>Parameters can be passed in via url. Available parameters:
+                        <ul>
+                            <li><b>affiliates=123,456 : </b>A comma-separated list of affiliate ID's to load
+                            <li><b>athletes=123,456 : </b>A comma-separated list of athlete ID's to load
+                            <li><b>show_division=[1,0] : </b>Show the division column by default (1=yes, 0=no)
+                            <li><b>sex=[M,F] : </b>Show only Male or Female by default
+                            <li><b>scaled=[1,0] : </b>Show only rx (0) or scaled (1) athletes by default
+                            <li><b>highlight=123,456 : </b>A comma-separated list of athlete ID's to highlight by default
+                            <li><b>show_header=[1,0] : </b>Show or hide the entire header with filters, text, etc. Useful if you display this on a monitor in your gym!
+                        </ul>
+                    </div>
+                    <div style="margin-top:5px;">Example URL: <a href="http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0">http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0</a></div>
+                </div>
+                <div style="width:90vw;height:80vh;margin:10px;border:1px solid black;padding:20px 10px 40px 10px;" ng-if="show_chart">
+                    <div class="chart-selector">
+                        <span ng-class="{selected:chart_workout==0}" ng-click="update_chart(0)">20.1</span>
+                        <span ng-class="{selected:chart_workout==1}" ng-click="update_chart(1)">20.2</span>
+                        <span ng-class="{selected:chart_workout==2}" ng-click="update_chart(2)">20.3</span>
+                        <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(3)">20.4</span>
+                        <span ng-class="{selected:chart_workout==4}" ng-click="update_chart(4)">20.5</span>
+                    </div>
+                    <canvas id="line" class="chart chart-line" chart-data="data"
+                        chart-labels="labels" chart-series="series" chart-options="options"
+                        chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+                    <div>(Hover over data points to see score/athlete)</div>
+                </div>
             </div>
-        </div> 
-            
-
         </div>
-        <div ng-if="show_whats_new" class="info_box">
-            <div><b>2019-10-04</b></div>
-            <div>
-                <ul>
-                    <li>Updated for 2020!
-                </ul>
+
+        <table id="leaderboard" style="width:auto;margin-top:10px;clear:both;">
+        <thead>
+            <tr>
+                <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
+                <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="!affiliate_name">Affiliate</th>
+                <th rowspan="2" ng-click="sort('entrant.divisionId')" ng-if="show_division">Division</th>
+                <th rowspan="2" ng-click="sort('entrant.countryOfOriginName')" ng-if="show_country">Country</th>
+                <th colspan="3">Overall</th>
+                <th class="workout_header" colspan="{{(show_20_1?2:1)}}" ng-click="show_20_1=1-show_20_1">20.1</th>
+                <th class="workout_header" colspan="{{(show_20_2?4:1)}}" ng-click="show_20_2=1-show_20_2">20.2</th>
+                <th class="workout_header" colspan="{{(show_20_3?4:1)}}" ng-click="show_20_3=1-show_20_3">20.3</th>
+                <th class="workout_header" colspan="{{(show_20_4?4:1)}}" ng-click="show_20_4=1-show_20_4">20.4</th>
+                <th class="workout_header" colspan="{{(show_20_5?4:1)}}" style="padding-right:0;" ng-click="show_20_5=1-show_20_5">20.5</th>
+            </tr>
+            <tr>
+                <th class="separator" ng-click="sort('_rank')">Rank</th>
+                <th ng-click="sort('_rank_total')">Score</th>
+                <th ng-click="sort('_pct')">Rank<br>Pct</th>
+
+                <th ng-show="show_20_1" class="separator" ng-click="sort('-scores[0].score')">Score</th>
+                <th xng-show="show_20_1" ng-class="{separator:!show_20_1}" ng-click="sort('scores[0]._workout_rank')">WO<br>Rank</th>
+
+                <th ng-show="show_20_2" class="separator" ng-click="sort('-scores[1].score')">Score</th>
+                <th xng-show="show_20_2" ng-class="{separator:!show_20_2}" ng-click="sort('scores[1]._workout_rank')">WO<br>Rank</th>
+                <th ng-show="show_20_2" ng-click="sort('scores[1]._overall_rank')">Overall<br>Rank</th>
+                <th ng-show="show_20_2" ng-click="sort('-scores[1].rankchange',true)">Rank<br>Change</th>
+
+                <th ng-show="show_20_3" class="separator" ng-click="sort('-scores[2].score')">Score</th>
+                <th xng-show="show_20_3" ng-class="{separator:!show_20_3}" ng-click="sort('scores[2]._workout_rank')">WO<br>Rank</th>
+                <th ng-show="show_20_3" ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
+                <th ng-show="show_20_3" ng-click="sort('-scores[2].rankchange',true)">Rank<br>Change</th>
+
+                <th ng-show="show_20_4" class="separator" ng-click="sort('-scores[3].score')">Score</th>
+                <th xng-show="show_20_4" ng-class="{separator:!show_20_4}" ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
+                <th ng-show="show_20_4" ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
+                <th ng-show="show_20_4" ng-click="sort('-scores[3].rankchange',true)">Rank<br>Change</th>
+
+                <th ng-show="show_20_5" class="separator" ng-click="sort('-scores[4].score')">Score</th>
+                <th xng-show="show_20_5" ng-class="{separator:!show_20_5}" ng-click="sort('scores[4]._workout_rank')">WO<br>Rank</th>
+                <th ng-show="show_20_5" ng-click="sort('scores[4]._overall_rank')">Overall<br>Rank</th>
+                <th ng-show="show_20_5" ng-click="sort('-scores[4].rankchange',true)">Rank<br>Change</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
+                <td>{{$index+1}}. <a ng-if="a.entrant.competitorId<5000000" href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a><span ng-if="a.entrant.competitorId>=5000000">{{a.entrant.competitorName}}</span></td>
+                <td ng-if="!affiliate_name">{{a.entrant.affiliateName}}</td>
+                <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
+                <td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
+                <td class="separator">{{a._rank}}</td>
+                <td>{{a._total_rank}}</td>
+                <td>{{a._pct|number:0}}%</td>
+
+                <td ng-show="show_20_1" class="separator" title="{{a.scores[0].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0]._workout_rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
+                <td ng-class="{separator:!show_20_1}">{{a.scores[0]._workout_rank}}</td>
+
+                <td ng-show="show_20_2" class="separator" title="{{a.scores[1].breakdown}} ({{a.scores[1].score}})" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1]._workout_rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span></td>
+                <td ng-class="{separator:!show_20_2}">{{a.scores[1]._workout_rank}}</td>
+                <td ng-show="show_20_2" title="Overall Score: {{a.scores[1]._overall_score}}">{{a.scores[1]._overall_rank}}</td>
+                <td ng-show="show_20_2">
+                    <span ng-if="a.scores[1].rankchange==0">-</span>
+                    <span ng-if="a.scores[1].rankchange>0" class="positive">+{{a.scores[1].rankchange}}</span>
+                    <span ng-if="a.scores[1].rankchange<0" class="negative">{{a.scores[1].rankchange}}</span>
+                </td>
+
+                <td ng-show="show_20_3" class="separator" title="{{a.scores[2].breakdown}} ({{a.scores[2].score}})" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2]._workout_rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span></td>
+                <td ng-class="{separator:!show_20_3}">{{a.scores[2]._workout_rank}}</td>
+                <td ng-show="show_20_3" title="Overall Score: {{a.scores[2]._overall_score}}">{{a.scores[2]._overall_rank}}</td>
+                <td ng-show="show_20_3">
+                    <span ng-if="a.scores[2].rankchange==0">-</span>
+                    <span ng-if="a.scores[2].rankchange>0" class="positive">+{{a.scores[2].rankchange}}</span>
+                    <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
+                </td>
+
+                <td ng-show="show_20_4" class="separator" title="{{a.scores[3].breakdown}} ({{a.scores[3].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
+                <td ng-class="{separator:!show_20_4}">{{a.scores[3]._workout_rank}}</td>
+                <td ng-show="show_20_4" title="Overall Score: {{a.scores[3]._overall_score}}">{{a.scores[3]._overall_rank}}</td>
+                <td ng-show="show_20_4">
+                    <span ng-if="a.scores[3].rankchange==0">-</span>
+                    <span ng-if="a.scores[3].rankchange>0" class="positive">+{{a.scores[3].rankchange}}</span>
+                    <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>
+                </td>
+
+                <td ng-show="show_20_5" class="separator" title="{{a.scores[4].breakdown}} ({{a.scores[4].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>
+                <td ng-class="{separator:!show_20_5}">{{a.scores[4]._workout_rank}}</td>
+                <td ng-show="show_20_5" title="Overall Score: {{a.scores[4]._overall_score}}">{{a.scores[4]._overall_rank}}</td>
+                <td ng-show="show_20_5">
+                    <span ng-if="a.scores[4].rankchange==0">-</span>
+                    <span ng-if="a.scores[4].rankchange>0" class="positive">+{{a.scores[4].rankchange}}</span>
+                    <span ng-if="a.scores[4].rankchange<0" class="negative">{{a.scores[4].rankchange}}</span>
+                </td>
+
+            </tr>
+        </tbody>
+        </table>
+        <div ng-show="!view" style="font-size:80%;color:#666;">
+            <div style="margin-top:10px;"><strong>Data Details</strong></div>
+            <div><em>(Athlete lists are loaded at most once per hour, then served from cache)</em></div>
+
+            <div ng-repeat="a in affiliates">
+                {{a.athletes[0].entrant.affiliateName}}
+                <span ng-if="a.cached">
+                retrieved from {{a.cache_source}}, updated {{time(a.cache_age)}} ago.
+                </span>
+                <span ng-if="!a.cached">
+                retrieved from crossfit.com and cached
+                </span>
+            </div>
+
+            <div ng-repeat="a in individual_athletes">
+                {{a.athlete.entrant.competitorName}}
+                <span ng-if="a.cached">
+                    retrieved from {{a.cache_source}}<span ng-if="!a.local">, updated {{time(a.cache_age)}} ago</span>.
+                </span>
+                <span ng-if="!a.cached">
+                retrieved from crossfit.com and cached
+                </span>
             </div>
         </div>
-        <div style="margin:5px 0 5px 10px;">Show: 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='M'}" type="button" value="Male" ng-click="apply_filter('sex','M')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex=='F'}" type="button" value="Female" ng-click="apply_filter('sex','F')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.sex==''}" type="button" value="All" ng-click="apply_filter('sex','')"> 
-            <span class="spacer">|</span>
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='0'}" type="button" value="RX" ng-click="apply_filter('scaled','0')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='1'}" type="button" value="Scaled" ng-click="apply_filter('scaled','1')"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')"> 
-            <span class="spacer">|</span>
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division"> 
-			<input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_country}" type="button" value="Country" ng-click="$parent.show_country=!$parent.show_country"> 
-            <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()"> 
-            <span class="spacer">|</span>
-			<a class="button-spaced bx--btn bx--btn--secondary filter-button" href="#" onclick="download_to_excel(this,document.getElementById('leaderboard'))">Download XLS</a>
-            <span class="spacer">|</span>
-            <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help"> 
-        </div>
-        <div ng-if="show_help" class="info_box">
-            <h3>Help</h3>
-            <div>Click on column headers to sort by any column.</div>
-            <div>Click on a row to highlight it yellow. This is useful to find yourself in the list, and track your rown as you sort by different columns.</div>
-            <div>Click on any athlete to visit their Crossfit Games profile</div>
-            <div>Parameters can be passed in via url. Available parameters:
-                <ul>
-                    <li><b>affiliates=123,456 : </b>A comma-separated list of affiliate ID's to load
-                    <li><b>athletes=123,456 : </b>A comma-separated list of athlete ID's to load
-                    <li><b>show_division=[1,0] : </b>Show the division column by default (1=yes, 0=no)
-                    <li><b>sex=[M,F] : </b>Show only Male or Female by default
-                    <li><b>scaled=[1,0] : </b>Show only rx (0) or scaled (1) athletes by default
-                    <li><b>highlight=123,456 : </b>A comma-separated list of athlete ID's to highlight by default
-                    <li><b>show_header=[1,0] : </b>Show or hide the entire header with filters, text, etc. Useful if you display this on a monitor in your gym!
-                </ul>
-            </div>
-            <div style="margin-top:5px;">Example URL: <a href="http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0">http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0</a></div>
-        </div>
-        <div style="width:90vw;height:80vh;margin:10px;border:1px solid black;padding:20px 10px 40px 10px;" ng-if="show_chart">
-            <div class="chart-selector">
-                <span ng-class="{selected:chart_workout==0}" ng-click="update_chart(0)">20.1</span>
-                <span ng-class="{selected:chart_workout==1}" ng-click="update_chart(1)">20.2</span>
-                <span ng-class="{selected:chart_workout==2}" ng-click="update_chart(2)">20.3</span>
-                <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(3)">20.4</span>
-                <span ng-class="{selected:chart_workout==4}" ng-click="update_chart(4)">20.5</span>
-            </div>
-            <canvas id="line" class="chart chart-line" chart-data="data"
-                chart-labels="labels" chart-series="series" chart-options="options"
-                chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
-            <div>(Hover over data points to see score/athlete)</div>
-        </div>
-    </div>
-    <table id="leaderboard" class="bx--data-table-v2 bx--data-table-v2--compact" style="width:auto;margin-top:10px;clear:both;">
-    <thead>
-        <tr>
-            <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
-            <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="!affiliate_name">Affiliate</th>
-            <th rowspan="2" ng-click="sort('entrant.divisionId')" ng-if="show_division">Division</th>
-			<th rowspan="2" ng-click="sort('entrant.countryOfOriginName')" ng-if="show_country">Country</th>
-            <th colspan="3">Overall</th>
-            <th class="workout_header" colspan="{{(show_20_1?2:1)}}" ng-click="show_20_1=1-show_20_1">20.1</th>
-            <th class="workout_header" colspan="{{(show_20_2?4:1)}}" ng-click="show_20_2=1-show_20_2">20.2</th>
-            <th class="workout_header" colspan="{{(show_20_3?4:1)}}" ng-click="show_20_3=1-show_20_3">20.3</th>
-            <th class="workout_header" colspan="{{(show_20_4?4:1)}}" ng-click="show_20_4=1-show_20_4">20.4</th>
-            <th class="workout_header" colspan="{{(show_20_5?4:1)}}" style="padding-right:0;" ng-click="show_20_5=1-show_20_5">20.5</th>
-        </tr>
-        <tr>
-            <th class="separator" ng-click="sort('_rank')">Rank</th>
-            <th ng-click="sort('_rank_total')">Score</th>
-            <th ng-click="sort('_pct')">Rank<br>Pct</th>
-
-            <th ng-show="show_20_1" class="separator" ng-click="sort('-scores[0].score')">Score</th>
-            <th xng-show="show_20_1" ng-class="{separator:!show_20_1}" ng-click="sort('scores[0]._workout_rank')">WO<br>Rank</th>
-            
-            <th ng-show="show_20_2" class="separator" ng-click="sort('-scores[1].score')">Score</th>
-            <th xng-show="show_20_2" ng-class="{separator:!show_20_2}" ng-click="sort('scores[1]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_2" ng-click="sort('scores[1]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_2" ng-click="sort('-scores[1].rankchange',true)">Rank<br>Change</th>
-            
-            <th ng-show="show_20_3" class="separator" ng-click="sort('-scores[2].score')">Score</th>
-            <th xng-show="show_20_3" ng-class="{separator:!show_20_3}" ng-click="sort('scores[2]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_3" ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_3" ng-click="sort('-scores[2].rankchange',true)">Rank<br>Change</th>
-
-            <th ng-show="show_20_4" class="separator" ng-click="sort('-scores[3].score')">Score</th>
-            <th xng-show="show_20_4" ng-class="{separator:!show_20_4}" ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_4" ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_4" ng-click="sort('-scores[3].rankchange',true)">Rank<br>Change</th>
-            
-            <th ng-show="show_20_5" class="separator" ng-click="sort('-scores[4].score')">Score</th>
-            <th xng-show="show_20_5" ng-class="{separator:!show_20_5}" ng-click="sort('scores[4]._workout_rank')">WO<br>Rank</th>
-            <th ng-show="show_20_5" ng-click="sort('scores[4]._overall_rank')">Overall<br>Rank</th>
-            <th ng-show="show_20_5" ng-click="sort('-scores[4].rankchange',true)">Rank<br>Change</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
-            <td>{{$index+1}}. <a ng-if="a.entrant.competitorId<5000000" href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a><span ng-if="a.entrant.competitorId>=5000000">{{a.entrant.competitorName}}</span></td>
-            <td ng-if="!affiliate_name">{{a.entrant.affiliateName}}</td>
-            <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
-			<td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
-            <td class="separator">{{a._rank}}</td>
-            <td>{{a._total_rank}}</td>
-            <td>{{a._pct|number:0}}%</td>
-            
-            <td ng-show="show_20_1" class="separator" title="{{a.scores[0].breakdown}} ({{a.scores[0].score}})" ng-class="{'empty':(a.scores[0].score=='0'&&a.scores[0]._workout_rank>1)}">{{a.scores[0].scoreDisplay}}<span ng-if="a.scores[0].scoredetails.time" class="time"> ({{time(a.scores[0].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_1}">{{a.scores[0]._workout_rank}}</td>
-            
-            <td ng-show="show_20_2" class="separator" title="{{a.scores[1].breakdown}} ({{a.scores[1].score}})" ng-class="{'empty':(a.scores[1].score=='0'&&a.scores[1]._workout_rank>1)}">{{a.scores[1].scoreDisplay}}<span ng-if="a.scores[1].scoredetails.time" class="time"> ({{time(a.scores[1].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_2}">{{a.scores[1]._workout_rank}}</td>
-            <td ng-show="show_20_2" title="Overall Score: {{a.scores[1]._overall_score}}">{{a.scores[1]._overall_rank}}</td>
-            <td ng-show="show_20_2">
-                <span ng-if="a.scores[1].rankchange==0">-</span>
-                <span ng-if="a.scores[1].rankchange>0" class="positive">+{{a.scores[1].rankchange}}</span>
-                <span ng-if="a.scores[1].rankchange<0" class="negative">{{a.scores[1].rankchange}}</span>
-            </td>
-
-            <td ng-show="show_20_3" class="separator" title="{{a.scores[2].breakdown}} ({{a.scores[2].score}})" ng-class="{'empty':(a.scores[2].score=='0'&&a.scores[2]._workout_rank>1)}">{{a.scores[2].scoreDisplay}}<span ng-if="a.scores[2].scoredetails.time" class="time"> ({{time(a.scores[2].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_3}">{{a.scores[2]._workout_rank}}</td>
-            <td ng-show="show_20_3" title="Overall Score: {{a.scores[2]._overall_score}}">{{a.scores[2]._overall_rank}}</td>
-            <td ng-show="show_20_3">
-                <span ng-if="a.scores[2].rankchange==0">-</span>
-                <span ng-if="a.scores[2].rankchange>0" class="positive">+{{a.scores[2].rankchange}}</span>
-                <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
-            </td>
-            
-            <td ng-show="show_20_4" class="separator" title="{{a.scores[3].breakdown}} ({{a.scores[3].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_4}">{{a.scores[3]._workout_rank}}</td>
-            <td ng-show="show_20_4" title="Overall Score: {{a.scores[3]._overall_score}}">{{a.scores[3]._overall_rank}}</td>
-            <td ng-show="show_20_4">
-                <span ng-if="a.scores[3].rankchange==0">-</span>
-                <span ng-if="a.scores[3].rankchange>0" class="positive">+{{a.scores[3].rankchange}}</span>
-                <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>
-            </td>
-
-            <td ng-show="show_20_5" class="separator" title="{{a.scores[4].breakdown}} ({{a.scores[4].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>
-            <td ng-class="{separator:!show_20_5}">{{a.scores[4]._workout_rank}}</td>
-            <td ng-show="show_20_5" title="Overall Score: {{a.scores[4]._overall_score}}">{{a.scores[4]._overall_rank}}</td>
-            <td ng-show="show_20_5">
-                <span ng-if="a.scores[4].rankchange==0">-</span>
-                <span ng-if="a.scores[4].rankchange>0" class="positive">+{{a.scores[4].rankchange}}</span>
-                <span ng-if="a.scores[4].rankchange<0" class="negative">{{a.scores[4].rankchange}}</span>
-            </td>
-
-        </tr>
-    </tbody>
-    </table>
-    <div ng-show="!view">
-        <div style="margin-top:10px;"><strong>Data Details</strong></div>
-        <div><em>(Athlete lists are loaded at most once per hour, then served from cache)</em></div>
-        
-        <div ng-repeat="a in affiliates">
-            {{a.athletes[0].entrant.affiliateName}}
-            <span ng-if="a.cached">
-            retrieved from {{a.cache_source}}, updated {{time(a.cache_age)}} ago.
-            </span>
-            <span ng-if="!a.cached">
-            retrieved from crossfit.com and cached
-            </span>
-        </div>
-        
-        <div ng-repeat="a in individual_athletes">
-            {{a.athlete.entrant.competitorName}}
-            <span ng-if="a.cached">
-            retrieved from {{a.cache_source}}, updated {{time(a.cache_age)}} ago.
-            </span>
-            <span ng-if="!a.cached">
-            retrieved from crossfit.com and cached
-            </span>
-        </div>
-    </div>
-	</div>
 
 	</div>
 </div>

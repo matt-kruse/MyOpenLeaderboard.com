@@ -446,7 +446,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
       for (id in $scope.individual_athletes) {
         athletes = athletes.concat( $scope.individual_athletes[id].athlete );
       }
-      if ($scope.num_affiliates==1 && (!athletes || athletes.length===0)) {
+      if ($scope.num_affiliates==1) {
         $scope.affiliate_name = athletes[0].entrant.affiliateName;
       }
       $scope.athletes = athletes;
@@ -465,13 +465,15 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
       aac_timeout && $timeout.cancel(aac_timeout);
       aac_timeout = $timeout($scope.aac, 300);
     }
+    else if (val.length===0) {
+      $scope.aac_list = null;
+    }
   };
   $scope.aac = function() {
     var term = document.getElementById('aac').value;
     $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https%3A%2F%2Fgames.crossfit.com%2Fac.php%3Ftype%3Daffiliates%26limit%3D50%26term%3D"+encodeURIComponent(term)).then(function(data) {
       try {
         $scope.aac_list = JSON.parse(data.data.content);
-        console.log($scope.aac_list);
       }
       catch(e) {
         $scope.aac_list = null;
@@ -507,7 +509,6 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https://games.crossfit.com/competitions/api/v1/competitions/open/2020/athletes%3Fterm="+encodeURIComponent(term)).then(function(data) {
       try {
         $scope.cac_list = JSON.parse(data.data.content);
-        console.log($scope.cac_list);
       }
       catch(e) {
         $scope.cac_list = null;

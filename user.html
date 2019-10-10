@@ -4,7 +4,6 @@
 	<title>Crossfit Open 2020 User Scores</title>
 	<meta name="title" content="Crossfit Open 2020 User Scores" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <link type="text/css" rel="stylesheet" href="carbon.css" />
     <link type="text/css" rel="stylesheet" href="index.css" />
     <link rel="icon" type="image/png" href="favicon.png">
     <script src="angular.min.js"></script>
@@ -23,14 +22,21 @@
         #promo li { font-size:1rem !important; }
         #promo h2 { font-weight:bold; }
         #logo { float:left; margin:0 20px 500px 0; width:192px; }
-        p { margin:10px; font-size:120%; }
-        i { font-style:italic; }
-        h4 {
-            font-size:120%;
-            font-weight:bold;
-            margin:20px 0;
+        button {
+            background-color:#E90827;
+            color:white;
         }
-        button { font-size:110%; padding:3px 10px; border-radius:5px; }
+        .form div {
+            margin:5px 0;
+        }
+        .form input {
+        }
+        .msg {
+            margin:5px 20px;
+            border-radius:10px;
+            padding:3px 10px;
+            font-weight:Bold;
+        }
     </style>
     <script>
       var $ = angular.element;
@@ -67,23 +73,32 @@
           'F':'Female'
         };
 
+        var msgtimeout = null;
         var msg = function(m) {
           $scope.message = m;
-          $timeout(function() {
+          $scope.error = null;
+          $timeout.cancel(msgtimeout);
+          msgtimeout = $timeout(function() {
             $scope.message = "";
           },3000);
         };
+        var errtimeout = null;
         var err = function(m) {
           $scope.error = m;
-          $timeout(function() {
+          $timeout.cancel(errtimeout);
+          errtimeout = $timeout(function() {
             $scope.error = "";
-          },3000);
+          },5000);
         };
         $scope.login = function() {
           var data = encodeURIComponent( JSON.stringify($scope.user) );
+          if (!$scope.user.id || !$scope.user.password) {
+            return err("Please enter a user ID and password");
+          }
           $scope.message = "Logging in ...";
           $http.get("https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?action=login&data=" + data).then(function(data) {
             if (data.data.error) {
+              msg(null);
               err(data.data.error);
             }
             else {
@@ -100,6 +115,7 @@
           $scope.message = "Creating user ...";
           $http.get("https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?action=create_user&data=" + data).then(function(data) {
             if (data.data.error) {
+              msg(null);
               err(data.data.error);
             }
             else {
@@ -119,7 +135,7 @@
               err(data.data.error);
             }
             else {
-              msg("Saved Successful");
+              msg("Save Successful");
             }
           });
         };
@@ -138,61 +154,70 @@
             Or use Paypal: <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>
         </div>
     </div>
-    <div id="logo">
-        <img src="logo_192.png">
-    </div>
-    <h3>2020 Crossfit Open User Scores</h3>
-
-    <select ng-options="key as value for (key , value) in divisions" ng-model="x.y"></select>
-
-    <div>
-        <p>MyOpenLeaderboard allows you to save your scores and include them in leaderboards on this site!</p>
-        <p>Your scores will <b>not</b> appear on Crossfit.com or the overall leaderboards there. But you can include yourself here in your affiliate's leaderboard, or with your friends, etc.</p>
-        <p>These scores may be <b>completely anonymous</b> if you wish. They are not tied to your Crossfit ID, social media, or anything else. You decide which name to display for yourself when you are included in a leaderboard here.</p>
-        <p>These scores are <b>not validated</b>, since they won't be displayed anywhere unless you or someone else intentionally chooses to include them in a leaderboard.</p>
-
-        <div ng-if="message" style="display:inline-block;background-color:#2bb54e;color:white;">{{message}}</div>
-        <div ng-if="!logged_in">
-            <form>
-                <p>To enter scores, either login below or create a new user.</p>
-                <h4>Login</h4>
-                <div>
-                    User ID: <input ng-model="user.id"><br>
-                    Password: <input ng-model="user.password"><br>
-                    <button ng-click="login()">Login</button>
-                </div>
-                <h4>Create A New User</h4>
-                <div>
-                    User ID: <i>(Will be auto-generated)</i><br>
-                    Display Name: <input ng-model="user.name"> (This will be displayed in the leaderboard)<br>
-                    Password: <input ng-model="user.password_new"><br>
-                    <button ng-click="create()">Create New User</button>
-                </div>
-            </form>
+    <div class="flex">
+        <div id="logo" class="flex-left">
+            <a href="index.html"><img src="logo_192.png"></a>
         </div>
 
-        <div ng-if="logged_in">
-            <form>
-                <h4>User Details and Scores</h4>
-                <p ng-if="new_user"><b>Write down your User ID and password used!</b> They cannot be recovered if lost or forgotten, and you will need to login with them to record your scores.</p>
-                <div>
-                    User ID: {{user.id}} (Enter this in the athlete ID box on the main page)<br>
-                    Display Name: <input ng-model="user.athlete.entrant.competitorName"> (This will be displayed in the leaderboard)<br>
-                    Affiliate Name: <input ng-model="user.athlete.entrant.affiliateName"> <br>
-                    Division: <select ng-options="key as value for (key , value) in divisions" ng-model="user.athlete.entrant.divisionId"></select> <br>
-                    Gender: <select ng-options="key as value for (key , value) in genders" ng-model="user.athlete.entrant.gender"></select> <br>
-                    Country of Origin Name: <input ng-model="user.athlete.entrant.countryOfOriginName">
+        <div class="flex-content">
+            <h3>2020 Crossfit Open User Scores</h3>
+
+            <div>
+                <p><a href="index.html">MyOpenLeaderboard</a> allows you to save your scores and include them in leaderboards on this site!</p>
+                <p>Your scores will <b>not</b> appear on Crossfit.com or the overall leaderboards there. But you can include yourself here in your affiliate's leaderboard, or with your friends, etc.</p>
+                <p>These scores may be <b>completely anonymous</b> if you wish. They are not tied to your Crossfit ID, social media, or anything else. You decide which name to display for yourself when you are included in a leaderboard here.</p>
+                <p>These scores are <b>not validated</b>, since they won't be displayed anywhere unless you or someone else intentionally chooses to include them in a leaderboard. If you lie or cheat, that's on you.</p>
+
+                <div ng-if="!logged_in">
+                    <form>
+                        <p>To enter scores, either login below or create a new user.</p>
+                        <div ng-cloak ng-if="message" class="msg" style="background-color:#2bb54e;color:white;">{{message}}</div>
+                        <div ng-cloak ng-if="error" class="msg" style="background-color:rgb(249,104,96);color:white;">Error: {{error}}</div>
+                        <h4>Login</h4>
+                        <div class="form">
+                            <div>User ID: <input ng-model="user.id"> <i>example: 12345</i></div>
+                            <div>Password: <input ng-model="user.password"></div>
+                            <button class="bx--btn bx--btn--primary" ng-click="login()">Login</button>
+                        </div>
+                        <h4>Create A New User</h4>
+                        <p>This will create an empty record on MyOpenLeaderboard.com that you can use to fill in scores. This user can then be included on leaderboards on this site. This user will never appear on Crossfit.com.</p>
+                        <div class="form">
+                            <div>User ID: <i>(Will be auto-generated and displayed to you when complete)</i></div>
+                            <div>Display Name: <input ng-model="user.name"> (This will be displayed in the leaderboard and can be changed later)</div>
+                            <div>Password: <input ng-model="user.password_new"> <b>Do not forget your password!</b></div>
+                            <button class="bx--btn bx--btn--primary" ng-click="create()">Create New User</button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <h4>Scores</h4>
-                    <div>
-                        Entry fields for each workout will be added the weekend after they are announced.
-                    </div>
+
+                <div ng-if="logged_in">
+                    <form>
+                        <h4>User Details and Scores</h4>
+
+                        <div ng-cloak ng-if="message" class="msg" style="background-color:#2bb54e;color:white;">{{message}}</div>
+                        <div ng-cloak ng-if="error" class="msg" style="background-color:rgb(249,104,96);color:white;">Error: {{error}}</div>
+
+                        <p ng-if="new_user"><b>Write down your User ID and password used!</b> They cannot be recovered if lost or forgotten, and you will need to login with them to record your scores.</p>
+                        <div class="form">
+                            <div>User ID: <span style="font-weight:bold;color:red;">{{user.id}}</span> (Enter this in the athlete ID box on the main page)</div>
+                            <div>Display Name: <input ng-model="user.athlete.entrant.competitorName"> (This will be displayed in the leaderboard)</div>
+                            <div>Affiliate Name: <input ng-model="user.athlete.entrant.affiliateName"></div>
+                            <div>Division: <select ng-options="key as value for (key , value) in divisions | orderBy:value" ng-model="user.athlete.entrant.divisionId"></select></div>
+                            <div>Gender: <select ng-options="key as value for (key , value) in genders" ng-model="user.athlete.entrant.gender"></select></div>
+                            <div>Country of Origin Name: <input ng-model="user.athlete.entrant.countryOfOriginName"></div>
+                        </div>
+                        <div class="form">
+                            <h4>Scores</h4>
+                            <div>
+                                Entry fields for each workout will be added the weekend after they are announced.
+                            </div>
+                        </div>
+                        <div>
+                            <button class="bx--btn bx--btn--primary" ng-click="update()">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <button ng-click="update()">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
