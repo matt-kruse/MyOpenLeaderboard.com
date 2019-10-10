@@ -80,10 +80,12 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 
   $scope.logo = "logo_192.png";
 
+  var query = null;
   try {
-    $scope.ids = location.search.substring(1);
+    query = location.search.substring(1);
   } catch(e) { }
-  if ($scope.ids) {
+  if (query && (/athletes/.test(query) || /affiliates/.test(query))) {
+    $scope.ids = query;
     var i=0;
     var a=0;
     var page=1;
