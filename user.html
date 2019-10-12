@@ -193,7 +193,6 @@
                 <div ng-if="logged_in">
                     <form>
                         <h4>User Details and Scores</h4>
-
                         <div ng-cloak ng-if="message" class="msg" style="background-color:#2bb54e;color:white;">{{message}}</div>
                         <div ng-cloak ng-if="error" class="msg" style="background-color:rgb(249,104,96);color:white;">Error: {{error}}</div>
 
@@ -211,6 +210,10 @@
                             <div>
                                 Entry fields for each workout will be added the weekend after they are announced.
                             </div>
+                            <h4>20.1</h4>
+                            <div>If you finished before the time cutoff enter your time: <input ng-model="user.s20_1_m" size="3"/> : <input ng-model="user.s20_1_s" size="3"/></div>
+                            <div>Otherwise, enter your total reps: <input ng-model="user.s20_1_reps" size="6"/> reps</div>
+                            <div>Did you do the workout RX or Scaled? <select ng-model="user.s20_1_rx"><option value="rx">RX</option><option value="scaled">Scaled</option></select></div>
                         </div>
                         <div>
                             <button class="bx--btn bx--btn--primary" ng-click="update()">Save</button>
