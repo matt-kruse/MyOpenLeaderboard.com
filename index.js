@@ -347,6 +347,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $scope.affiliate_ids = [];
     $scope.athlete_ids = [];
     $scope.highlight = {};
+    $scope.title = null;
 
     $scope.show_division = false;
     $scope.show_country = false;
@@ -394,6 +395,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
           }
           else if (kv[0]=="scaled") {
             $scope.filters.scaled=kv[1];
+          }
+          else if (kv[0]=="title") {
+            $scope.title=kv[1];
           }
           else {
             if (kv[1]=="0") { kv[1]=0; }
@@ -450,6 +454,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
       }
       if ($scope.num_affiliates==1) {
         $scope.affiliate_name = athletes[0].entrant.affiliateName;
+        if (!$scope.title) {
+          $scope.title = $scope.affiliate_name;
+        }
       }
       $scope.athletes = athletes;
       $timeout($scope.process_athletes,1);

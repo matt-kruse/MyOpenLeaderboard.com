@@ -140,7 +140,7 @@
 	<div id="results" ng-if="athletes && athletes.length>0">
         <div ng-if="show_header">
             <img ng-if="leaderboard_logo" ng-src="{{leaderboard_logo}}" style="float:left;margin-right:20px;">
-            <div class="header__results"><h3 style="display:inline-block;"><a href="index.html" style="text-decoration:none;color:inherit;">Crossfit Open 2020 Leaderboard</a> <span ng-if="affiliate_name">- <strong>{{affiliate_name}}</strong></span></h3> <span class="reload">[Auto reload in {{counter}} minutes]</span></div>
+            <div class="header__results"><h3 style="display:inline-block;"><a href="index.html" style="text-decoration:none;color:inherit;">Crossfit Open 2020 Leaderboard</a> <span ng-if="title">- <strong>{{title}}</strong></span></h3> <span class="reload">[Auto reload in {{counter}} minutes]</span></div>
             <div>
                 <div style="color:#666;font-size:90%;">
                     Not affiliated with Crossfit.com.
@@ -209,6 +209,7 @@
                             <li><b>scaled=[1,0] : </b>Show only rx (0) or scaled (1) athletes by default
                             <li><b>highlight=123,456 : </b>A comma-separated list of athlete ID's to highlight by default
                             <li><b>show_header=[1,0] : </b>Show or hide the entire header with filters, text, etc. Useful if you display this on a monitor in your gym!
+                            <li><b>title=XYZ : </b>Add a custom title to the results table header</li>
                         </ul>
                     </div>
                     <div style="margin-top:5px;">Example URL: <a href="http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0">http://MyOpenLeaderboard.com?affiliates=11328&highlight=759861&show_division=1&sex=M&show_header=0</a></div>
