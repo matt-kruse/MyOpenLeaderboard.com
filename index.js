@@ -357,6 +357,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $scope.show_donate = false;
     $scope.show_donate_details = false;
     $scope.show_chart = false;
+    $scope.cache = true;
 
     var now = (new Date()).getTime();
     var is_after = function(y,m,d) {
@@ -416,7 +417,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 
     // Process each affiliate and add it to the loader
     $scope.user_base_url = "https://games.crossfit.com/athlete/";
-    var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // prod
+    var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids+"&cache="+$scope.cache; // prod
     if ("reddit"==$scope.view) {
       url = "reddit.json";
       $scope.user_base_url = "http://reddit.com/user/";
