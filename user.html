@@ -210,10 +210,16 @@
                             <div>
                                 Entry fields for each workout will be added the weekend after they are announced.
                             </div>
+
                             <h4>20.1</h4>
                             <div>If you finished before the time cutoff enter your time: <input ng-model="user.s20_1_m" size="3"/> : <input ng-model="user.s20_1_s" size="3"/></div>
                             <div>Otherwise, enter your total reps: <input ng-model="user.s20_1_reps" size="6"/> reps</div>
                             <div>Did you do the workout RX or Scaled? <select ng-model="user.s20_1_rx"><option value="rx">RX</option><option value="scaled">Scaled</option></select></div>
+
+                            <h4>20.2</h4>
+                            <div>Total Reps: <input ng-model="user.s20_2_reps" size="6"/> reps</div>
+                            <div>Did you do the workout RX or Scaled? <select ng-model="user.s20_2_rx"><option value="rx">RX</option><option value="scaled">Scaled</option></select></div>
+
                         </div>
                         <div>
                             <button class="bx--btn bx--btn--primary" ng-click="update()">Save</button>
