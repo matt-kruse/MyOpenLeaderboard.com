@@ -366,9 +366,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     };
     $scope.show_20_1 = 1;
     $scope.show_20_2 = 1;
-    $scope.show_20_3 = is_after(2020,10,23);
-    $scope.show_20_4 = is_after(2020,10,30);
-    $scope.show_20_5 = is_after(2020,11,6);
+    $scope.show_20_3 = is_after(2019,10,23);
+    $scope.show_20_4 = is_after(2019,10,30);
+    $scope.show_20_5 = is_after(2019,11,6);
 
     // If affiliates are passed in the old way
     if (/^[\d,]+$/.test($scope.ids)) {
