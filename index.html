@@ -242,7 +242,7 @@
         <thead>
             <tr>
                 <th rowspan="2" ng-click="sort('entrant.competitorName')">Name</th>
-                <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="!affiliate_name">Affiliate</th>
+                <th rowspan="2" ng-click="sort('entrant.affiliateName')" ng-if="show_affiliate">Affiliate</th>
                 <th rowspan="2" ng-click="sort('entrant.divisionId')" ng-if="show_division">Division</th>
                 <th rowspan="2" ng-click="sort('entrant.countryOfOriginName')" ng-if="show_country">Country</th>
                 <th colspan="3">Overall</th>
@@ -283,8 +283,8 @@
         </thead>
         <tbody>
             <tr ng-repeat="a in athletes | orderBy:[sortby,'_rank','entrant.competitorName']" ng-click="highlight[a.entrant.competitorId]=!highlight[a.entrant.competitorId]" ng-class="{'selected':(highlight[a.entrant.competitorId])}">
-                <td>{{$index+1}}. <a ng-if="a.entrant.competitorId<5000000" href="{{user_base_url}}{{a.entrant.competitorId}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a><span ng-if="a.entrant.competitorId>=5000000">{{a.entrant.competitorName}}</span></td>
-                <td ng-if="!affiliate_name">{{a.entrant.affiliateName}}</td>
+                <td>{{$index+1}}. <a ng-if="a.entrant.competitorId<5000000" href="{{user_base_url}}{{(a.reddit ? a.entrant.competitorName : a.entrant.competitorId)}}" style="color:#006;text-decoration:none;" ng-click="a.selected = !a.selected" target="_blank">{{a.entrant.competitorName}}</a><span ng-if="a.entrant.competitorId>=5000000">{{a.entrant.competitorName}}</span></td>
+                <td ng-if="show_affiliate">{{a.entrant.affiliateName}}</td>
                 <td ng-if="show_division">{{divisions[a.entrant.divisionId]}}</td>
                 <td ng-if="show_country">{{a.entrant.countryOfOriginName}}</td>
                 <td class="separator">{{a._rank}}</td>

@@ -349,6 +349,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $scope.highlight = {};
     $scope.title = null;
 
+    $scope.show_affiliate = true;
     $scope.show_division = false;
     $scope.show_country = false;
     $scope.show_help = false;
@@ -369,6 +370,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $scope.show_20_3 = is_after(2019,10,23);
     $scope.show_20_4 = is_after(2019,10,30);
     $scope.show_20_5 = is_after(2019,11,6);
+    $scope.reddit = false;
 
     // If affiliates are passed in the old way
     if (/^[\d,]+$/.test($scope.ids)) {
@@ -381,6 +383,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
         try {
           var kv = p.split(/=/);
           if (kv[0]=="athletes") {
+            if ("reddit"==kv[1]) {
+              $scope.reddit = true;
+            }
             $scope.athlete_ids = kv[1].split(/\s*,\s*/);
           }
           else if (kv[0]=="affiliates") {
@@ -418,9 +423,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     // Process each affiliate and add it to the loader
     $scope.user_base_url = "https://games.crossfit.com/athlete/";
     var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids+"&cache="+$scope.cache; // prod
-    if ("reddit"==$scope.view) {
-      url = "reddit.json";
+    if ($scope.reddit) {
       $scope.user_base_url = "http://reddit.com/user/";
+      $scope.title = "Reddit";
+      $scope.show_affiliate = false;
     }
     //var url = 'https://enqoy6eal3.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids; // test
     $http.get(url).then( function(data) {
@@ -453,7 +459,8 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
       for (id in $scope.individual_athletes) {
         athletes = athletes.concat( $scope.individual_athletes[id].athlete );
       }
-      if ($scope.num_affiliates==1) {
+      if (!$scope.reddit && $scope.num_affiliates==1) {
+        $scope.show_affiliate = false;
         $scope.affiliate_name = athletes[0].entrant.affiliateName;
         if (!$scope.title) {
           $scope.title = $scope.affiliate_name;
