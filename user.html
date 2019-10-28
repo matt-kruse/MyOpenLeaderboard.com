@@ -228,6 +228,12 @@
                             <div>Total Reps: <input ng-model="user.s20_2_reps" size="6"/> reps</div>
                             <div>Did you do the workout RX or Scaled? <select ng-model="user.s20_2_rx"><option value="rx">RX</option><option value="scaled">Scaled</option></select></div>
 
+                            <h4>20.3</h4>
+                            <div>If you finished before the time cutoff enter your time: <input ng-model="user.s20_3_m" size="3"/> : <input ng-model="user.s20_3_s" size="3"/></div>
+                            <div>Otherwise, enter your total reps: <input ng-model="user.s20_3_reps" size="6"/> reps</div>
+                            <div>And Tie-Break Time: <input ng-model="user.s20_3_tb_m" size="3"/> : <input ng-model="user.s20_3_tb_s" size="3"/></div>
+                            <div>Did you do the workout RX or Scaled? <select ng-model="user.s20_3_rx"><option value="rx">RX</option><option value="scaled">Scaled</option></select></div>
+
                         </div>
                         <div>
                             <button class="bx--btn bx--btn--primary" ng-click="update()">Save</button>
