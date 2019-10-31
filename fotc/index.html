@@ -73,6 +73,15 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   $scope.show_20_4 = is_after(2019,10,30);
   $scope.show_20_5 = is_after(2019,11,6);
 
+  try {
+    var params = location.search.substring(1).split(/&/);
+    params.forEach(function(p) {
+      var kv = p.split(/=/);
+      if (kv[1]=="0") { kv[1]=0; }
+      $scope[kv[0]] = kv[1];
+    });
+  } catch(e) { }
+
   // FITTEST OF THE COAST CONFIG
   $scope.affiliate_ids = [2955, 17680, 4005, 14997, 24292, 2376, 20106, 10639, 3887, 3929, 3392, 21579, 10174, 19409, 19207, 10507, 18741, 18528, 15897, 16410, 2421, 15555, 4372, 5920, 2011, 14358, 9172, 5875, 3576, 3687, 1747, 19306, 4747];
   $scope.affiliate_name = "2020 Fittest of the Coast Qualifier";
