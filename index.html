@@ -36,6 +36,12 @@
         #promo li { font-size:1rem !important; }
         #promo h2 { font-weight:bold; }
     </style>
+    <script>
+      function hide_donate(a) {
+        a.href = window.location.href.replace(/\#$/,'') + "&show_donate=0";
+        return true;
+      }
+    </script>
 </head>
 
 <body ng-app="App">
@@ -156,28 +162,29 @@
                     <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
                     <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_help=!show_help">Help</span>
                 </div>
-                <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px; font-size:120%;">
-                <!--
-                So far in 2019, MyOpenLeaderboard.com has been used for over <b>1,100 affiliates</b> and <b>400</b> individual athletes, and loaded over <b>30,000</b> times (!), incurring over $200 in Amazon AWS costs.<br>
-                Please consider donating to support this site! I'm one guy, doing this in my spare time. Help me out!
-                <span style="color:red;font-weight:bold;cursor:pointer;text-decoration:underline;" ng-click="$parent.show_donate_details=!$parent.show_donate_details">Show donation details</span>.
-                -->
+                <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px 5px 10px 5px;max-width:1000px;border-radius:10px;box-shadow:5px 5px 10px #999;">
 
-                    <div ng-if="show_donate_details" style="font-weight:normal;" class="info_box">
-                    My name is Matt Kruse (<a href="mailto:matt@mattkruse.com">email me</a>). I'm a web developer and (very <a href="http://myopenleaderboard.com/?athletes=759861">average</a>) crossfitter. I setup a GoFundMe page for donations for MyOpenLeaderboard.com, or you can use <a href="https://www.paypal.me/krusematt" target="_blank"><img src="paypal_pay.gif" alt="Paypal"></a>.
+                    My name is <a href="https://MattKruse.com" target="_blank">Matt Kruse</a>. For the last 3 Opens, I've invested many hours coding, improving, and maintaining this site.
+                    <br>
+                    For 2020, almost <b>1,000 visitors</b>/day have loaded <b>900</b> affiliates and <b>850</b> individual athletes. Hundreds of people using the <a href="user.html">manual entry</a> form to include their scores on leaderboards without officially signing up.
+                    <br><br>
+                    I do this as a labor of love for the Crossfit community. If you'd like to help out with <a href="https://aws.amazon.com/" target="_blank">AWS</a> costs or help me buy some new Nano 9's, donations during this final week are greatly appreciated!
+                    <br>
+                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9ZLEY9XZFX6YW&source=url" target="_blank"><img src="buttons/button_paypal.png"></a> <a href="https://www.gofundme.com/MyOpenLeaderboard/donate?pc=wd_md_donate_r" target="_blank"><img src="buttons/button_gofundme.png"></a>
+                    <br>
+                    <b>Thank you!!!</b>
+                    <i style="font-size:80%;">(To hide this message, add <a href="#" onclick="hide_donate(this)">&show_donate=0</a> to your url)</i>
+
+                    <!--
+                    <br>
+                    Or, if you prefer, use my postal address where you can send a t-shirt or socks from your gym. :)
                     <div>
-                        <embed height="180px" width="100%" src="https://www.gofundme.com/mvc.php?route=widgets/mediawidget&fund=MyOpenLeaderboard&image=0&coinfo=0&preview=1" type="text/html"></embed>
-                        <br>
-                        Or, if you prefer, here's my postal address where you can send a t-shirt or socks from your gym. :)
-                        <div>
-                          Matt Kruse<br>
-                          PO Box 165<br>
-                          Hampton, IL 61256
-                        </div>
-                    <br>Thank you!!!
+                      Matt Kruse<br>
+                      PO Box 165<br>
+                      Hampton, IL 61256
                     </div>
+                    -->
                 </div>
-
 
                 </div>
                 <div ng-if="show_whats_new" class="info_box">
