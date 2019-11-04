@@ -63,10 +63,10 @@ a:hover { color: #00428d; }
     color: #3d70b2;
 }
 .bx--btn--secondary:focus,.bx--btn--secondary:hover {
-    background-color: #3d70b2;
+    /* background-color: #3d70b2; */
 }
 .bx--btn--secondary:hover,.bx--btn--secondary:focus {
-    color: #fff;
+    /* color: #fff; */
 }
 
 .loading { font-size:30px; font-weight:bold; }

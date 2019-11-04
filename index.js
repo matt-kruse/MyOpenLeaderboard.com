@@ -30,6 +30,10 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     ,"scaled":""
   };
 
+  $scope.show_teens = true;
+  $scope.show_masters = true;
+  $scope.show_others = true;
+
   $interval(function() {
     $scope.counter--;
     if ($scope.counter<1) {
@@ -74,6 +78,27 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     '9': 'Men (60+)'
   };
 
+  $scope.division_buckets = {
+    '2': 'Normal',
+    '1': 'Normal',
+    '15': 'Teen',
+    '14': 'Teen',
+    '17': 'Teen',
+    '16': 'Teen',
+    '19': 'Normal',
+    '18': 'Normal',
+    '13': 'Normal',
+    '12': 'Normal',
+    '4': 'Normal',
+    '3': 'Normal',
+    '6': 'Normal',
+    '5': 'Normal',
+    '8': 'Masters',
+    '7': 'Masters',
+    '10': 'Masters',
+    '9': 'Masters'
+  };
+
   $scope.ids = null;
   $scope.athletes = null;
   $scope.chart_workout = 0;
@@ -102,6 +127,20 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
           if (uniques[id]) { return false; }
           uniques[id] = true;
           return true;
+        });
+
+        // Apply Division filter
+        filtered_athletes = filtered_athletes.filter(function (a) {
+          var div = a.entrant.divisionId;
+          var bucket = $scope.division_buckets[div];
+          if (!$scope.show_teens && !$scope.show_masters && !$scope.show_others) {
+            $scope.show_teens = $scope.show_masters = $scope.show_others = true;
+            return true;
+          }
+          if (!bucket) return true;
+          if (bucket==="Teen") return $scope.show_teens;
+          if (bucket==="Masters") return $scope.show_masters;
+          return $scope.show_others;
         });
 
         // Apply filters
@@ -556,7 +595,13 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   };
   
   $scope.apply_filter = function(filter,val) {
-    $scope.filters[filter] = val;
+    if (filter) {
+      $scope.filters[filter] = val;
+    }
+    $timeout($scope.process_athletes,10);
+  };
+  $scope.apply_toggle = function(val) {
+    $scope[val] = !$scope[val];
     $timeout($scope.process_athletes,10);
   };
 

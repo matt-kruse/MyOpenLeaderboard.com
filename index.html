@@ -152,7 +152,9 @@
             <div>
                 <div style="color:#666;font-size:90%;">
                     Not affiliated with Crossfit.com.
+                    <a style="padding-left:15px;cursor:pointer;text-decoration:underline;" onclick="download_to_excel(this,document.getElementById('leaderboard'))">Download XLS</a>
                     <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_whats_new=!show_whats_new">What's New?</span>
+                    <span style="padding-left:15px;cursor:pointer;text-decoration:underline;" ng-click="show_help=!show_help">Help</span>
                 </div>
                 <div ng-if="show_donate" style="display:inline-block;border:3px solid #3D70B2;width:auto;padding:10px;margin:5px; font-size:120%;">
                 <!--
@@ -195,13 +197,13 @@
                     <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled=='1'}" type="button" value="Scaled" ng-click="apply_filter('scaled','1')">
                     <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:filters.scaled==''}" type="button" value="All" ng-click="apply_filter('scaled','')">
                     <span class="spacer">|</span>
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_teens}" type="button" value="Teens" ng-click="apply_toggle('show_teens')">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_masters}" type="button" value="Masters" ng-click="apply_toggle('show_masters')">
+                    <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_others}" type="button" value="Others" ng-click="apply_toggle('show_others')">
+                    <span class="spacer">|</span>
                     <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_division}" type="button" value="Division" ng-click="$parent.show_division=!$parent.show_division">
                     <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_country}" type="button" value="Country" ng-click="$parent.show_country=!$parent.show_country">
                     <input class="bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_chart}" type="button" value="Chart" ng-click="toggle_chart()">
-                    <span class="spacer">|</span>
-                    <a class="button-spaced bx--btn bx--btn--secondary filter-button" href="#" onclick="download_to_excel(this,document.getElementById('leaderboard'))">Download XLS</a>
-                    <span class="spacer">|</span>
-                    <input class="button-spaced bx--btn bx--btn--secondary filter-button" ng-class="{selected:show_help}" type="button" value="Help" ng-click="show_help=!show_help">
                 </div>
                 <div ng-if="show_help" class="info_box">
                     <h3>Help</h3>
