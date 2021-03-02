@@ -404,11 +404,11 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
       var d = new Date(y,m-1,d);
       return (now > d.getTime()) ? 1 : 0;
     };
-    $scope.show_21_1 = 1;
-    $scope.show_21_2 = 1;
-    $scope.show_21_3 = 1;
-    $scope.show_21_4 = 0;
-    $scope.show_21_5 = 0;
+    $scope.show_20_1 = 1;
+    $scope.show_20_2 = 1;
+    $scope.show_20_3 = is_after(2019,10,23);
+    $scope.show_20_4 = is_after(2019,10,30);
+    $scope.show_20_5 = is_after(2019,11,6);
     $scope.reddit = false;
 
     // If affiliates are passed in the old way
@@ -461,7 +461,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
 
     // Process each affiliate and add it to the loader
     $scope.user_base_url = "https://games.crossfit.com/athlete/";
-    var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids+"&cache="+$scope.cache; // prod
+    var url = 'https://17f05zpuae.execute-api.us-east-1.amazonaws.com/prod/proxy?year=2020&affiliates='+$scope.affiliate_ids+"&athletes="+$scope.athlete_ids+"&cache="+$scope.cache; // prod
     if ($scope.reddit) {
       $scope.user_base_url = "http://reddit.com/user/";
       $scope.title = "Reddit";
@@ -569,7 +569,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     var term = document.getElementById('cac').value;
     $scope.cac_searching = true;
     $scope.cac_list = null;
-    $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https://games.crossfit.com/competitions/api/v1/competitions/open/2021/athletes%3Fterm="+encodeURIComponent(term)).then(function(data) {
+    $http.get("https://8xd8ar771c.execute-api.us-east-1.amazonaws.com/prod/xray?url=https://games.crossfit.com/competitions/api/v1/competitions/open/2020/athletes%3Fterm="+encodeURIComponent(term)).then(function(data) {
       $scope.cac_searching = false;
       try {
         $scope.cac_list = JSON.parse(data.data.content);
