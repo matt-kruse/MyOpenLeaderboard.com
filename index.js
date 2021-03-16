@@ -166,6 +166,9 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
             var s = a.scores[i];
             if (s.score) {
               s.score = +s.score;
+              if (s.scaled=="0") {
+                s.score = s.score*1000;
+              }
             }
             s._workout_rank = null;
             s._overall_rank = null;
