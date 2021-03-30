@@ -237,7 +237,7 @@
                         <span ng-class="{selected:chart_workout==0}" ng-click="update_chart(0)">21.1</span>
                         <span ng-class="{selected:chart_workout==1}" ng-click="update_chart(1)">21.2</span>
                         <span ng-class="{selected:chart_workout==2}" ng-click="update_chart(2)">21.3</span>
-<!--                        <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(3)">21.4</span>-->
+                        <span ng-class="{selected:chart_workout==3}" ng-click="update_chart(3)">21.4</span>
 <!--                        <span ng-class="{selected:chart_workout==4}" ng-click="update_chart(4)">21.5</span>-->
                     </div>
                     <canvas id="line" class="chart chart-line" chart-data="data"
@@ -259,7 +259,7 @@
                 <th class="workout_header" colspan="{{(show_21_1?2:1)}}" ng-click="show_21_1=1-show_21_1">21.1</th>
                 <th class="workout_header" colspan="{{(show_21_2?4:1)}}" ng-click="show_21_2=1-show_21_2">21.2</th>
                 <th class="workout_header" colspan="{{(show_21_3?4:1)}}" style="padding-right:0;" ng-click="show_21_3=1-show_21_3">21.3</th>
-<!--                <th class="workout_header" colspan="{{(show_21_4?4:1)}}" ng-click="show_21_4=1-show_21_4">21.4</th>-->
+                <th class="workout_header" colspan="{{(show_21_4?4:1)}}" ng-click="show_21_4=1-show_21_4">21.4</th>
 <!--                <th class="workout_header" colspan="{{(show_21_5?4:1)}}" style="padding-right:0;" ng-click="show_21_5=1-show_21_5">21.5</th>-->
             </tr>
             <tr>
@@ -280,10 +280,10 @@
                 <th ng-show="show_21_3" ng-click="sort('scores[2]._overall_rank')">Overall<br>Rank</th>
                 <th ng-show="show_21_3" ng-click="sort('-scores[2].rankchange',true)">Rank<br>Change</th>
 
-<!--                <th ng-show="show_21_4" class="separator" ng-click="sort('-scores[3].score')">Score</th>-->
-<!--                <th xng-show="show_21_4" ng-class="{separator:!show_21_4}" ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>-->
-<!--                <th ng-show="show_21_4" ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>-->
-<!--                <th ng-show="show_21_4" ng-click="sort('-scores[3].rankchange',true)">Rank<br>Change</th>-->
+                <th ng-show="show_21_4" class="separator" ng-click="sort('-scores[3].score')">Score</th>
+                <th xng-show="show_21_4" ng-class="{separator:!show_21_4}" ng-click="sort('scores[3]._workout_rank')">WO<br>Rank</th>
+                <th ng-show="show_21_4" ng-click="sort('scores[3]._overall_rank')">Overall<br>Rank</th>
+                <th ng-show="show_21_4" ng-click="sort('-scores[3].rankchange',true)">Rank<br>Change</th>
 
 <!--                <th ng-show="show_21_5" class="separator" ng-click="sort('-scores[4].score')">Score</th>-->
 <!--                <th xng-show="show_21_5" ng-class="{separator:!show_21_5}" ng-click="sort('scores[4]._workout_rank')">WO<br>Rank</th>-->
@@ -322,14 +322,14 @@
                     <span ng-if="a.scores[2].rankchange<0" class="negative">{{a.scores[2].rankchange}}</span>
                 </td>
 
-<!--                <td ng-show="show_21_4" class="separator" title="{{a.scores[3].breakdown}} ({{a.scores[3].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>-->
-<!--                <td ng-class="{separator:!show_21_4}">{{a.scores[3]._workout_rank}}</td>-->
-<!--                <td ng-show="show_21_4" title="Overall Score: {{a.scores[3]._overall_score}}">{{a.scores[3]._overall_rank}}</td>-->
-<!--                <td ng-show="show_21_4">-->
-<!--                    <span ng-if="a.scores[3].rankchange==0">-</span>-->
-<!--                    <span ng-if="a.scores[3].rankchange>0" class="positive">+{{a.scores[3].rankchange}}</span>-->
-<!--                    <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>-->
-<!--                </td>-->
+                <td ng-show="show_21_4" class="separator" title="{{a.scores[3].breakdown}} ({{a.scores[3].score}})" ng-class="{'empty':(a.scores[3].score=='0'&&a.scores[3]._workout_rank>1)}">{{a.scores[3].scoreDisplay}}<span ng-if="a.scores[3].scoredetails.time" class="time"> ({{time(a.scores[3].scoredetails.time)}})</span></td>
+                <td ng-class="{separator:!show_21_4}">{{a.scores[3]._workout_rank}}</td>
+                <td ng-show="show_21_4" title="Overall Score: {{a.scores[3]._overall_score}}">{{a.scores[3]._overall_rank}}</td>
+                <td ng-show="show_21_4">
+                    <span ng-if="a.scores[3].rankchange==0">-</span>
+                    <span ng-if="a.scores[3].rankchange>0" class="positive">+{{a.scores[3].rankchange}}</span>
+                    <span ng-if="a.scores[3].rankchange<0" class="negative">{{a.scores[3].rankchange}}</span>
+                </td>
 
 <!--                <td ng-show="show_21_5" class="separator" title="{{a.scores[4].breakdown}} ({{a.scores[4].score}})" ng-class="{'empty':(a.scores[4].score=='0'&&a.scores[4]._workout_rank>1)}">{{a.scores[4].scoreDisplay}}<span ng-if="a.scores[4].scoredetails.time" class="time"> ({{time(a.scores[4].scoredetails.time)}})</span></td>-->
 <!--                <td ng-class="{separator:!show_21_5}">{{a.scores[4]._workout_rank}}</td>-->

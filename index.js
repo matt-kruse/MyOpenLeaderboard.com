@@ -57,46 +57,49 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
   };
 
   $scope.divisions = {
-    '2': 'Women',
-    '1': 'Men',
-    '11': 'Team',
-    '15': 'Girls (14-15)',
-    '14': 'Boys (14-15)',
-    '17': 'Girls (16-17)',
-    '16': 'Boy (16-17)',
-    '19': 'Women (35-39)',
-    '18': 'Men (35-39)',
-    '13': 'Women (40-44)',
-    '12': 'Men (40-44)',
-    '4': 'Women (45-49)',
-    '3': 'Men (45-49)',
-    '6': 'Women (50-54)',
-    '5': 'Men (50-54)',
-    '8': 'Women (55-59)',
-    '7': 'Men (55-59)',
-    '10': 'Women (60+)',
-    '9': 'Men (60+)'
+    "1":"Men",
+    "2":"Women",
+    "18":"Men (35-39)",
+    "19":"Women (35-39)",
+    "12":"Men (40-44)",
+    "13":"Women (40-44)",
+    "3":"Men (45-49)",
+    "4":"Women (45-49)",
+    "5":"Men (50-54)",
+    "6":"Women (50-54)",
+    "7":"Men (55-59)",
+    "8":"Women (55-59)",
+    "36":"Men (60-64)",
+    "37":"Women (60-64)",
+    "38":"Men (65+)",
+    "39":"Women (65+)",
+    "16":"Boys (16-17)",
+    "17":"Girls (16-17)",
+    "14":"Boys (14-15)",
+    "15":"Girls (14-15)"
   };
 
   $scope.division_buckets = {
-    '2': 'Normal',
-    '1': 'Normal',
-    '15': 'Teen',
-    '14': 'Teen',
-    '17': 'Teen',
-    '16': 'Teen',
-    '19': 'Normal',
-    '18': 'Normal',
-    '13': 'Normal',
-    '12': 'Normal',
-    '4': 'Normal',
-    '3': 'Normal',
-    '6': 'Normal',
-    '5': 'Normal',
-    '8': 'Masters',
-    '7': 'Masters',
-    '10': 'Masters',
-    '9': 'Masters'
+    "1":"Normal",
+    "2":"Normal",
+    "18":"Normal",
+    "19":"Normal)",
+    "12":"Normal",
+    "13":"Normal",
+    "3":"Normal",
+    "4":"Normal",
+    "5":"Normal",
+    "6":"Normal",
+    "7":"Masters",
+    "8":"Masters",
+    "36":"Masters",
+    "37":"Masters",
+    "38":"Masters",
+    "39":"Masters",
+    "16":"Teen",
+    "17":"Teen",
+    "14":"Teen",
+    "15":"Teen"
   };
 
   $scope.ids = null;
@@ -410,7 +413,7 @@ app.controller("Controller", function($scope, $http, $interval, $timeout) {
     $scope.show_21_1 = 1;
     $scope.show_21_2 = 1;
     $scope.show_21_3 = 1;
-    $scope.show_21_4 = 0;
+    $scope.show_21_4 = 1;
     $scope.show_21_5 = 0;
     $scope.reddit = false;
 
